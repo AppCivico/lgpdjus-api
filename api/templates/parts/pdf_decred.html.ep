@@ -1,0 +1,19 @@
+<div class="break-before">
+    <h1>Registro em blockchain</h1>
+    <p>O hash deste arquivo PDF será registrado na off-chain de timestamp da blockchain Decred.</p>
+    <p>Você pode verificar a ancoragem deste arquivo acessando <a
+            href="https://timestamp.decred.org/">https://timestamp.decred.org/</a> e fazendo o upload deste PDF, ou
+        então utilizando a ferramenta <a href="https://github.com/decred/dcrtime">dcrtime</a>.</p>
+    <p>Em nenhum momento a ferramenta envia o arquivo para os servidores da decred, apenas o hash do arquivo é
+        necessário para a ancoragem e verificação.</p>
+    <p>dcrtime é um aplicativo de registro de data e hora que permite aos usuários armazenar hashes de dados
+        arbitrários no blockchain Decred. Inspirado pelos <a
+            href="https://petertodd.org/2016/opentimestamps-announcement">OpenTimestamps</a> de Peter Todd, dcrtime
+        foi originalmente construído para armazenar hashes de dados com carimbo de data/hora do <a
+            href="https://docs.decred.org/governance/politeia/overview/">Politeia</a>, o
+        sistema de proposta de
+        Decred, no blockchain Decred. Ele também pode ser usado como um serviço de carimbo de data / hora para
+        outros fins, como neste caso do LGPDJus. Este caso de uso garantimos a transparência, integridade de dados e
+        ordenação do tempo.
+    </p>
+</div>

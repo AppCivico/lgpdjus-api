@@ -1,0 +1,7 @@
+<main role="main">
+
+    <div class="divgray" style="color: #000000">
+        <%== stash('texto') %>
+    </div>
+
+</main>

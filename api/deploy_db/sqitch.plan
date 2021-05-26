@@ -1,0 +1,6 @@
+%syntax-version=1.0.0
+%project=lgpdjus
+
+0001-db-init 2020-04-07T11:19:59Z renato,,, <renato.santosr@appcivico> # reset init
+0002-is_on_blockchain [0001-db-init] 2021-05-25T15:46:36Z renato,,, <renato@renato-MS-7A34> # is_on_blockchain
+0003-notification [0002-is_on_blockchain] 2021-05-26T19:32:30Z renato,,, <renato@renato-MS-7A34> # notification

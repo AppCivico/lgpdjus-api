@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha512-tDXPcamuZsWWd6OsKFyH6nAqh/MjZ/5Yk88T5o+aMfygqNFPan1pLyPFAndRzmOWHKT+jSDzWpJv8krj6x1LMA=="
+        crossorigin="anonymous" />
+
+    % my $version = 1;
+    % if (stash('is_login')) {
+    <link rel="stylesheet" href="/web-assets/login.css?v=<%==$version%>" />
+    % } else {
+    <link rel="stylesheet" href="/web-assets/admin.css?v=<%==$version%>" />
+    % }
+
+    % if (stash('add_editor')) {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.6.1/tinymce.min.js"
+        integrity="sha512-RAKGi5Lz3BrsIKXW8sSbTM2sgNbf5m3n7zApdXDTL1IH0OvG1Xe1q2yI2R2gTDqsd2PLuQIIiPnDJeOSLikJTA=="
+        crossorigin="anonymous"></script>
+    % }
+    <title><%= (stash 'title') || 'Padrão' %></title>
+
+    </style>
+
+</head>
+
+<body>
+
+    % if (stash('is_login')) {
+    <%= content %>
+    % } else {
+
+    <nav class="container navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="/admin">LGPDjus</a>
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/tickets">Solicitações</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/users">Usuários</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/notifications">Notificações</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/blockchains">Blockchain</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/bignum">Números</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"><%== stash('admin_user')->name_or_email() %></a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="/admin/logout">Sair</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/users">
+                <input name="nome" class="form-control mr-sm-2" type="text" placeholder="Nome, email ou apelido"
+                    aria-label="Nome ou apelido">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
+                    <span data-feather="search"></span>
+                </button>
+            </form>
+        </div>
+    </nav>
+
+
+    <div role="main" class="container">
+        % if (my $message = stash ('message')) {
+        <div class="alert alert-danger" role="alert">
+            <%== $message %>
+        </div>
+        % }
+        % if (my $success = stash ('success_message') ) {
+        <div class="alert alert-success" role="alert">
+            <%== $success %>
+        </div>
+        % }
+
+        <%= content %>
+    </div>
+
+    % }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+        integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha512-Ah5hWYPzDsVHf9i2EejFBFrG2ZAPmpu4ZJtW4MfSgpZacn+M9QHDt+Hd/wL1tEkk1UgbzqepJr6KnhZjFKB+0A=="
+        crossorigin="anonymous"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
+
+    <script src="/web-assets/offcanvas.js?v=<%==$version%>"></script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<b>Data de abertura: </b> <span>
+    <%= $created_at_dmy_hms %>
+</span><br />
+<b>Tipo de solicitação: </b> <span>
+    <%= $tipo %>
+</span><br />
+<b>Situação: </b> <span>
+    <%= $status_human %>
+</span><br />
+<b>Prazo: </b> <span>
+    <%= $prazo %>
+</span><br />
+
+<div class="card">
+    <div class="card-body">
+        <style>div.agentMessageWrap img {max-width: 100% !important;}</style>
+        % for my $quiz (@{$quiz}) {
+        <div class="agentMessageWrap">
+            <span style="background-color: #EEEEEE; border-radius: 6px; padding: 8px; margin-bottom: 4px;display:inline-block"><%== $quiz->{question} %></span>
+        </div>
+        % if (defined $quiz->{response}){
+
+        <div style="text-align: right;">
+
+            % if ($quiz->{type} eq 'photo_attachment'){
+            % if ($is_admin){ # apenas no admin colocar o link
+            <a title="Clique para ampliar" href="<%= $quiz->{response_hd} %>" target="_blank">
+                <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
+            </a>
+            %}else{
+            <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
+            %}
+            %}else{
+            <span style="background-color: #3078DE; color: white; border-radius: 6px; padding: 8px;  margin-bottom: 4px; display:inline-block">
+                <%= $quiz->{response} %>
+            </span>
+            %}
+        </div>
+        % } # defined
+        % } # type
+    </div>
+</div>

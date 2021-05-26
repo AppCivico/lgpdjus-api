@@ -1,0 +1,67 @@
+html,body {
+    background-color: #ffffff;
+}
+.divgray {
+    background-color: #f8f8f8;
+    color: #0a115f;
+    padding: 1em;
+}
+
+.divwhite {
+    background-color: #ffffff;
+    color: #0a115f;
+    padding: 1em;
+}
+.questinaries-accordion {
+    padding-bottom: 20px;
+}
+.h-need-help, div.card-header h5 {
+    text-align: left;
+    font-weight: 700;
+}
+.h-need-help {
+    padding-top: 0.5em;
+}
+h4, div.card-header h5 {
+    color: #0a115f;
+}
+a.faq-sobre-link, a.faq-sobre-link:visited, a.faq-sobre-link:hover, a.faq-sobre-link:active {
+    color: #3078DE;
+    text-decoration: underline;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    display: block;
+}
+.card, .card-header {
+    background: none;
+    border:none;
+    padding-left: 0;
+    padding-right: 0;
+}
+.btn-back-faq, .btn-back-faq:visited, .btn-back-faq:active,.btn-back-faq:hover {
+    color: #3078DE;
+}
+.card-header>a h5 {
+    padding-right: 20px;
+    background-image: url(/web-assets/left.svg);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 15px;
+    font-size: 18px;
+    padding-top: 10px;
+}
+.card-header>a.collapsed h5 {
+    background-image: url(/web-assets/down.svg);
+}
+.card-body-nopad{
+    padding: 0;
+}
+.p-top{
+    padding-top: 0.5em;
+}
+.btn-acessar, .btn-acessar:hover, .btn-acessar:active,.btn-acessar:visited {
+    background-color: #3078DE;
+    color: white !important;
+    font-size: 18px;
+    border-radius: 30px;
+}

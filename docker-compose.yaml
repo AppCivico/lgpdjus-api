@@ -1,0 +1,55 @@
+version: '3.2'
+services:
+  lgpdjus_api:
+    container_name: lgpdjus_api
+    image: its/lgpdjus_api
+    restart: unless-stopped
+    network_mode: "bridge"
+    ports:
+      - "172.17.0.1:${LGPDJUS_API_PORT}:8080"
+    volumes:
+        - ../lgpdjus-data/:/data/
+        - ./api/:/src/
+    environment:
+      REDIS_SERVER: "${REDIS_SERVER}"
+      REDIS_NS: "${REDIS_NS}"
+      POSTGRESQL_HOST: "${POSTGRESQL_HOST}"
+      POSTGRESQL_PORT: "${POSTGRESQL_PORT}"
+      POSTGRESQL_DBNAME: "${POSTGRESQL_DBNAME}"
+      POSTGRESQL_USER: "${POSTGRESQL_USER}"
+      POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
+  directus:
+    container_name: lgpdjus_directus
+    image: directus/directus:v9.0.0-rc.69
+    restart: unless-stopped
+    network_mode: "bridge"
+    depends_on:
+      - lgpdjus_api
+    ports:
+      - "172.17.0.1:${LGPDJUS_DIRECTUS_PORT}:8055"
+    environment:
+      PUBLIC_URL: "${DIRECTUS_PUBLIC_URL}"
+      KEY: "${DIRECTUS_KEY}"
+      SECRET: "${DIRECTUS_SECRET}"
+
+      DB_CLIENT: 'pg'
+      DB_HOST: "${POSTGRESQL_HOST}"
+      DB_PORT: "${POSTGRESQL_PORT}"
+      DB_DATABASE: "${POSTGRESQL_DBNAME}"
+      DB_USER: "${POSTGRESQL_USER}"
+      DB_PASSWORD: "${POSTGRESQL_PASSWORD}"
+
+      EMAIL_FROM: 'directus@appcivico.com'
+      EMAIL_TRANSPORT: 'smtp'
+      EMAIL_SMTP_HOST: "${EMAIL_SMTP_HOST}"
+      EMAIL_SMTP_PORT: "${EMAIL_SMTP_PORT}"
+      EMAIL_SMTP_USER: "${EMAIL_SMTP_USER}"
+      EMAIL_SMTP_PASSWORD: "${EMAIL_SMTP_PASSWORD}"
+      EMAIL_SMTP_SECURE: 'true'
+  html2pdf:
+    container_name: lgpdjus_html2pdf
+    image: oberonamsterdam/wkhtmltopdf:latest
+    restart: unless-stopped
+    network_mode: "bridge"
+    ports:
+      - "172.17.0.1:${LGPDJUS_WKHTMLTOPDF_PORT}:80"

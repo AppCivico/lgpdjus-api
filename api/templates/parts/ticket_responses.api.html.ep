@@ -1,0 +1,60 @@
+% my $responses = stash('responses');
+<h2>Iterações: </h2>
+
+% if (!scalar @$responses ){
+
+<p>Não há iterações</p>
+
+% } else {
+
+% for my $response (@{$responses}) {
+<div>
+
+    <small>
+        <%= $pg_timestamp2human->($response->{created_on}) %>
+            <%= $response->{user_name} %> <%= $response->{response_type} %>:
+    </small>
+    <p>
+        <span style="background-color: #EEEEEE; border-radius: 6px; padding: 8px; display:inline-block">
+            <%= $response->{reply_content} %>
+        </span>
+    </p>
+
+    % if ($response->{type} eq 'request-additional-info') {
+
+    % if ($response->{cliente_reply}) {
+    <small>
+        <%= $pg_timestamp2human->($response->{cliente_reply_created_at}) %> manifestante respondeu
+    </small>
+    <div class="card">
+        <div class="card-body" style="text-align: right;">
+            <span
+                style="background-color: #3078DE; color: white; border-radius: 6px; padding: 8px; display:inline-block">
+                <%= $response->{cliente_reply} %>
+            </span>
+            % if ($response->{img_href}) {
+            <p>
+                % if ($response->{img_href_hd}) {
+                <a title="Clique para ampliar" href="<%= $response->{img_href_hd} %>" target="_blank">
+                    <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
+                </a>
+                %}else{
+                <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
+                %}
+            </p>
+            %}
+        </div>
+    </div>
+    %} else {
+    <div class="alert alert-warning" role="alert">
+        Aguardando resposta
+    </div>
+    %}
+
+    % }
+
+</div>
+<hr />
+% } # foreach
+
+% }

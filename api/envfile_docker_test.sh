@@ -1,0 +1,24 @@
+# Para essas configurações funcionarem, o redis e o postgres precisam estar fazendo o bind na interface 172.17.0.1
+REDIS_SERVER="${REDIS_SERVER:-172.17.0.1:6379}"
+POSTGRESQL_HOST="${POSTGRESQL_HOST:-172.17.0.1}"
+POSTGRESQL_PORT="${POSTGRESQL_PORT:-5432}"
+POSTGRESQL_DBNAME="${POSTGRESQL_DBNAME:-lgpdjus_dev}"
+POSTGRESQL_USER="${POSTGRESQL_USER:-postgres}"
+POSTGRESQL_PASSWORD="${POSTGRESQL_PASSWORD:-trustme}"
+SQITCH_DEPLOY="${SQITCH_DEPLOY:-docker}"
+API_PORT="${API_PORT:-8080}"
+API_WORKERS="${API_WORKERS:-1}"
+
+
+# forcar carregar o WKHTMLTOPDF_HTTP via http, mesmo que seja rodando os testes
+export WKHTMLTOPDF_HTTP_TEST=1
+
+export REDIS_SERVER
+export POSTGRESQL_HOST
+export POSTGRESQL_PORT
+export POSTGRESQL_DBNAME
+export POSTGRESQL_USER
+export POSTGRESQL_PASSWORD
+export SQITCH_DEPLOY
+export API_PORT
+export API_WORKERS

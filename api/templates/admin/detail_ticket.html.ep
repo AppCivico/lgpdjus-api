@@ -1,0 +1,78 @@
+% my $ticket = stash('ticket');
+% my $actions = stash('actions');
+% my $base_url = stash('base_url');
+% my $action_name = stash('action_name');
+% my $action_text_label = stash('action_text_label');
+% my $action_text_placeholder = stash('action_text_placeholder');
+% my $selected_action = stash('selected_action');
+% my $params = $c->stash('params');
+
+% if ($ticket) {
+<div class="border-bottom">
+    <h1 class="h2">Solicitação <%= $ticket->protocol %> </h1>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h3>Dados da solicitação</h3>
+        <%== $ticket->html_detail( admin => 1, c => $c ) %>
+    </div>
+    <div class="col">
+        <%== $ticket->html_ticket_responses( admin => 1, c => $c ) %>
+            % if (!$selected_action) {
+            <h3>Ações disponíveis</h3>
+
+            % for my $action (@{$actions}){
+            <a href="<%= $action->{href} %>" class="btn <%= $action->{class} %>">
+                <%= $action->{name} %>
+            </a>
+            </br>
+            </br>
+            %}
+            %} else{
+            <h3>Ação: <%= $action_name %>
+            </h3>
+            <a href="<%= $base_url %>" class="btn btn-light">Escolher outra ação</a>
+            <hr />
+
+            <form action="<%= $base_url %>" method="POST">
+                <input type="hidden" name="selected_action" value="<%= $selected_action %>" />
+
+                % if ($selected_action eq 'verify') {
+                <div class="form-group">
+                    <label for="response_content">
+                        Avaliação:
+                    </label>
+                    <select class="form-control" name="verified" id="verified">
+                        <option selected value=0>Recusar</option>
+                        <option value=1>Aceitar e verificar conta</option>
+                    </select>
+                </div>
+                % }
+
+                <div class="form-group">
+                    <label for="response_content">
+                        <%= $action_text_label %>
+                    </label>
+                    <div class="form-group">
+                        % if ($selected_action eq 'change_due') {
+                        <input type="date" class="form-control"
+                            value="<%= $params->{response_content} || $ticket->due_date_ymd() %>"
+                            name="response_content" id="response_content" />
+                        % }else{
+                        <textarea rows=3 max-length=10000 class="form-control"
+                            placeholder="<%= $action_text_placeholder %>" name="response_content"
+                            id="response_content"><%= $params->{response_content} || '' %></textarea>
+                        % }
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enviar</button>
+
+                </div>
+            </form>
+            %}
+
+    </div>
+</div>
+
+% }

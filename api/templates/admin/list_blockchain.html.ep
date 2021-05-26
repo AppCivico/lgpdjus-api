@@ -1,0 +1,100 @@
+<div class="border-bottom">
+    <h1 class="h2">Lista de registro em blockchain</h1>
+</div>
+% if ( stash('filter_opts') ) {
+<hr />
+<form method="GET">
+    <h3>Filtro:</h3>
+    % if ( $c->req->params->param('cliente_id') ) {
+    <input type="hidden" name="cliente_id" value="<%=$c->req->params->param('cliente_id')%>" />
+    <p>Filtrando por cliente.</p>
+    %}
+    <div class="form-group">
+        <select name="filter" class="form-control">
+            % for my $r (@{stash('filter_opts') || []}) {
+            <option <%= $r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                <%= $r->{label} %>
+            </option>
+            % }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Aplicar</button>
+</form>
+% }
+
+<style>
+td.text-ellipsis
+{
+ max-width: 100px;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ white-space: nowrap;
+}</style>
+<br>
+<div class="table-responsive">
+    <table class="table table-striped table-sm table-hover">
+        <thead>
+            <tr>
+                <th>Horário criação</th>
+                <th>Documento</th>
+                <th>Cliente</th>
+                <th>Hash 256</th>
+                <th>Horário bloco</th>
+                <th>Situação</th>
+               </tr>
+        </thead>
+        <tbody>
+            % for my $r (@{stash('rows') || []}) {
+            <tr>
+                <td>
+                   <span title="<%= $r->created_at_utc() %> UTC"><%= $pg_timestamp2human->($r->created_at) %></span>
+                </td>
+                <td>
+                    <a href="<%= $r->media_upload->media_generate_download_url_admin($c, 'hd', 0, $r->filename) %>">Baixar <%= $r->get_column('filename') %>
+                    % if ($r->get_column('ticket_protocol')){
+                        <br/>
+                        <a href="/admin/tickets-details?protocol=<%= $r->get_column('ticket_protocol') %>">Visualizar solicitação <%= $r->get_column('ticket_protocol') %> </a>
+                    %}
+                </td>
+                <td>
+                    % if ($r->get_column('cliente_id')){
+                        <a href="/admin/users?cliente_id=<%= $r->get_column('cliente_id') %>"><%= $r->get_column('cliente_nome_completo') %></a>
+                    % } else {
+                       usário removido
+                    %}
+                </td>
+                <td title="De um duplo clique para selecionar o texto inteiro da coluna" class="text-ellipsis">
+                    <%= $r->get_column('digest') %>
+                </td>
+                <td>
+                   % if ($r->dcrtime_timestamp){
+                    <span title="<%= $r->dcrtime_timestamp_utc() %> UTC"><%= $pg_timestamp2human->($r->dcrtime_timestamp) %> (São Paulo)</span>
+                    % } else {
+                        -
+                   %}
+                </td>
+                <td class="text-ellipsis">
+                <%== $r->build_status() %>
+                </td>
+
+            </tr>
+            % }
+        </tbody>
+    </table>
+
+    % if ( $c->req->params->param('next_page') ) {
+    <a href="#" class="btn btn-outline-dark btn-sm" onclick="window.history.back();window.close();">voltar</a>
+    %}
+
+    % if ( stash('has_more') ) {
+    <a href="/admin/blockchains?next_page=<%== stash('next_page') %>" class="btn btn-outline-dark btn-sm">carregar próxima
+        página</a>
+    % }
+
+    <hr/>
+    <div>
+    <p>Vocẽ pode acessar <a target="_blank" href="https://timestamp.decred.org/">este site</a> para verificar arquivos usando a colna Hash 256 para pesquisar.</p>
+
+    </div>
+
+</div>

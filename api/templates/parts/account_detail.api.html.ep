@@ -1,0 +1,22 @@
+<style>
+.mydt dt{font-weight: 700}
+</style>
+<p>Os dados abaixo foram informados durante a criação de conta no aplicativo LGPDJus.</p>
+<dl class="mydt">
+<dt>Data de criação</dt>
+<dd><%= $cliente->created_at_dmy_hms() %></dd>
+<dt>Nome completo</dt>
+<dd><%= $cliente->nome_completo() %></dd>
+<dt>E-mail</dt>
+<dd><%= $cliente->email() %></dd>
+<dt>CPF</dt>
+<dd><%= $cliente->cpf() %></dd>
+<dt>Data de nascimento</dt>
+<dd><%= $cliente->dt_nasc()->dmy('/') %></dd>
+<dt>Gênero</dt>
+<dd><%= $cliente->genero() %></dd>
+<dt>CEP</dt>
+<dd><%= $cliente->cep() %></dd>
+<dt>Como deseja ser chamado</dt>
+<dd><%= $cliente->apelido() %></dd>
+</dl>
