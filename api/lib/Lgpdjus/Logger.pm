@@ -58,7 +58,11 @@ sub get_logger {
             level  => $DEBUG,
             layout =>
               (is_test() && $test_is_folder ? '' : '[%d{dd/MM/yyyy HH:mm:ss.SSS}] [%p{4} %P] %x %m{indent=1}%n'),
-            ($ENV{LGPDJUS_API_LOG_DIR} ? (file => '>>' . $ENV{LGPDJUS_API_LOG_DIR}) : ()),
+            (
+                $ENV{LGPDJUS_API_LOG_DIR}
+                ? (file => '>>' . $ENV{LGPDJUS_API_LOG_DIR})
+                : (stderr => 1,)
+            ),
             'utf8'    => 1,
             autoflush => 1,
 
