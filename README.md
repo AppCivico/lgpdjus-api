@@ -165,6 +165,10 @@ Existe um arquivo .env com as seguintes variáveis:
     LGPDJUS_WKHTMLTOPDF_PORT=64596        # qual porta o serviço de html2pdf deve fazer o bind na interface 172.17.0.1
     LGPDJUS_API_PORT=64598                # qual porta o serviço de da api deve fazer o bind na interface 172.17.0.1
     LGPDJUS_DIRECTUS_PORT=64597           # qual porta o serviço de da directus deve fazer o bind na interface 172.17.0.1
+    EMAIL_SMTP_HOST=...                   # usado pelo directus, host do smtp
+    EMAIL_SMTP_PORT=...                   # porta do smtp (usar 465 para secure)
+    EMAIL_SMTP_USER=...                   # usuario do smtp
+    EMAIL_SMTP_PASSWORD=...               # senha do smtp
 
 Após configurar, execute o comando `docker-compose config` para ter um preview da configuração.
 
