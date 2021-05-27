@@ -148,7 +148,7 @@ Para fazer o build, basta ir o path ./api/ e executar o arquivo `build_container
 
 Esse processo pode levar alguns minutos na primeira vez.
 
-Depois que o processo terminar, temos um arquivo de exemplo de como subir apenas o container da api, `api/sample-run-container.sh` porem vamos utilizar o docker-compose para subir o container junto com o diretus e o wkhtmltopdf.
+Depois que o processo terminar, temos um arquivo de exemplo de como subir apenas o container da api, `api/sample-run-container.sh` porém vamos utilizar o docker-compose para subir o container junto com o diretus e o wkhtmltopdf.
 
 Existe um arquivo .env com as seguintes variáveis:
 
