@@ -152,8 +152,8 @@ Depois que o processo terminar, temos um arquivo de exemplo de como subir apenas
 
 Existe um arquivo .env com as seguintes variáveis:
 
-    DIRECTUS_KEY=5569ed57-66f2-4cbb-b3a9-0b0062edf798    # deve ser alterado para qualquer valor aleatorio
-    DIRECTUS_SECRET=07cec12f-f625-4006-8b31-e477319b6758 # deve ser alterado para qualquer valor aleatorio
+    DIRECTUS_KEY=5569ed57-66f2-4cbb-b3a9-0b0062edf798    # deve ser alterado para qualquer valor aleatório
+    DIRECTUS_SECRET=07cec12f-f625-4006-8b31-e477319b6758 # deve ser alterado para qualquer valor aleatório
     POSTGRESQL_HOST=172.17.0.1 # qual endereço do servidor postgres
     POSTGRESQL_PORT=5432
     POSTGRESQL_DBNAME=lgpdjus_dev
