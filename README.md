@@ -4,14 +4,14 @@ Deploy em Produção/Homologação:
 
 # requisitos do sistema
 
-- PostgreSQL 11 ou superior
-- docker community edition 19 or maior [testado na 19.03.12]
+- PostgreSQL 11 ou superior (testado na versão 12 e 13)
+- docker community edition 19 or maior (testado na 19.03.12)
 - docker-compose 1.21 ou superior
 - Nginx ou outro proxy reverso para finalização do HTTPS
 - redis-server 5 ou superior
 - Servidor SMTP para envio de e-mails
 - S3 (compatível), pode ser AWS s3, backblaze b2 ou subir um MinIO https://min.io/
-- Recomendado 4 GB de RAM e 25GB de disco.
+- Recomendado 4 GB de RAM e 25GB de disco livres para as imagens dos containers.
 
 
 # Instalação dos requisitos:
@@ -81,17 +81,17 @@ Aproveite para ajustar os valores de random_page_cost e cpu_tuple_cost.
 
 > Se o hardware encontra-se usando SSD-backed, é recomendado trocar o random_page_cost para 1.1.
 
-> Se o clock da maquina for pelo menos 3ghz, altere cpu_tuple_cost para 0.02.
+> Se o clock da máquina for pelo menos 3ghz, altere cpu_tuple_cost para 0.02.
 
 
     # su postgres
-    $ view /etc/postgresql/9.6/main/postgresql.conf # edit the file
+    $ view /etc/postgresql/11/main/postgresql.conf # edit the file
 
 Ainda nesse usuário, vamos configurar o `pg_hba` para liberar os acessos ao banco
 
 Altere 127.0.0.1 para trust, e adicione a rede usada pelo containers:
 
-    $ view /etc/postgresql/9.6/main/pg_hba.conf
+    $ view /etc/postgresql/11/main/pg_hba.conf
 
         # IPv4 local connections:
         host    all             all             127.0.0.1/32            trust
@@ -150,7 +150,7 @@ Esse processo pode levar alguns minutos na primeira vez.
 
 Depois que o processo terminar, temos um arquivo de exemplo de como subir apenas o container da api, `api/sample-run-container.sh` porem vamos utilizar o docker-compose para subir o container junto com o diretus e o wkhtmltopdf.
 
-Existe um arquivo .env com as seguintes variaveis:
+Existe um arquivo .env com as seguintes variáveis:
 
     DIRECTUS_KEY=5569ed57-66f2-4cbb-b3a9-0b0062edf798    # deve ser alterado para qualquer valor aleatorio
     DIRECTUS_SECRET=07cec12f-f625-4006-8b31-e477319b6758 # deve ser alterado para qualquer valor aleatorio
@@ -180,7 +180,7 @@ Para subir, basta executar `docker-compose up` e os serviços serão iniciados.
 > Como pode ser visto acima, depois que um container esta rodando, para executar comandos dentro do ambiente dele, basta usar comando `docker exec`
 > Para abrir um terminal: `docker exec -u app -it lgpdjus_api /bin/bash`. Passe -u root para trocar para root.
 
-Você pode criar o arquivo `api/envfile_local.sh` para trocar as variaveis de ambientes, por exemplo, para aumentar o número de workers da api:
+Você pode criar o arquivo `api/envfile_local.sh` para trocar as variáveis de ambientes, por exemplo, para aumentar o número de workers da api:
 
     # view envfile_local.sh e adicionar
     export API_WORKERS="2"
@@ -188,7 +188,7 @@ Você pode criar o arquivo `api/envfile_local.sh` para trocar as variaveis de am
 Caso o arquivo não exista, o arquivo padrão será carregado (api/envfile.sh) que tenta manter os valores ja carregados pelo ambiente e seta o default
 
 Depois, ajuste a permissão do arquivo `chmod +x envfile_local.sh`
-Após a troca da variavel, é possível recarregar o serviço da api usando `docker exec -u app lgpdjus_api  /src/script/restart-services.sh`
+Após a troca da variável, é possível recarregar o serviço da api usando `docker exec -u app lgpdjus_api  /src/script/restart-services.sh`
 
 
 Se tudo ocorreu bem, em você poderá acessar o admin do DPO da api usando
@@ -200,7 +200,7 @@ O usuário e senha padrão (que vem no migration inicial) é `admin@sample.com` 
 
 ## Configurando nginx:
 
-A configuração do NGINX não é necessária para o ambiente de desenvovlimento, apenas para o ambiente com SSL.
+A configuração do NGINX não é necessária para o ambiente de desenvolvimento, apenas para o ambiente com SSL.
 
 A configuração do nginx ira ser diferente em cada ambiente, mas de qualquer forma, segue a base que usamos usando self-signed:
 
@@ -374,14 +374,14 @@ Vá até o diretório base código, e execute o código:
     docker run --name lgpdjus_backend_test --rm -v $(pwd):/src -v /tmp/:/data -it -u app its/lgpdjus_api bash
 
     $ cd /src;
-    $ . envfile_docker_test.sh # carrega as variaveis de ambiente configurado o ambiente docker
+    $ . envfile_docker_test.sh # carrega as variáveis de ambiente configurado o ambiente docker
     $ yath test -j 4 -PLgpdjus  -Ilib t/ # inicia todos os testes, usando 4 tests em paralelo
 
-Para o desenvolvedor, eu recomendo instalar o pg, redis, perl e wkhtmltopdf na maquina local, assim evita ter que subir um container inteiro toda hora que deseja rodar o teste.
+Para o desenvolvedor, eu recomendo instalar o pg, redis, perl e wkhtmltopdf na máquina local, assim evita ter que subir um container inteiro toda hora que deseja rodar o teste.
 
 Para instalar as deps, use o Dockerfile como base.
 
-Para testar na maquina local, após instalar as dependencias, execute:
+Para testar na máquina local, após instalar as dependências, execute:
 
     createdb -h 127.0.0.1 -U postgres lgpdjus_dev
     sqitch deploy  -t development
@@ -397,13 +397,13 @@ DBIC_TRACE=1 mostra as queries que foram executadas por dentro do ORM
 
 Usamos um padrão para criar um novo arquivo sqitch:
 
-- Cada arquivo faz "require" no ultimo deploy
+- Cada arquivo faz "require" no último deploy
 - Não usamos revert nem verify
 
 O problema de usar o revert, é que nem toda alteração tem revert, e, quando você faz deploy de mais de uma alteração ao mesmo tempo, e uma desta falha, o sqitch roda todos os reverts (que se não existir, irá ficar em branco), dando um trabalho extra para voltar o banco em um estado estável.
-Quando não existe arquivo, ele simplismente não executa o revert, e você pode arrumar o arquivo de deploy que deu errado e executar novamente `sqitch deploy` que ele irá apensar executar os arquivos ainda não executados (ou executados com erro).
+Quando não existe arquivo, ele simplismente não executa o revert, e você pode arrumar o arquivo de deploy que deu errado e executar novamente `sqitch deploy` que ele irá apenas executar os arquivos ainda não executados (ou executados com erro).
 
-Para ajudar, uso essas funcoes no meu .bashrc para criar novos sqitch.
+Para ajudar, uso essas funções no meu .bashrc para criar novos sqitch.
 
     deploydb_last_version () {
        perl -e 'my $last = [ sort { $b <=> $a } grep {/^\d{1,4}-/} @ARGV]->[0]; $last =~ s/\.sql$//; print "$last"' `ls deploy_db/deploy/`
@@ -422,9 +422,9 @@ Para ajudar, uso essas funcoes no meu .bashrc para criar novos sqitch.
     }
 
 
-E para criar um novo deploy, eu simpliemnte executo `new_deploy nome-do-arquivo descrição do será modificado`
+E para criar um novo deploy, simplesmente executar `new_deploy nome-do-arquivo descrição do será modificado`
 
-Depois de criar e editar o arquivo (fica na pasta deploy_db/deploy/) você podera executar as alterações no banco usando `sqitch deploy -t development` (-t é o target, pode ser outro)
+Depois de criar e editar o arquivo (fica na pasta deploy_db/deploy/) você poderá executar as alterações no banco usando `sqitch deploy -t development` (-t é o target, pode ser outro)
 
 # Configurações na tabela lgpdjus_config
 
@@ -453,7 +453,7 @@ Depois de criar e editar o arquivo (fica na pasta deploy_db/deploy/) você poder
 
 Temos algumas ações que precisam rodar periodicamente no sistema, são eles:
 
-- Indexação de conteudo (RSS)
+- Indexação de conteúdo (RSS)
 - Iniciar jobs longos (apagar conta)
 
 Para executar tais ações, basta fazer uma chamada HTTP usando o secret do MAINTENANCE_SECRET
@@ -471,14 +471,14 @@ Também pode ser usado um serviço de monitoramento para fazer as chamadas no lu
 
 # Directus
 
-Assim como o login da area do DPO, o acesso no directus é com o mesmo usuário e senha. Para acessar, acesse http://172.17.0.1:64597 e utilize o usuário `admin@sample.com` e senha `admin@sample.com`.
+Assim como o login da área do DPO, o acesso no directus é com o mesmo usuário e senha. Para acessar, acesse http://172.17.0.1:64597 e utilize o usuário `admin@sample.com` e senha `admin@sample.com`.
 
-No directus existe uma descriação para cada tabela que pode ser modificada pelos administradores.
+No directus existe uma descrição para cada tabela que pode ser modificada pelos administradores.
 
 
 # Triggers
 
-O sistema usa algumas triggers para atualizar os timestamp quando certo dados são modificados para invalidar o cache.
+O sistema usa algumas triggers para atualizar os timestamp quando certos dados são modificados para invalidar o cache.
 
 Você pode encontrar as triggers usando o comando:
 
