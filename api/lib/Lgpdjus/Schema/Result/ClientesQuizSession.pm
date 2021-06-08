@@ -93,37 +93,46 @@ sub generate_ticket {
         log_trace(['generate_ticket:load', $self->ticket->id]);
         return $self->ticket;
     }
-
-    my $protocol = $self->_get_protocol_token($c);
-    my $content  = to_json($self->build_questionnaire_questions_reply());
+    my $content = to_json($self->build_questionnaire_questions_reply());
 
     my $ticket;
-    $self->result_source->schema->txn_do(
-        sub {
-            $ticket = $self->cliente->tickets->create(
-                {
-                    content          => $content,
-                    content_hash256  => sha256_hex(encode_utf8($content)),
-                    questionnaire_id => $self->questionnaire_id,
-                    protocol         => $protocol,
-                    status           => 'pending',
-                    due_date         => \[
-                        "now() + (?::text || ' days')::interval",
-                        $self->search_related_rs('questionnaire')->get_column('due_days')->next()
-                    ],
-                    created_on => \'now()',
-                    updated_at => \'now()',
+  AGAIN:
+    my $protocol = $self->_get_protocol_token($c);
+    for my $try (1 .. 10) {
+        eval {
+            $self->result_source->schema->txn_do(
+                sub {
+                    $ticket = $self->cliente->tickets->create(
+                        {
+                            content          => $content,
+                            content_hash256  => sha256_hex(encode_utf8($content)),
+                            questionnaire_id => $self->questionnaire_id,
+                            protocol         => $protocol,
+                            status           => 'pending',
+                            due_date         => \[
+                                "now() + (?::text || ' days')::interval",
+                                $self->search_related_rs('questionnaire')->get_column('due_days')->next()
+                            ],
+                            created_on => \'now()',
+                            updated_at => \'now()',
+                        }
+                    );
+                    $ticket->_generate_pdf(
+                        $c, 'cliente_send_email',
+                        {
+                            template => 'ticket_created',
+                        }
+                    );
+                    $self->update({ticket_id => $ticket->id, can_delete => 0});
                 }
             );
-            $ticket->_generate_pdf(
-                $c, 'cliente_send_email',
-                {
-                    template => 'ticket_created',
-                }
-            );
-            $self->update({ticket_id => $ticket->id, can_delete => 0});
+        };
+        if ($@) {
+            log_error("Try $try/10 - fatal error: $@");
+            goto AGAIN;
         }
-    );
+        last;
+    }
 
     log_trace(['generate_ticket:new', $ticket->id]);
 
@@ -135,23 +144,22 @@ sub _get_protocol_token {
     my ($self, $c) = @_;
 
     # captura o horario atual, e depois, fazemos um contador unico (controlado pelo redis),
-    # o redis lembra por 60 segundos de "cada segundo tweetado", just in case
+    # o redis lembra por 2 dias
     # tenha algum retry lentidao na rede e varios clientes tentando processar.
   AGAIN:
-    my $now     = DateTime->now;
-    my $base    = substr($now->ymd(''), 2) . $now->hms('');
+    my $now     = DateTime->now->set_time_zone('America/Sao_Paulo');
+    my $base    = substr($now->ymd(''), 2);
     my $cur_seq = $c->kv->local_inc_then_expire(
         key     => $base,
-        expires => 60
+        expires => 86400 * 2,
     );
 
-    # permite até 9999 tickets em 1 segundo, acho que ta ok pra este app!
-    # se tiver tudo isso de tweet em um segundo, aguarda o proximo segundo!
-    if ($cur_seq == 9999) {
+    # permite até 99999 tickets em 1 dia, acho que ta ok pra este app!
+    if ($cur_seq == 99999) {
         sleep 1;
         goto AGAIN;
     }
-    return $base . sprintf('%04d', $cur_seq);
+    return $base . sprintf('%05d', $cur_seq);
 }
 
 sub build_questionnaire_questions_reply {
