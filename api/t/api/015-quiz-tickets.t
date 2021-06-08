@@ -55,21 +55,31 @@ ok((grep { $_->{code} eq 'tickets' } $json->{modules}->@*) ? 1 : 0, 'has tickets
 $t->get_ok(
     '/available-tickets-timeline',
   )->status_is(200, '200 tickets timeline')    #
-  ->json_is('/rows/0/type',   'questionnaire')                              #
-  ->json_is('/rows/0/body',   'short_text 5', 'came first, order is ok')    #
-  ->json_is('/rows/0/header', 'label 5')                                    #
-  ->json_is('/rows/0/id',     '5')                                          #
-  ->json_is('/rows/1/type',   'questionnaire')                              #
-  ->json_is('/rows/1/body',   'short_text 4')                               #
-  ->json_is('/rows/1/header', 'label 4')                                    #
-  ->json_is('/rows/1/id',     '4')                                          #
-  ->json_is('/rows/1/icon',   '/document.svg')                              #
-  ->json_is('/rows/2/id',     undef, 'id do quiz de verificar conta nao vem');
+  ->json_is('/rows/0/id',                             '5')                                          #
+  ->json_is('/rows/0/type',                           'questionnaire')                              #
+  ->json_is('/rows/0/header',                         'cat short 5')                                #
+  ->json_is('/rows/0/appbar_header',                  'label 5')                                    #
+  ->json_is('/rows/0/body',                           'short_text 5', 'came first, order is ok')    #
+  ->json_is('/rows/0/confirmation_screen/body',       'body 5')                                     #
+  ->json_is('/rows/0/confirmation_screen/button',     'start button 5')                             #
+  ->json_is('/rows/0/confirmation_screen/legal_info', '', 'empty, not null')                        #
+  ->json_is('/rows/0/confirmation_screen/title',      'title 5')                                    #
+
+  ->json_is('/rows/1/id',                             '4')                                          #
+  ->json_is('/rows/1/type',                           'questionnaire')                              #
+  ->json_is('/rows/1/header',                         'cat short 4')                                #
+  ->json_is('/rows/1/appbar_header',                  'label 4')                                    #
+  ->json_is('/rows/1/body',                           'short_text 4')                               #
+  ->json_is('/rows/1/confirmation_screen/body',       'body 4')                                     #
+  ->json_is('/rows/1/confirmation_screen/button',     'start button 4')                             #
+  ->json_is('/rows/1/confirmation_screen/legal_info', 'legal info 4')                               #
+  ->json_is('/rows/1/confirmation_screen/title',      'title 4')                                    #
+  ->json_is('/rows/2/id',                             undef, 'id do quiz de verificar conta nao vem');
 
 $t->post_ok(
     '/me/quiz/start',
     {'x-api-key' => $session},
-    form => {id => 'verify_account'}                                        # iniciando form 7 via code
+    form => {id => 'verify_account'}    # iniciando form 7 via code
 )->status_is(200, '200 start session verify_account')
   ->json_has('/quiz_session/current_msgs/0/content', 'verify_account question 1')    #
   ->json_is('/quiz_session/can_delete', 1, 'can delete');

@@ -94,6 +94,12 @@ __PACKAGE__->has_many(
   { "foreign.noticias_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
+__PACKAGE__->has_many(
+  "noticias_aberturas",
+  "Lgpdjus::Schema::Result::NoticiasAbertura",
+  { "foreign.noticias_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
 __PACKAGE__->belongs_to(
   "rss_feed",
   "Lgpdjus::Schema::Result::RssFeed",
@@ -107,8 +113,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-16 09:50:11
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bZlFlkurhglnkbA36kmakw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 19:06:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/nOhtqDWpJpR3ftFi6ns7w
 
 # ALTER TABLE noticias ADD FOREIGN KEY (rss_feed_id) REFERENCES rss_feeds(id) ON DELETE CASCADE ON UPDATE cascade;
 

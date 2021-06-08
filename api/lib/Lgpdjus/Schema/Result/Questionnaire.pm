@@ -47,10 +47,10 @@ __PACKAGE__->add_columns(
   },
   "label",
   {
-    data_type => "varchar",
-    default_value => "[% 1 %]",
-    is_nullable => 0,
-    size => 2000,
+    data_type     => "text",
+    default_value => "T\xEDtulo",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
   },
   "short_text",
   {
@@ -69,10 +69,9 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 35 },
   "title",
   {
-    data_type => "varchar",
-    default_value => "eg: \"Aqui voc\xEA poder\xE1 solicitar a .... de seus dados.\"",
+    data_type   => "text",
     is_nullable => 1,
-    size => 100,
+    original    => { data_type => "varchar" },
   },
   "body",
   { data_type => "varchar", is_nullable => 1, size => 340 },
@@ -80,6 +79,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 35 },
   "category_full",
   { data_type => "varchar", is_nullable => 1, size => 35 },
+  "legal_info",
+  { data_type => "varchar", is_nullable => 1, size => 340 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many(
@@ -102,8 +103,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 12:15:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qh/OITpkL+JdXSU+1lWWbQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 19:06:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5LxLp1dsanu5EafUmdzchQ
 
 sub as_hashref {
     my $self = shift;

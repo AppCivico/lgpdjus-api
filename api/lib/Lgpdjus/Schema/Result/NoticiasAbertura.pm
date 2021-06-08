@@ -28,15 +28,27 @@ __PACKAGE__->add_columns(
   "created_at",
   { data_type => "timestamp with time zone", is_nullable => 0 },
   "noticias_id",
-  { data_type => "bigint", is_nullable => 0 },
+  { data_type => "bigint", is_foreign_key => 1, is_nullable => 0 },
   "cliente_id",
-  { data_type => "bigint", is_nullable => 0 },
+  { data_type => "bigint", is_foreign_key => 1, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->belongs_to(
+  "cliente",
+  "Lgpdjus::Schema::Result::Cliente",
+  { id => "cliente_id" },
+  { is_deferrable => 0, on_delete => "SET NULL", on_update => "NO ACTION" },
+);
+__PACKAGE__->belongs_to(
+  "noticia",
+  "Lgpdjus::Schema::Result::Noticia",
+  { id => "noticias_id" },
+  { is_deferrable => 0, on_delete => "SET NULL", on_update => "NO ACTION" },
+);
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-16 09:45:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:n79rY6IXzREbH/wscQe95A
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 19:06:25
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:3XXdA9Fmhomg0vAR+4VCkw
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

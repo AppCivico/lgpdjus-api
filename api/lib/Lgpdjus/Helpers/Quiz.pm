@@ -246,10 +246,18 @@ sub _format_questionnaire {
 
     return {
         type   => 'questionnaire',
-        header => $r->{label},
+        header => $r->{category_short},
         body   => $r->{short_text},
         icon   => $href,
-        id     => $r->{id}
+        id     => $r->{id},
+
+        appbar_header       => $r->{label} || '',
+        confirmation_screen => {
+            title      => $r->{title}        || 'Clique em iniciar.',
+            body       => $r->{body}         || 'Clique em iniciar.',
+            legal_info => $r->{legal_info}   || '',
+            button     => $r->{start_button} || 'Iniciar',
+        }
     };
 }
 
