@@ -510,6 +510,11 @@ sub _render_question {
 
     my $public = {};
 
+    if (!$vars->{ticket_protocol} && $session->ticket_id) {
+        $vars->{'ticket_protocol'} = $session->ticket->protocol;
+        $vars->{'ticket_id'}       = $session->ticket_id;
+    }
+
     if (exists $q->{_load_as_image}) {
         confess 'cannot load image without user' unless $user_obj;
         confess 'cannot load image without $c'   unless $c;
