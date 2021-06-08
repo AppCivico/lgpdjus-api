@@ -15,4 +15,6 @@ alter table clientes add column account_verification_pending boolean not null de
 
 alter table questionnaires add column legal_info varchar(340);
 
+create unique index ticket_protocol_uniq_idx on tickets(protocol);
+
 COMMIT;

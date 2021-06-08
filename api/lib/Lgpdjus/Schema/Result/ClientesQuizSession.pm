@@ -127,8 +127,21 @@ sub generate_ticket {
                 }
             );
         };
-        if ($@) {
+        if ($@ && $@ =~ /ticket_protocol_uniq_idx/) {
+            log_error("Redis cache failed! $@");
+            my $max_protocol = $self->result_source->schema->resulset('Tickets')->max('protocol');
+
+            my $protocol_day = substr($max_protocol, 0, 6);
+            my $protocol_seq = substr($max_protocol, 6);
+            log_error(
+                "max protocol is $max_protocol, protocol day is $protocol_day, protocol_seq is $protocol_seq. Updating redis"
+            );
+            $c->kv->redis->set($ENV{REDIS_NS} . $protocol_day, $protocol_seq);
+            goto AGAIN;
+        }
+        elsif ($@) {
             log_error("Try $try/10 - fatal error: $@");
+            sleep 1;
             goto AGAIN;
         }
         last;
@@ -155,10 +168,10 @@ sub _get_protocol_token {
     );
 
     # permite até 99999 tickets em 1 dia, acho que ta ok pra este app!
-    if ($cur_seq == 99999) {
-        sleep 1;
-        goto AGAIN;
+    if ($cur_seq > 99999) {
+        return $base . $cur_seq;
     }
+
     return $base . sprintf('%05d', $cur_seq);
 }
 
