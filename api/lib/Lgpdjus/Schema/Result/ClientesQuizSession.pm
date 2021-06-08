@@ -129,10 +129,12 @@ sub generate_ticket {
         };
         if ($@ && $@ =~ /ticket_protocol_uniq_idx/) {
             log_error("Redis cache failed! $@");
-            my $max_protocol = $self->result_source->schema->resultset('Ticket')->get_column('protocol')->max();
+            my $base         = &_get_protocol_prefix();
+            my $max_protocol = $self->result_source->schema->resultset('Ticket')
+              ->search({'-and' => [\["protocol::text like '?%'", $base]]})->get_column('protocol')->max();
 
-            my $protocol_day = substr($max_protocol, 0, 6);
-            my $protocol_seq = substr($max_protocol, 6);
+            my $protocol_day = substr($max_protocol, 0, length($base));
+            my $protocol_seq = substr($max_protocol, length($base));
             log_error(
                 "max protocol is $max_protocol, protocol day is $protocol_day, protocol_seq is $protocol_seq. Updating redis"
             );
@@ -153,15 +155,21 @@ sub generate_ticket {
     return $ticket;
 }
 
+sub _get_protocol_prefix {
+    my $now  = DateTime->now->set_time_zone('America/Sao_Paulo');
+    my $base = substr($now->ymd(''), 2);
+
+    return $base;
+}
+
 sub _get_protocol_token {
     my ($self, $c) = @_;
 
     # captura o horario atual, e depois, fazemos um contador unico (controlado pelo redis),
     # o redis lembra por 2 dias
     # tenha algum retry lentidao na rede e varios clientes tentando processar.
-  AGAIN:
-    my $now     = DateTime->now->set_time_zone('America/Sao_Paulo');
-    my $base    = substr($now->ymd(''), 2);
+
+    my $base    = &_get_protocol_prefix();
     my $cur_seq = $c->kv->local_inc_then_expire(
         key     => $base,
         expires => 86400 * 2,
