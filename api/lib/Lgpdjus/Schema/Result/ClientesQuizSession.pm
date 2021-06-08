@@ -138,7 +138,7 @@ sub generate_ticket {
             log_error(
                 "max protocol is $max_protocol, protocol day is $protocol_day, protocol_seq is $protocol_seq. Updating redis"
             );
-            $c->kv->redis->set($ENV{REDIS_NS} . $protocol_day, $protocol_seq);
+            $c->kv->redis->set($ENV{REDIS_NS} . $protocol_day, int($protocol_seq));
             goto AGAIN;
         }
         elsif ($@) {
