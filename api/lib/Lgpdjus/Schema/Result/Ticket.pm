@@ -138,7 +138,7 @@ sub html_preview {
     my $preview = '';
     $preview
       .= sprintf
-      '<div style="color: #398FCE;"> <span style="font-size: 18pt; line-height: 22pt; font-weight: 700">%s</span></div>',
+      '<div style="color: #398FCE;"> <span font-family="Rubik" style="font-size: 18pt; line-height: 22pt; font-weight: 700">%s</span></div>',
       $self->questionnaire->category_full;
     $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Protocolo: %s</div>', $self->protocol;
     $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Data de abertura: %s</div>',
