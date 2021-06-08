@@ -138,28 +138,29 @@ sub html_preview {
     my $preview = '';
     $preview
       .= sprintf
-      '<div style="color: #a6ce39;"> <span style="font-size: 16px; font-weight: 700">Protocolo %s</span></div>',
-      $self->protocol;
+      '<div style="color: #398FCE;"> <span style="font-size: 18pt; line-height: 22pt; font-weight: 700">%s</span></div>',
+      $self->questionnaire->category_full;
+      $preview .= sprintf '<div style="color: #666; font-size: 12px"> Protocolo: %s</div>', $self->protocol;
     $preview .= sprintf '<div style="color: #666; font-size: 12px"> Data de abertura: %s</div>', $self->created_at_dmy;
-    $preview .= sprintf '<div style="color: #666; font-size: 12px">Tipo de solicitação: %s</div>', $tipo;
+
     $preview .= sprintf '<b>Situação: </b> <span>%s</span><br/>', $self->status_human_html;
 
     if ($self->status eq 'wait-additional-info') {
         $preview =~ s/<br\/>$//;
         $preview .= sprintf
-          '<div style="color: #444; font-size: 16px; padding: 16px; text-align: center"> São necessárias mais informações para dar continuidade na solicitação. Clique aqui para responder.</div>';
+          '<div style="color: #444; font-size: 12pt; padding: 12pt; text-align: center"> São necessárias mais informações para dar continuidade na solicitação. Clique aqui para responder.</div>';
     }
     elsif ($self->status eq 'done') {
         $preview =~ s/<br\/>$//;
         $preview .= sprintf
-          '<div style="color: #444; font-size: 16px;padding: 16px; text-align: center"> A solicitação foi respondida, clique aqui para visualizar a resposta.</div>';
+          '<div style="color: #444; font-size: 12pt;padding: 12pt; text-align: center"> A solicitação foi respondida, clique aqui para visualizar a resposta.</div>';
     }
     elsif ($self->status eq 'pending') {
         $preview .= sprintf '<b>Prazo: </b> <span>%s</span>',
           $self->due_date_dmy();
 
         $preview .= sprintf
-          '<div style="color: #444; font-size: 16px;padding: 16px; text-align: center"> Sua solicitação está em andamento, clique aqui para visualizar os detalhes da solicitação.</div>';
+          '<div style="color: #444; font-size: 12pt;padding: 12pt; text-align: center"> Sua solicitação está em andamento, clique aqui para visualizar os detalhes da solicitação.</div>';
     }
 
     $preview =~ s/<br\/>$//;
