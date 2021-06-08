@@ -167,13 +167,11 @@ sub html_preview {
 
 
         $preview .= sprintf
-          '<div style="color: #398FCE; font-size: 10pt; padding: 12pt; text-align: right"> Visualizar.
-<svg width="20" height="20" viewBox="0 0 20 20">
-  <title>
-    external link
-  </title>
-  <path d="M17 17H3V3h5V1H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5h-2z"/>
-  <path d="M19 1h-8l3.29 3.29-5.73 5.73 1.42 1.42 5.73-5.73L19 9V1z"/>
+          '<div style="color: #398FCE; font-size: 10pt; padding: 12pt; text-align: right;">
+            Visualizar.
+<svg width="20" display="inline" height="20" viewBox="0 0 20 20">
+  <path style="fill: #398FCE" d="M17 17H3V3h5V1H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5h-2z"/>
+  <path  style="fill: #398FCE" d="M19 1h-8l3.29 3.29-5.73 5.73 1.42 1.42 5.73-5.73L19 9V1z"/>
 </svg>
 </div>';
 
