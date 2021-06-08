@@ -72,15 +72,11 @@ sub tickets_timeline_get {
     );
 }
 
-sub available_tickets_timeline_get {
+sub public_available_tickets_timeline_get {
     my $c = shift;
 
-    my $tweets = $c->list_available_tickets(
-        user_obj => $c->stash('user_obj'),
-    );
-
     return $c->render(
-        json   => $tweets,
+        json   => $c->list_available_tickets(),
         status => 200,
     );
 }

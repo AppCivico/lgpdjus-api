@@ -405,10 +405,27 @@ sub action_verify_cliente {
                     $type = 'verify_yes';
                     $self->cliente->update(
                         {
-                            account_verified      => '1',
-                            verified_account_at   => \'now()',
-                            verified_account_info => to_json(
+                            account_verified             => '1',
+                            account_verification_pending => 0,
+                            verified_account_at          => \'now()',
+                            verified_account_info        => to_json(
                                 {
+                                    verified  => 1,
+                                    ticket_id => $self->id,
+                                    user_id   => $admin_user->id()
+                                }
+                            )
+                        }
+                    );
+                }
+                else {
+                    $self->cliente->update(
+                        {
+                            # libera para que ele faça novamente
+                            account_verification_pending => 0,
+                            verified_account_info        => to_json(
+                                {
+                                    verified  => 0,
                                     ticket_id => $self->id,
                                     user_id   => $admin_user->id()
                                 }
@@ -584,8 +601,7 @@ sub as_hashref {
 
     return {
         questionnaire => $questionnaire->as_hashref(),
-        map { $_ => $self->get_column($_) }
-          qw/
+        map { $_ => $self->get_column($_) } qw/
           id
           cliente_id
           due_date

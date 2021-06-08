@@ -24,13 +24,6 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "active",
   { data_type => "boolean", is_nullable => 0 },
-  "condition",
-  {
-    data_type => "varchar",
-    default_value => "[% 1 %]",
-    is_nullable => 0,
-    size => 2000,
-  },
   "end_screen",
   {
     data_type => "varchar",
@@ -72,6 +65,21 @@ __PACKAGE__->add_columns(
   { data_type => "integer", default_value => 1, is_nullable => 0 },
   "sort",
   { data_type => "integer", default_value => 1, is_nullable => 0 },
+  "category_short",
+  { data_type => "varchar", is_nullable => 1, size => 35 },
+  "title",
+  {
+    data_type => "varchar",
+    default_value => "eg: \"Aqui voc\xEA poder\xE1 solicitar a .... de seus dados.\"",
+    is_nullable => 1,
+    size => 100,
+  },
+  "body",
+  { data_type => "varchar", is_nullable => 1, size => 340 },
+  "start_button",
+  { data_type => "varchar", is_nullable => 1, size => 35 },
+  "category_full",
+  { data_type => "varchar", is_nullable => 1, size => 35 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many(
@@ -94,8 +102,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-05-12 18:31:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:EH3H0IAhgZh8egcnnqrJGA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 12:15:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:qh/OITpkL+JdXSU+1lWWbQ
 
 sub as_hashref {
     my $self = shift;
@@ -106,7 +114,6 @@ sub as_hashref {
           created_on
           modified_on
           active
-          condition
           end_screen
           code
           icon_href

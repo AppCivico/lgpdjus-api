@@ -180,6 +180,16 @@ sub create_quiz_session {
     log_trace(['clientes_quiz_session:created',                  $session->{id}]);
     log_trace(['clientes_quiz_session:created_questionnaire_id', $questionnaire->{id}]);
 
+    if ($questionnaire->code eq 'verify_account') {
+        $user_obj->update(
+            {
+                # congela a conta para não iniciar outros questionários do
+                # tipo verify_account até a conclusão da solicitação (ou cancelamento)
+                account_verification_pending => 1,
+            }
+        );
+    }
+
     slog_info('Created session clientes_quiz_session.id:%s', $session->{id});
     $session->{stash}     = from_json($session->{stash});
     $session->{responses} = from_json($session->{responses});
@@ -189,17 +199,19 @@ sub create_quiz_session {
 
 sub list_questionnaires {
     my ($c, %opts) = @_;
-    my $user_obj  = $opts{user_obj} or confess 'missing user_obj';
+
     my $filter_id = $opts{id};
 
-    Log::Log4perl::NDC->push('list_questionnaires user_id:' . $user_obj->id);
+    Log::Log4perl::NDC->push('list_questionnaires');
     on_scope_exit { Log::Log4perl::NDC->pop };
 
     $c->ensure_questionnaires_loaded();
 
     my @available_quiz;
-    my $vars = &_quiz_get_vars({$user_obj->get_columns});
 
+    # if filter is number, then apply filter by ID
+    # if filter is string, then apply filter by code
+    # if no filter defined, only return code=unset
     my $filter_is_number = $filter_id =~ /^[0-9]+$/;
 
     foreach my $q ($c->stash('questionnaires')->@*) {
@@ -207,12 +219,8 @@ sub list_questionnaires {
           if $filter_id
           && (($filter_is_number && $q->{id} != $filter_id) || (!$filter_is_number && $q->{code} ne $filter_id));
 
-        if (tt_test_condition($q->{condition}, $vars)) {
+        if ($filter_id || (!$filter_id && $q->{code} eq 'unset')) {
             push @available_quiz, $q;
-            slog_info('questionnaires_id:%s criteria matched "%s"', $q->{id}, $q->{condition});
-        }
-        else {
-            slog_info('questionnaires_id:%s criteria NOT matched "%s"', $q->{id}, $q->{condition});
         }
     }
 

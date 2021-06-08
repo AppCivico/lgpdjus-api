@@ -112,6 +112,8 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "verified_account_info",
   { data_type => "json", default_value => "{}", is_nullable => 0 },
+  "account_verification_pending",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("idx_219091_email", ["email"]);
@@ -195,8 +197,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-05-24 11:12:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:y8RswhBexAngiDjLgHxDMw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 12:15:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:bhKH+c2Bpb6jG0A7NZznhw
 
 use Carp qw/confess/;
 use Lgpdjus::Utils qw/is_uuid_v4/;

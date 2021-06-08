@@ -93,10 +93,6 @@ sub list_available_tickets {
 
     return {
         rows => [
-            {
-                type  => 'header',
-                value => 'Solicitações disponíveis',
-            },
             @{$questionnaires->{rows}}
         ],
         has_more => 0,

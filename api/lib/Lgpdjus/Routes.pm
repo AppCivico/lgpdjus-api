@@ -41,7 +41,12 @@ sub register {
     my $faq_detail = $r->under('web/faq/:faq_id')->to(controller => 'WebFAQ', action => 'apply_rps');
     $faq_detail->get()->to(action => 'webfaq_detail');
 
-    # "public"
+    # /available-tickets-timeline/
+    $r->under('available-tickets-timeline')->get()
+      ->to(controller => 'Timeline', action => 'public_available_tickets_timeline_get');
+
+
+    # "public" - used for pdf generator from html
     my $internal_media_download
       = $r->get('internal-media-download')->to(controller => 'MediaDownload', action => 'internal_get_media');
 
@@ -141,12 +146,6 @@ sub register {
     my $timeline2
       = $authenticated->under('tickets-timeline')->to(controller => 'Timeline', action => 'assert_user_perms');
     $timeline2->get()->to(action => 'tickets_timeline_get');
-
-    # /available-tickets-timeline/
-    my $timeline3
-      = $authenticated->under('available-tickets-timeline')
-      ->to(controller => 'Timeline', action => 'assert_user_perms');
-    $timeline3->get()->to(action => 'available_tickets_timeline_get');
 
     # /me/tickets/
     # GET /me/tickets/:ticket_id

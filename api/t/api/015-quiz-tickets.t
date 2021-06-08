@@ -54,33 +54,42 @@ ok((grep { $_->{code} eq 'tickets' } $json->{modules}->@*) ? 1 : 0, 'has tickets
 
 $t->get_ok(
     '/available-tickets-timeline',
-    {'x-api-key' => $session}
-  )->status_is(200, '200 tickets timeline')->json_is('/rows/0/type', 'header')    #
-  ->json_is('/rows/0/type',   'header')                                           #
-  ->json_is('/rows/0/value',  'Solicitações disponíveis')                         #
-  ->json_is('/rows/1/type',   'questionnaire')                                    #
-  ->json_is('/rows/1/body',   'short_text 4')                                     #
-  ->json_is('/rows/1/header', 'label 4')                                          #
-  ->json_is('/rows/1/id',     '4')                                                #
-  ->json_is('/rows/1/icon',   '/document.svg')                                    #
-  ->json_is('/rows/2/id',     '7', 'id do quiz de verificar conta');
+  )->status_is(200, '200 tickets timeline')    #
+  ->json_is('/rows/0/type',   'questionnaire')                              #
+  ->json_is('/rows/0/body',   'short_text 5', 'came first, order is ok')    #
+  ->json_is('/rows/0/header', 'label 5')                                    #
+  ->json_is('/rows/0/id',     '5')                                          #
+  ->json_is('/rows/1/type',   'questionnaire')                              #
+  ->json_is('/rows/1/body',   'short_text 4')                               #
+  ->json_is('/rows/1/header', 'label 4')                                    #
+  ->json_is('/rows/1/id',     '4')                                          #
+  ->json_is('/rows/1/icon',   '/document.svg')                              #
+  ->json_is('/rows/2/id',     undef, 'id do quiz de verificar conta nao vem');
 
 $t->post_ok(
     '/me/quiz/start',
     {'x-api-key' => $session},
-    form => {id => 'verify_account'}                                              # iniciando form 7 via code
+    form => {id => 'verify_account'}                                        # iniciando form 7 via code
 )->status_is(200, '200 start session verify_account')
   ->json_has('/quiz_session/current_msgs/0/content', 'verify_account question 1')    #
   ->json_is('/quiz_session/can_delete', 1, 'can delete');
 
 is trace_grep('clientes_quiz_session:created_questionnaire_id'), 7, 'created questionnaire 7';
 
-$cliente->update({account_verified => 1});
+$t->post_ok(
+    '/me/quiz/start',
+    {'x-api-key' => $session},
+    form => {id => 'account_verification_pending'}
+)->status_is(400, '400 start session account_verification_pending is true')->json_is('/error', 'quiz_in_progress');
+
+
+$cliente->update({account_verified => 1, account_verification_pending => 0});
 $t->post_ok(
     '/me/quiz/start',
     {'x-api-key' => $session},
     form => {id => 'verify_account'}
 )->status_is(400, '400 start session verify_account when already verified')->json_is('/error', 'quiz_not_active');
+
 
 ok my $session_id = trace_grep('clientes_quiz_session:created'), 'session was created';
 $t->post_ok(
@@ -364,12 +373,12 @@ subtest_buffered 'group de questoes boolean' => sub {
 
     my $session   = get_schema->resultset('ClientesQuizSession')->find($session_id);
     my $responses = from_json($session->responses);
-    is $responses->{yesno_customlabel}, 'yes',  'yes value for custom label/value';
-    is $responses->{btn_fim_action},    'none', 'no action btn_fim_action';
-    is $responses->{yesno1},            'Y',    'Y for yesno1';
-    is $responses->{groupq_1},          'N',    'N for groupq_1';
-    is $responses->{mc},                '[a,c]',  'a and c for mc';
-    is $responses->{oc},                '3',    '3 for oc';
+    is $responses->{yesno_customlabel}, 'yes',   'yes value for custom label/value';
+    is $responses->{btn_fim_action},    'none',  'no action btn_fim_action';
+    is $responses->{yesno1},            'Y',     'Y for yesno1';
+    is $responses->{groupq_1},          'N',     'N for groupq_1';
+    is $responses->{mc},                '[a,c]', 'a and c for mc';
+    is $responses->{oc},                '3',     '3 for oc';
 };
 
 

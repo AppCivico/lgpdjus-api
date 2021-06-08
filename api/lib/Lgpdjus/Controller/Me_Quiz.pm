@@ -85,6 +85,15 @@ sub cancel_quiz_post {
         );
     }
 
+    if ($session->questionnaire->code eq 'verify_account') {
+        $user_obj->update(
+            {
+                # libera a conta para iniciar outros questionários do tipo verify_account
+                account_verification_pending => 0,
+            }
+        );
+    }
+
     $session->update({deleted_at => \'now()'});
     return $c->render(text => '', status => 204);
 }
@@ -103,11 +112,21 @@ sub start_quiz_post {
         id       => $valids->{id},
     );
 
-    if (!$questionnaire) {
+    if ($questionnaire && $questionnaire->{code} eq 'verify_account' && $user_obj->account_verified) {
         return $c->render(
             json => {
                 error   => 'quiz_not_active',
-                message => 'Este questionário não está ativo para você neste momento.'
+                message => 'Sua conta já está verificada. Não podemos iniciar novamente o questionário.'
+            },
+            status => 400,
+        );
+    }
+    elsif ($questionnaire && $questionnaire->{code} eq 'verify_account' && $user_obj->account_verification_pending) {
+        return $c->render(
+            json => {
+                error   => 'quiz_in_progress',
+                message =>
+                  'Já existe um processo de validação em progresso. Não podemos iniciar novamente o questionário.'
             },
             status => 400,
         );
