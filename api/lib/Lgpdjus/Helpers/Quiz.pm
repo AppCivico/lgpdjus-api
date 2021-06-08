@@ -502,7 +502,7 @@ sub load_quiz_session {
 
 sub _skip_empty_msg {
     my ($question) = @_;
-    return exists $question->{content} ? $question->{content} ? 1 : 0 : 1;
+    return exists $question->{content} && $question->{type} ne 'button' ? $question->{content} ? 1 : 0 : 1;
 }
 
 sub _render_question {
