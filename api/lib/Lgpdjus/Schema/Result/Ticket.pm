@@ -140,7 +140,7 @@ sub html_preview {
       .= sprintf
       '<div style="color: #398FCE;"> <span style="font-size: 18pt; line-height: 22pt; font-weight: 700">%s</span></div>',
       $self->questionnaire->category_full;
-    $preview .= sprintf '<div style="color: #646464; font-size: 14pt"> Protocolo: %s</div>', $self->protocol;
+    $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Protocolo: %s</div>', $self->protocol;
     $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Data de abertura: %s</div>',
       $self->created_at_dmy;
     $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Situação: %s</div>', $self->status_human_html;
@@ -158,11 +158,11 @@ sub html_preview {
     elsif ($self->status eq 'pending') {
         $preview
           .= sprintf
-          '<div style="color: #646464; font-size: 10pt; line-height: 12pt; font-weight: 700;"> Prazo: %s</div>',
+          '<div style="color: #646464; font-size: 12pt; line-height: 12pt; font-weight: 700;"> Prazo: %s</div>',
           $self->due_date_dmy;
 
         $preview .= sprintf
-          '<div style="color: #646464; font-size: 12pt;padding: 12pt; text-align: center"> Sua solicitação está em andamento, clique aqui para visualizar os detalhes da solicitação.</div>';
+          '<div style="color: #646464; font-size: 12pt; padding: 12pt; text-align: center"> Sua solicitação está em andamento, clique aqui para visualizar os detalhes da solicitação.</div>';
     }
 
     $preview =~ s/<br\/>$//;
