@@ -13,4 +13,6 @@ alter table questionnaires add column category_full varchar(35);
 
 alter table clientes add column account_verification_pending boolean not null default false;
 
+alter table questionnaires add column legal_info varchar(340);
+
 COMMIT;
