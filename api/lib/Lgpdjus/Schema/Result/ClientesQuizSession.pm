@@ -131,7 +131,7 @@ sub generate_ticket {
             log_error("Redis cache failed! $@");
             my $base         = &_get_protocol_prefix();
             my $max_protocol = $self->result_source->schema->resultset('Ticket')
-              ->search({'-and' => [\["protocol::text like '?%'", $base]]})->get_column('protocol')->max();
+              ->search({'-and' => [\["protocol::text like ? || '%'", $base]]})->get_column('protocol')->max();
 
             my $protocol_day = substr($max_protocol, 0, length($base));
             my $protocol_seq = substr($max_protocol, length($base));
