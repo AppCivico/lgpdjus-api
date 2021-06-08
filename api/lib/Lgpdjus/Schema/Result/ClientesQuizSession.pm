@@ -129,7 +129,7 @@ sub generate_ticket {
         };
         if ($@ && $@ =~ /ticket_protocol_uniq_idx/) {
             log_error("Redis cache failed! $@");
-            my $max_protocol = $self->result_source->schema->resultset('Tickets')->max('protocol');
+            my $max_protocol = $self->result_source->schema->resultset('Ticket')->max('protocol');
 
             my $protocol_day = substr($max_protocol, 0, 6);
             my $protocol_seq = substr($max_protocol, 6);
