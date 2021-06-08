@@ -138,7 +138,7 @@ sub generate_ticket {
             log_error(
                 "max protocol is $max_protocol, protocol day is $protocol_day, protocol_seq is $protocol_seq. Updating redis"
             );
-            $c->kv->redis->set($ENV{REDIS_NS} . $protocol_day, int($protocol_seq));
+            $c->kv->redis->set($ENV{REDIS_NS} . 'protocol_seq' . $protocol_day, int($protocol_seq));
             goto AGAIN;
         }
         elsif ($@) {
@@ -171,7 +171,7 @@ sub _get_protocol_token {
 
     my $base    = &_get_protocol_prefix();
     my $cur_seq = $c->kv->local_inc_then_expire(
-        key     => $base,
+        key     => 'protocol_seq' . $base,
         expires => 86400 * 2,
     );
 
