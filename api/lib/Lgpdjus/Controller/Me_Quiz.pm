@@ -131,6 +131,15 @@ sub start_quiz_post {
             status => 400,
         );
     }
+    elsif (!$questionnaire) {
+        return $c->render(
+            json => {
+                error   => 'not_found',
+                message => 'Questionário não foi encontrado!'
+            },
+            status => 400,
+        );
+    }
 
     my $quiz_session = $c->user_get_quiz_session(user_obj => $user_obj);
 
@@ -138,7 +147,8 @@ sub start_quiz_post {
         return $c->render(
             json => {
                 error   => 'session_already_exists',
-                message => 'Já existe um questionário em andamento. Por favor, feche o aplicativo e abra novamente.'
+                message =>
+                  'Já existe um questionário em andamento. Feche o aplicativo e abra-o novamente para continuar respondendo.'
             },
             status => 400,
         );

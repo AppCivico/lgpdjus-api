@@ -76,12 +76,13 @@ $t->post_ok(
 
 is trace_grep('clientes_quiz_session:created_questionnaire_id'), 7, 'created questionnaire 7';
 
+is $cliente->discard_changes->account_verification_pending, 1, 'account_verification_pending was updated';
+
 $t->post_ok(
     '/me/quiz/start',
     {'x-api-key' => $session},
-    form => {id => 'account_verification_pending'}
-)->status_is(400, '400 start session account_verification_pending is true')->json_is('/error', 'quiz_in_progress');
-
+    form => {id => 'verify_account'}
+)->status_is(400, '400 start session if account_verification_pending is true')->json_is('/error', 'quiz_in_progress');
 
 $cliente->update({account_verified => 1, account_verification_pending => 0});
 $t->post_ok(
@@ -89,6 +90,12 @@ $t->post_ok(
     {'x-api-key' => $session},
     form => {id => 'verify_account'}
 )->status_is(400, '400 start session verify_account when already verified')->json_is('/error', 'quiz_not_active');
+
+$t->post_ok(
+    '/me/quiz/start',
+    {'x-api-key' => $session},
+    form => {id => 'not_existing_code'}
+)->status_is(400, '400 code does not exists')->json_is('/error', 'not_found');
 
 
 ok my $session_id = trace_grep('clientes_quiz_session:created'), 'session was created';
