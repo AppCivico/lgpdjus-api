@@ -366,7 +366,7 @@ sub load_quiz_session {
         );
 
         if ($has) {
-            push @frontend_msg, &_render_question($q, $vars, $user_obj, $session, $c);
+            push @frontend_msg, $q;
         }
     }
 
@@ -474,12 +474,17 @@ sub load_quiz_session {
             if ($q->{type} eq 'create_ticket') {
                 my $session_obj = $user_obj->clientes_quiz_sessions->find($session->{id}) or confess 'missing session';
                 my $ticket      = $session_obj->generate_ticket($c)                       or confess 'missing ticket';
+                $session_obj->discard_changes;
+                $session = {$session_obj->get_columns};
 
                 $vars->{'ticket_protocol'} = $ticket->protocol;
                 $vars->{'ticket_id'}       = $ticket->id;
                 $q->{type}                 = 'displaytext';
                 my $render = &_render_question($q, $vars, $user_obj, $session, $c);
                 $q->{$_} = $render->{$_} for keys %$render;
+            }
+            else {
+                $q = &_render_question($q, $vars, $user_obj, $session, $c);
             }
         }
 
@@ -511,8 +516,9 @@ sub _render_question {
     my $public = {};
 
     if (!$vars->{ticket_protocol} && $session->{ticket_id}) {
-        $vars->{'ticket_protocol'} = $user_obj->tickets->search({ id => $session->{ticket_id}})->get_column('protocol')->next;
-        $vars->{'ticket_id'}       = $session->{ticket_id};
+        $vars->{'ticket_protocol'}
+          = $user_obj->tickets->search({id => $session->{ticket_id}})->get_column('protocol')->next;
+        $vars->{'ticket_id'} = $session->{ticket_id};
     }
 
     if (exists $q->{_load_as_image}) {
