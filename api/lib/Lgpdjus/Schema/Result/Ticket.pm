@@ -156,26 +156,26 @@ sub html_preview {
           '<div style="color: #646464; font-size: 12pt;padding: 12pt; text-align: center"> A solicitação foi respondida, clique aqui para visualizar a resposta.</div>';
     }
     elsif ($self->status eq 'pending') {
-        $preview
-          .= sprintf
-          '<div style="color: #646464; font-size: 12pt; line-height: 12pt; font-weight: 700;"> Prazo: %s</div>',
-          $self->due_date_dmy;
-
         $preview .= sprintf
           '<div style="color: #646464; font-size: 12pt; padding: 12pt; text-align: center"> Sua solicitação está em andamento, clique aqui para visualizar os detalhes da solicitação.</div>';
     }
 
-
-        $preview .= sprintf
-          '<div style="color: #398FCE; font-size: 10pt; padding: 12pt; text-align: right;">
-            Visualizar.
-<svg width="20" display="inline" height="20" viewBox="0 0 20 20">
-  <path style="fill: #398FCE" d="M17 17H3V3h5V1H3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5h-2z"/>
-  <path  style="fill: #398FCE" d="M19 1h-8l3.29 3.29-5.73 5.73 1.42 1.42 5.73-5.73L19 9V1z"/>
-</svg>
-</div>';
-
     $preview =~ s/<br\/>$//;
+
+    $preview .= '<table><tr><td>';
+    if ($self->status eq 'pending') {
+        $preview
+          .= sprintf
+          '<div style="display:inline; color: #646464; font-size: 10pt; line-height: 12pt; font-weight: 700;"> Prazo: %s</div>',
+          $self->due_date_dmy;
+    }
+    $preview .= '</td>';    # table-cell
+    $preview .= '<td>';
+
+    $preview
+      .= '<div style="color: #398FCE; font-size: 10pt; padding: 12pt; text-align:right;">Visualizar <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAAP1BMVEUAAAA6i9E3kNM1iso9j8w5jtA5js04j846j886kM46j805j805js45j845kM46j845j845j845j845j87///9skJzUAAAAE3RSTlMAFhcYGRtISUt3gNPV1tfi4+TqE2qOVgAAAAFiS0dEFJLfyTUAAABhSURBVBjTtdE5FoAgDATQGFcURcn972qQsNM61eQ/QgEA3WwPuXBTRKHesQXl5mcf1UO0LaImW+Nw0DWpEj9z92bIuxpd2RPKOYngeGYW12eEFov5D5SnSzGMa6Vm6X/GCy5MCc9sh7i1AAAAAElFTkSuQmCC"></div>';
+
+    $preview .= '</td></tr></table>';    # table-cell
 
     return $preview;
 }
@@ -304,10 +304,11 @@ sub status_human {
 
 sub status_human_html {
     my ($self) = shift;
+
     my $map = {
-        'pending'              => '<span style="color: #444444">⏰ Em andamento</span>',
-        'done'                 => '<span style="color: #228C22">✔️ Finalizado</span>',
-        'wait-additional-info' => '<span style="color: #E56717">⚠️ Aguardando informações adicionais</span>',
+        'pending'              => '<span style="color: #646464">Em andamento</span>',
+        'done'                 => '<span style="color: #A6CE39">Finalizado</span>',
+        'wait-additional-info' => '<span style="color: #D64933;">Aguardando informações adicionais</span>',
     };
     return $map->{$self->status()};
 }
