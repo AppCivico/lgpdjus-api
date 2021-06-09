@@ -96,58 +96,58 @@ sub generate_ticket {
     my $content = to_json($self->build_questionnaire_questions_reply());
 
     my $ticket;
+    my $try = 0;
   AGAIN:
+    $try++;
     my $protocol = $self->_get_protocol_token($c);
-    for my $try (1 .. 11) {
-        eval {
-            $self->result_source->schema->txn_do(
-                sub {
-                    $ticket = $self->cliente->tickets->create(
-                        {
-                            content          => $content,
-                            content_hash256  => sha256_hex(encode_utf8($content)),
-                            questionnaire_id => $self->questionnaire_id,
-                            protocol         => $protocol,
-                            status           => 'pending',
-                            due_date         => \[
-                                "now() + (?::text || ' days')::interval",
-                                $self->search_related_rs('questionnaire')->get_column('due_days')->next()
-                            ],
-                            created_on => \'now()',
-                            updated_at => \'now()',
-                        }
-                    );
-                    $ticket->_generate_pdf(
-                        $c, 'cliente_send_email',
-                        {
-                            template => 'ticket_created',
-                        }
-                    );
-                    $self->update({ticket_id => $ticket->id, can_delete => 0});
-                }
-            );
-        };
-        if ($@ && $@ =~ /ticket_protocol_uniq_idx/) {
-            log_error("Redis cache failed! $@");
-            my $base         = &_get_protocol_prefix();
-            my $max_protocol = $self->result_source->schema->resultset('Ticket')
-              ->search({'-and' => [\["protocol::text like ? || '%'", $base]]})->get_column('protocol')->max();
 
-            my $protocol_day = substr($max_protocol, 0, length($base));
-            my $protocol_seq = substr($max_protocol, length($base));
-            log_error(
-                "max protocol is $max_protocol, protocol day is $protocol_day, protocol_seq is $protocol_seq. Updating redis"
-            );
-            $c->kv->redis->set($ENV{REDIS_NS} . 'protocol_seq' . $protocol_day, int($protocol_seq));
-            goto AGAIN;
-        }
-        elsif ($@) {
-            log_error("Try $try/10 - fatal error: $@");
-            die $@ if $try == 11;
-            sleep 1;
-            goto AGAIN;
-        }
-        last;
+    eval {
+        $self->result_source->schema->txn_do(
+            sub {
+                $ticket = $self->cliente->tickets->create(
+                    {
+                        content          => $content,
+                        content_hash256  => sha256_hex(encode_utf8($content)),
+                        questionnaire_id => $self->questionnaire_id,
+                        protocol         => $protocol,
+                        status           => 'pending',
+                        due_date         => \[
+                            "now() + (?::text || ' days')::interval",
+                            $self->search_related_rs('questionnaire')->get_column('due_days')->next()
+                        ],
+                        created_on => \'now()',
+                        updated_at => \'now()',
+                    }
+                );
+                $ticket->_generate_pdf(
+                    $c, 'cliente_send_email',
+                    {
+                        template => 'ticket_created',
+                    }
+                );
+                $self->update({ticket_id => $ticket->id, can_delete => 0});
+            }
+        );
+    };
+    if ($@ && $@ =~ /ticket_protocol_uniq_idx/) {
+        log_error("Redis cache failed! $@");
+        my $base         = &_get_protocol_prefix();
+        my $max_protocol = $self->result_source->schema->resultset('Ticket')
+          ->search({'-and' => [\["protocol::text like ? || '%'", $base]]})->get_column('protocol')->max();
+
+        my $protocol_day = substr($max_protocol, 0, length($base));
+        my $protocol_seq = substr($max_protocol, length($base));
+        log_error(
+            "max protocol is $max_protocol, protocol day is $protocol_day, protocol_seq is $protocol_seq. Updating redis"
+        );
+        $c->kv->redis->set($ENV{REDIS_NS} . 'protocol_seq' . $protocol_day, int($protocol_seq));
+        goto AGAIN if $try < 10;
+    }
+    elsif ($@) {
+        log_error("Try $try/10 - fatal error: $@");
+        sleep 1;
+        goto AGAIN if $try < 10;
+        die $@;
     }
 
     log_trace(['generate_ticket:new', $ticket->id]);
