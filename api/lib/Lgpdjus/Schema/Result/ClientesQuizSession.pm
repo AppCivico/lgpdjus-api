@@ -98,7 +98,7 @@ sub generate_ticket {
     my $ticket;
   AGAIN:
     my $protocol = $self->_get_protocol_token($c);
-    for my $try (1 .. 10) {
+    for my $try (1 .. 11) {
         eval {
             $self->result_source->schema->txn_do(
                 sub {
@@ -143,6 +143,7 @@ sub generate_ticket {
         }
         elsif ($@) {
             log_error("Try $try/10 - fatal error: $@");
+            die $@ if $try == 11;
             sleep 1;
             goto AGAIN;
         }
