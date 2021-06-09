@@ -95,6 +95,8 @@ __PACKAGE__->add_columns(
   },
   "options",
   { data_type => "json", default_value => "[]", is_nullable => 0 },
+  "progress_bar",
+  { data_type => "smallint", default_value => 0, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -110,8 +112,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-05-12 18:31:07
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:zUZjPXkK8VRgZDYiDQqfdQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-09 20:12:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AVDKKiq4uOV65QBviPKvlA
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

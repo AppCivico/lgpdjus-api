@@ -229,6 +229,7 @@ subtest_buffered 'group de questoes boolean' => sub {
             $field_ref => 'N',
         }
     )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+    is $json->{quiz_session}{progress_bar}, 2, 'progress is 0 + 2 (index of yesnogroup) question';
 
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
@@ -247,6 +248,7 @@ subtest_buffered 'group de questoes boolean' => sub {
             $field_ref => 'Y',
         }
     )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+    is $json->{quiz_session}{appbar_header}, 'label 4', 'has appbar_header';
 
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
@@ -349,6 +351,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $input_msg->{content}, 'final',         'button has content';
     is $input_msg->{label},   'btn label fim', 'botao tem label';
     is $input_msg->{action},  'none',          'button action is none [btn-fim]';
+    is $json->{quiz_session}{progress_bar}, 99, 'progress is 99 (saved on btn_fim) question';
 
     my $prev_msgs = $t->get_ok(
         '/me',
@@ -449,10 +452,10 @@ subtest_buffered 'list do ticket' => sub {
         '/me/tickets/' . $wait->id,
         {'x-api-key' => $session}
       )->status_is(200)->json_like('/body', qr/Categoria da/, 'body ok')    #
-      ->json_has('/id',          'has id')                                     #
-      ->json_has('/meta/header', 'has header')                                 #
-      ->json_like('/responses/0/body', qr/necessária/, 'has response body')    #
-      ->json_has('/responses/0/id', 'has response id')                         #
+      ->json_has('/id',          'has id')                                  #
+      ->json_has('/meta/header', 'has header')                              #
+      ->json_like('/responses/0/body', qr/necessária/, 'has response body') #
+      ->json_has('/responses/0/id', 'has response id')                      #
       ->json_is('/responses/0/meta/can_reply', 1, 'has response can_reply');
 
     my $response_id = &last_tx_json()->{responses}[0]{id};

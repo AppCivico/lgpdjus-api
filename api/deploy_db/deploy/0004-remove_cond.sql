@@ -17,4 +17,6 @@ alter table questionnaires add column legal_info varchar(340);
 
 create unique index ticket_protocol_uniq_idx on tickets(protocol);
 
+alter table quiz_config add column progress_bar smallint not null default 0;
+
 COMMIT;

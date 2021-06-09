@@ -64,6 +64,7 @@ __PACKAGE__->add_columns(
   { data_type => "bigint", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->add_unique_constraint("ticket_protocol_uniq_idx", ["protocol"]);
 __PACKAGE__->has_many(
   "blockchain_records",
   "Lgpdjus::Schema::Result::BlockchainRecord",
@@ -118,8 +119,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-05-24 11:12:02
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:7if3xLxC2iwZm3btFfFiOw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-09 20:12:13
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CpP0ocWX/PRNKNUw89arcw
 
 # ALTER TABLE tickets ADD FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE ON UPDATE cascade;
 # ALTER TABLE tickets ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;

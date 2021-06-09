@@ -449,15 +449,18 @@ sub load_quiz_session {
         );
     }
 
+    # procura qual é o questionario desta session pra pegar o label
+    $c->ensure_questionnaires_loaded();
+    my $questionnaire;
+    foreach my $q ($c->stash('questionnaires')->@*) {
+        next unless $q->{id} == $session->{questionnaire_id};
+        $questionnaire = $q;
+        last;
+    }
+
     if (exists $stash->{is_finished} && $stash->{is_finished}) {
 
-        my $end_screen = '';
-        $c->ensure_questionnaires_loaded();
-        foreach my $q ($c->stash('questionnaires')->@*) {
-            next unless $q->{id} == $session->{questionnaire_id};
-            $end_screen = $q->{end_screen};
-            last;
-        }
+        my $end_screen = $questionnaire->{end_screen};
 
         $c->stash(
             'quiz_session' => {
@@ -470,6 +473,7 @@ sub load_quiz_session {
         # importante só processar o create_ticket no render após o update do banco,
         # então ele é gerado imediatamente antes do retorno para o frotnend
 
+        my $progress_bar;
         foreach my $q (@frontend_msg) {
             if ($q->{type} eq 'create_ticket') {
                 my $session_obj = $user_obj->clientes_quiz_sessions->find($session->{id}) or confess 'missing session';
@@ -480,16 +484,21 @@ sub load_quiz_session {
                 $vars->{'ticket_protocol'} = $ticket->protocol;
                 $vars->{'ticket_id'}       = $ticket->id;
                 $q->{type}                 = 'displaytext';
+                $progress_bar              = $q->{_progress_bar} if $q->{_progress_bar};
                 my $render = &_render_question($q, $vars, $user_obj, $session, $c);
                 $q->{$_} = $render->{$_} for keys %$render;
             }
             else {
-                $q = &_render_question($q, $vars, $user_obj, $session, $c);
+                $progress_bar = $q->{_progress_bar} if $q->{_progress_bar};
+                $q            = &_render_question($q, $vars, $user_obj, $session, $c);
             }
         }
 
         $c->stash(
             'quiz_session' => {
+                appbar_header => $questionnaire->{label},
+                progress_bar  => $progress_bar || 0,
+
                 current_msgs => [grep { &_skip_empty_msg($_) } @preprend_msg, @frontend_msg],
                 session_id   => $session->{id},
                 can_delete   => $session->{can_delete} ? 1 : 0,
@@ -834,44 +843,46 @@ sub _init_questionnaire_stash {
 
         if ($qc->{type} eq 'yesno') {
             push @questions, {
-                type       => 'yesno',
-                content    => $qc->{question},
-                ref        => 'YN' . $qc->{id},
-                yes_label  => $qc->{yesno_yes_label} || 'SIM',
-                _yes_value => $qc->{yesno_yes_value} || 'Y',
-                no_label   => $qc->{yesno_no_label}  || 'NÂO',
-                _no_value  => $qc->{yesno_no_value}  || 'N',
-                _relevance => $relevance,
-                _code      => $qc->{code},
+                type          => 'yesno',
+                content       => $qc->{question},
+                ref           => 'YN' . $qc->{id},
+                yes_label     => $qc->{yesno_yes_label} || 'SIM',
+                _yes_value    => $qc->{yesno_yes_value} || 'Y',
+                no_label      => $qc->{yesno_no_label}  || 'NÂO',
+                _no_value     => $qc->{yesno_no_value}  || 'N',
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
             };
         }
         elsif ($qc->{type} eq 'text') {
             push @questions, {
-                type       => 'text',
-                content    => $qc->{question},
-                ref        => 'FT' . $qc->{id},
-                _relevance => $relevance,
-                _code      => $qc->{code},
+                type          => 'text',
+                content       => $qc->{question},
+                ref           => 'FT' . $qc->{id},
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
             };
         }
         elsif ($qc->{type} eq 'yesnogroup') {
 
             my $counter = 1;
             foreach my $subq ($qc->{yesnogroup}->@*) {
-                next unless $subq->{Status};
                 $counter++;
 
                 push @questions, {
-                    type       => 'yesno',
-                    content    => $subq->{question},
-                    ref        => 'YN' . $qc->{id} . '_' . $counter,
-                    yes_label  => $qc->{yesno_yes_label} || 'SIM',
-                    _yes_value => $qc->{yesno_yes_value} || 'Y',
-                    no_label   => $qc->{yesno_no_label}  || 'NÂO',
-                    _no_value  => $qc->{yesno_no_value}  || 'N',
-                    _code      => $qc->{code},
-                    _relevance => $relevance,
-                    _sub       => {
+                    type          => 'yesno',
+                    content       => $subq->{question},
+                    ref           => 'YN' . $qc->{id} . '_' . $counter,
+                    yes_label     => $qc->{yesno_yes_label} || 'SIM',
+                    _yes_value    => $qc->{yesno_yes_value} || 'Y',
+                    no_label      => $qc->{yesno_no_label}  || 'NÂO',
+                    _no_value     => $qc->{yesno_no_value}  || 'N',
+                    _code         => $qc->{code},
+                    _progress_bar => $qc->{progress_bar} + $counter - 1,
+                    _relevance    => $relevance,
+                    _sub          => {
                         ref  => $qc->{code} . '_' . $subq->{referencia},
                         p2a  => $subq->{power2answer},
                         code => $qc->{code}
@@ -885,47 +896,51 @@ sub _init_questionnaire_stash {
         elsif ($qc->{type} eq 'displaytext') {
 
             push @questions, {
-                type       => 'displaytext',
-                style      => 'normal',
-                content    => $qc->{question},
-                _relevance => $relevance,
+                type          => 'displaytext',
+                style         => 'normal',
+                content       => $qc->{question},
+                _relevance    => $relevance,
+                _progress_bar => $qc->{progress_bar},
             };
 
         }
         elsif ($qc->{type} eq 'photo_attachment') {
 
             push @questions, {
-                type       => 'photo_attachment',
-                content    => $qc->{question},
-                ref        => 'BT' . $qc->{id},
-                label      => $qc->{button_label} || 'Selecionar foto',
-                _relevance => $relevance,
-                _code      => $qc->{code},
+                type          => 'photo_attachment',
+                content       => $qc->{question},
+                ref           => 'BT' . $qc->{id},
+                label         => $qc->{button_label} || 'Selecionar foto',
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
             };
 
         }
         elsif ($qc->{type} eq 'create_ticket') {
 
             push @questions, {
-                type       => 'create_ticket',
-                content    => $qc->{question},
-                ref        => 'BT' . $qc->{id},
-                _relevance => $relevance,
-                _code      => $qc->{code},
+                type          => 'create_ticket',
+                content       => $qc->{question},
+                ref           => 'BT' . $qc->{id},
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
             };
 
         }
         elsif ($qc->{type} eq 'botao_fim') {
 
             push @questions, {
-                type       => 'button',
-                content    => $qc->{question},
-                action     => 'none',
-                ref        => 'BT' . $qc->{id},
-                label      => $qc->{button_label} || 'Enviar',
-                _relevance => $relevance,
-                _code      => $qc->{code},
-                _end_chat  => 1,
+                type          => 'button',
+                content       => $qc->{question},
+                action        => 'none',
+                ref           => 'BT' . $qc->{id},
+                label         => $qc->{button_label} || 'Enviar',
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
+                _end_chat     => 1,
             };
 
         }
@@ -933,12 +948,13 @@ sub _init_questionnaire_stash {
             my $is_mc = $qc->{type} eq 'multiplechoices' ? 1 : 0;
 
             my $ref = {
-                type       => $is_mc ? 'multiplechoices' : 'onlychoice',
-                content    => $qc->{question},
-                ref        => ($is_mc ? 'MC' : 'OC') . $qc->{id},
-                _code      => $qc->{code},
-                _relevance => $relevance,
-                options    => [],
+                type          => $is_mc ? 'multiplechoices' : 'onlychoice',
+                content       => $qc->{question},
+                ref           => ($is_mc ? 'MC' : 'OC') . $qc->{id},
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
+                _relevance    => $relevance,
+                options       => [],
             };
 
             my $counter = 0;
