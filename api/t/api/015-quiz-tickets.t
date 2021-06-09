@@ -448,7 +448,7 @@ subtest_buffered 'list do ticket' => sub {
     $t->get_ok(
         '/me/tickets/' . $wait->id,
         {'x-api-key' => $session}
-      )->status_is(200)->json_like('/body', qr/Tipo de/, 'body ok')    #
+      )->status_is(200)->json_like('/body', qr/Categoria da/, 'body ok')    #
       ->json_has('/id',          'has id')                                     #
       ->json_has('/meta/header', 'has header')                                 #
       ->json_like('/responses/0/body', qr/necessária/, 'has response body')    #
