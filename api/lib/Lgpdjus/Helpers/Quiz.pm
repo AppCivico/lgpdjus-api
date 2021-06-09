@@ -473,7 +473,7 @@ sub load_quiz_session {
         # importante só processar o create_ticket no render após o update do banco,
         # então ele é gerado imediatamente antes do retorno para o frotnend
 
-        my $progress_bar;
+        my $progress_bar = 0;
         foreach my $q (@frontend_msg) {
             if ($q->{type} eq 'create_ticket') {
                 my $session_obj = $user_obj->clientes_quiz_sessions->find($session->{id}) or confess 'missing session';
@@ -484,15 +484,18 @@ sub load_quiz_session {
                 $vars->{'ticket_protocol'} = $ticket->protocol;
                 $vars->{'ticket_id'}       = $ticket->id;
                 $q->{type}                 = 'displaytext';
-                $progress_bar              = $q->{_progress_bar} if $q->{_progress_bar};
+                $progress_bar              = $q->{_progress_bar} if exists $q->{_progress_bar};
                 my $render = &_render_question($q, $vars, $user_obj, $session, $c);
                 $q->{$_} = $render->{$_} for keys %$render;
             }
             else {
-                $progress_bar = $q->{_progress_bar} if $q->{_progress_bar};
+                $progress_bar = $q->{_progress_bar} if exists $q->{_progress_bar};
                 $q            = &_render_question($q, $vars, $user_obj, $session, $c);
             }
         }
+
+        $progress_bar = 0   if $progress_bar < 0;
+        $progress_bar = 100 if $progress_bar > 100;
 
         $c->stash(
             'quiz_session' => {
