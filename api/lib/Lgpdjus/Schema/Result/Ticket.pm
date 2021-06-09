@@ -133,7 +133,7 @@ use Carp qw/confess/;
 
 sub html_preview {
     my ($self) = shift;
-    my $tipo = $self->questionnaire->label;
+    my $tipo = $self->questionnaire->category_full;
 
     my $preview = '';
     $preview
@@ -186,7 +186,7 @@ sub html_detail {
     my $is_admin = $opts{admin};
     my $is_pdf   = $opts{pdf};
 
-    my $tipo = $self->questionnaire->label;
+    my $tipo = $self->questionnaire->category_full;
 
     my $vars = {
         tipo               => $tipo,
