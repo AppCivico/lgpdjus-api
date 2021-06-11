@@ -136,7 +136,7 @@ is trace_grep('clientes_quiz_session:loaded'), $session_id, 'same session was lo
 my $first_session_id;
 subtest_buffered 'Testar envio de campo boolean com valor invalido + interpolation de variaveis no intro' => sub {
     $first_session_id = $cadastro->{quiz_session}{session_id};
-    my $field_ref = $cadastro->{quiz_session}{current_msgs}[-1]{ref};
+    my $field_ref = $cadastro->{quiz_session}{current_msgs}[-2]{ref};    # atenção, -2 por causa do appendix
     $json = $t->post_ok(
         '/me/quiz',
         {'x-api-key' => $session},
@@ -146,22 +146,23 @@ subtest_buffered 'Testar envio de campo boolean com valor invalido + interpolati
         }
     )->status_is(200)->json_has('/quiz_session')->tx->res->json;
 
-    my $first_msg  = $json->{quiz_session}{current_msgs}[0];
-    my $second_msg = $json->{quiz_session}{current_msgs}[1];
-    my $third_msg  = $json->{quiz_session}{current_msgs}[2];
-    my $input_msg  = $json->{quiz_session}{current_msgs}[-1];
+    my $first_msg        = $json->{quiz_session}{current_msgs}[0];
+    my $second_msg       = $json->{quiz_session}{current_msgs}[1];
+    my $third_msg        = $json->{quiz_session}{current_msgs}[2];
+    my $before_input_msg = $json->{quiz_session}{current_msgs}[-1];
+    my $input_msg        = $json->{quiz_session}{current_msgs}[-2];
     like $first_msg->{content}, qr/$field_ref.+deve ser Y ou N/, "$field_ref nao pode ser X";
     is $first_msg->{style},     'error',                         'type is error';
 
-
-    is $second_msg->{content}, 'intro1',                 'question intro is working';
-    is $third_msg->{content},  'HELLOQuiz UserName!',    'question intro interpolation is working';
-    is $input_msg->{content},  'yesno question☺️⚠️👍👭🤗🤳', 'yesno question question is present';
+    is $before_input_msg->{content}, 'appendix 1',             'has appendix before message';
+    is $second_msg->{content},       'intro1',                 'question intro is working';
+    is $third_msg->{content},        'HELLOQuiz UserName!',    'question intro interpolation is working';
+    is $input_msg->{content},        'yesno question☺️⚠️👍👭🤗🤳', 'yesno question question is present';
 };
 
 my $choose_rand = rand;
 subtest_buffered 'Seguindo fluxo ate o final usando caminho Y' => sub {
-    my $field_ref = $cadastro->{quiz_session}{current_msgs}[-1]{ref};
+    my $field_ref = $cadastro->{quiz_session}{current_msgs}[-2]{ref};    # atençaõ, -2 por causa do appendix
     $json = $t->post_ok(
         '/me/quiz',
         {'x-api-key' => $session},
@@ -375,7 +376,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     }
 
     like $load_as_image_response, qr/media-download\/\?m=$media->{id}/, 'media id';
-    is scalar @$prev_msgs, 11, '11 prev questions';
+    is scalar @$prev_msgs, 12, '12 prev questions';
 
     ok my $session_id = $json->{quiz_session}{session_id}, 'has session id';
 

@@ -65,6 +65,7 @@ sub load_quiz_config {
                     map {
                         $_->{yesnogroup} and $_->{yesnogroup} = from_json($_->{yesnogroup});
                         $_->{intro}      and $_->{intro}      = from_json($_->{intro});
+                        $_->{appendix}   and $_->{appendix}   = from_json($_->{appendix});
                         $_->{options}    and $_->{options}    = from_json($_->{options});
                         $_
                     } $c->schema->resultset('QuizConfig')->search(
@@ -474,6 +475,7 @@ sub load_quiz_session {
         # então ele é gerado imediatamente antes do retorno para o frotnend
 
         my $progress_bar = 0;
+        my @real_frontend_msg;
         foreach my $q (@frontend_msg) {
             if ($q->{type} eq 'create_ticket') {
                 my $session_obj = $user_obj->clientes_quiz_sessions->find($session->{id}) or confess 'missing session';
@@ -486,11 +488,16 @@ sub load_quiz_session {
                 $q->{type}                 = 'displaytext';
                 $progress_bar              = $q->{_progress_bar} if exists $q->{_progress_bar};
                 my $render = &_render_question($q, $vars, $user_obj, $session, $c);
-                $q->{$_} = $render->{$_} for keys %$render;
+                push @real_frontend_msg, $render;
             }
             else {
                 $progress_bar = $q->{_progress_bar} if exists $q->{_progress_bar};
-                $q            = &_render_question($q, $vars, $user_obj, $session, $c);
+                push @real_frontend_msg, &_render_question($q, $vars, $user_obj, $session, $c);
+                if (exists $q->{_appendix}) {
+                    foreach my $appendix (@{$q->{_appendix}}) {
+                        push @real_frontend_msg, &_render_question($appendix, $vars, $user_obj, $session, $c);
+                    }
+                }
             }
         }
 
@@ -502,7 +509,7 @@ sub load_quiz_session {
                 appbar_header => $questionnaire->{label},
                 progress_bar  => $progress_bar || 0,
 
-                current_msgs => [grep { &_skip_empty_msg($_) } @preprend_msg, @frontend_msg],
+                current_msgs => [grep { &_skip_empty_msg($_) } @preprend_msg, @real_frontend_msg],
                 session_id   => $session->{id},
                 can_delete   => $session->{can_delete} ? 1 : 0,
                 prev_msgs    => $opts{caller_is_post}
@@ -786,6 +793,15 @@ sub process_quiz_session {
             }
             else {
                 push $stash->{prev_msgs}->@*, $msg;
+
+                if (exists $msg->{_appendix}) {
+                    my $vars = &_quiz_get_vars({$user_obj->get_columns()}, $responses);
+
+                    foreach my $appendix (@{$msg->{_appendix}}) {
+                        push $stash->{prev_msgs}->@*, &_render_question($appendix, $vars, $user_obj, $session, $c);
+                    }
+                }
+
             }
         }
 
@@ -976,6 +992,19 @@ sub _init_questionnaire_stash {
 
         }
 
+        if (exists $qc->{appendix} && @{$qc->{appendix}}) {
+            my $last_question = $questions[-1];
+            my @appendix;
+            foreach my $appendix ($qc->{appendix}->@*) {
+                push @appendix, {
+                    type       => 'displaytext',
+                    style      => 'normal',
+                    content    => $appendix->{text},
+                    _relevance => $relevance,
+                };
+            }
+            $last_question->{_appendix} = \@appendix;
+        }
     }
 
     # verificando se o banco nao tem nada muito inconsistente

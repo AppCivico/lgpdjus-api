@@ -44,12 +44,7 @@ __PACKAGE__->add_columns(
     size => 100,
   },
   "question",
-  {
-    data_type => "varchar",
-    default_value => \"null",
-    is_nullable => 0,
-    size => 800,
-  },
+  { data_type => "text", is_nullable => 0 },
   "yesnogroup",
   { data_type => "json", is_nullable => 1 },
   "intro",
@@ -97,6 +92,8 @@ __PACKAGE__->add_columns(
   { data_type => "json", default_value => "[]", is_nullable => 0 },
   "progress_bar",
   { data_type => "smallint", default_value => 0, is_nullable => 0 },
+  "appendix",
+  { data_type => "json", default_value => "[]", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -112,8 +109,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-09 20:12:13
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AVDKKiq4uOV65QBviPKvlA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-10 19:05:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TxysHk1/J6X+xR1JzSHXJA
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod
