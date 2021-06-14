@@ -21,7 +21,4 @@ alter table quiz_config add column progress_bar smallint not null default 0;
 alter table quiz_config alter column question type text;
 alter table quiz_config add column appendix json not null default '[]';
 
-insert into lgpdjus_config(name,value) values ('COLLAPSE_QUIZ_QUESTIONS','1');
-
-
 COMMIT;
