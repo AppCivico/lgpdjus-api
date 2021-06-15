@@ -394,12 +394,13 @@ subtest_buffered 'group de questoes boolean' => sub {
 
     my $session   = get_schema->resultset('ClientesQuizSession')->find($session_id);
     my $responses = from_json($session->responses);
-    is $responses->{yesno_customlabel}, 'yes',       'yes value for custom label/value';
-    is $responses->{btn_fim_action},    'none',      'no action btn_fim_action';
-    is $responses->{yesno1},            'Y',         'Y for yesno1';
-    is $responses->{groupq_1},          'N',         'N for groupq_1';
-    is $responses->{mc},                '["a","c"]', 'a and c for mc';
-    is $responses->{oc},                '3',         '3 for oc';
+    is $responses->{yesno_customlabel}, 'yes',              'yes value for custom label/value';
+    is $responses->{btn_fim_action},    'none',             'no action btn_fim_action';
+    is $responses->{yesno1},            'Y',                'Y for yesno1';
+    is $responses->{groupq_1},          'N',                'N for groupq_1';
+    is $responses->{mc},                'opção a, opção c', 'use human label for mc';
+    is $responses->{mc_json},           '["a","c"]',        'a and c for mc';
+    is $responses->{oc},                '3',                '3 for oc';
 };
 
 

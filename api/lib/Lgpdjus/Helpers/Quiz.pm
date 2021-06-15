@@ -707,8 +707,9 @@ sub process_quiz_session {
                     chop($output_human);    # rm virgula
                     chop($output);          # rm virgula
 
-                    $responses->{$code} = to_json(\@output);
-                    $msg->{display_response} = $output_human;
+                    $responses->{$code . '_json'} = to_json(\@output);
+                    $responses->{$code}           = $output_human;
+                    $msg->{display_response}      = $output_human;
                     $have_new_responses++;
 
                 }
