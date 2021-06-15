@@ -348,10 +348,10 @@ subtest_buffered 'group de questoes boolean' => sub {
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    is $input_msg->{type},    'button',        'is a button';
-    is $input_msg->{content}, 'final',         'button has content';
-    is $input_msg->{label},   'btn label fim', 'botao tem label';
-    is $input_msg->{action},  'none',          'button action is none [btn-fim]';
+    is $input_msg->{type},    'button',                               'is a button';
+    is $input_msg->{content}, 'Fim. MC=a e c. A_Member=1 D_Member=0', 'button has content and functions validated';
+    is $input_msg->{label},   'btn label fim',                        'botao tem label';
+    is $input_msg->{action},  'none',                                 'button action is none [btn-fim]';
     is $json->{quiz_session}{progress_bar}, 99, 'progress is 99 (saved on btn_fim) question';
 
     my $prev_msgs = $t->get_ok(
@@ -394,12 +394,12 @@ subtest_buffered 'group de questoes boolean' => sub {
 
     my $session   = get_schema->resultset('ClientesQuizSession')->find($session_id);
     my $responses = from_json($session->responses);
-    is $responses->{yesno_customlabel}, 'yes',   'yes value for custom label/value';
-    is $responses->{btn_fim_action},    'none',  'no action btn_fim_action';
-    is $responses->{yesno1},            'Y',     'Y for yesno1';
-    is $responses->{groupq_1},          'N',     'N for groupq_1';
+    is $responses->{yesno_customlabel}, 'yes',       'yes value for custom label/value';
+    is $responses->{btn_fim_action},    'none',      'no action btn_fim_action';
+    is $responses->{yesno1},            'Y',         'Y for yesno1';
+    is $responses->{groupq_1},          'N',         'N for groupq_1';
     is $responses->{mc},                '["a","c"]', 'a and c for mc';
-    is $responses->{oc},                '3',     '3 for oc';
+    is $responses->{oc},                '3',         '3 for oc';
 };
 
 

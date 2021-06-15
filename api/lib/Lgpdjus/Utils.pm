@@ -15,12 +15,44 @@ use Text::Xslate;
 use POSIX ();
 use utf8;
 use vars qw(@ISA @EXPORT);
+use JSON;
 
 use DateTime::Format::Pg;
 
 state $text_xslate = Text::Xslate->new(
-    syntax => 'TTerse',
-    module => ['Text::Xslate::Bridge::TT2Like'],
+    syntax   => 'TTerse',
+    module   => ['Text::Xslate::Bridge::TT2Like'],
+    function => {
+        is_json_member => sub {
+            my ($member, $json) = @_;
+            return 'is_json_member: not an json'  unless $json;
+            return 'is_json_member: not an array' unless $json =~ /^\[/;
+            my $array = from_json($json);
+            foreach (@$array) {
+                return 1 if $_ eq $member;
+            }
+            return 0;
+        },
+        json_array_to_string => sub {
+            my ($json) = @_;
+            return 'is_json_member: not an json'  unless $json;
+            return 'is_json_member: not an array' unless $json =~ /^\[/;
+            my $str;
+            my @items = @{from_json($json)};
+            if (scalar @items == 1) {
+                $str = $items[0];
+            }
+            else {
+                my $last = pop @items;
+
+                $str = join ', ', @items;
+                $str .= ' e ' . $last;
+            }
+
+            return $str;
+        },
+
+    }
 );
 
 @ISA    = (qw(Exporter));
