@@ -398,7 +398,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $responses->{btn_fim_action},    'none',  'no action btn_fim_action';
     is $responses->{yesno1},            'Y',     'Y for yesno1';
     is $responses->{groupq_1},          'N',     'N for groupq_1';
-    is $responses->{mc},                '[a,c]', 'a and c for mc';
+    is $responses->{mc},                '["a","c"]', 'a and c for mc';
     is $responses->{oc},                '3',     '3 for oc';
 };
 

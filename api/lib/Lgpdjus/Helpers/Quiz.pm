@@ -693,20 +693,21 @@ sub process_quiz_session {
                     my $reverse_index = {map { $_->{index} => $_->{display} } $msg->{options}->@*};
                     my $output        = '';
                     my $output_human  = '';
+                    my @output;
                     foreach my $index (split /,/, $val) {
 
                         # pula caso venha opcoes invalidas
                         next unless defined $reverse_index->{$index};
 
                         $output_human .= $reverse_index->{$index} . ', ';
-                        $output       .= $msg->{_db_option}[$index] . ',';
+                        push @output, $msg->{_db_option}[$index];
                     }
 
                     chop($output_human);    # rm espaco
                     chop($output_human);    # rm virgula
                     chop($output);          # rm virgula
 
-                    $responses->{$code} = '[' . $output . ']';
+                    $responses->{$code} = to_json(\@output);
                     $msg->{display_response} = $output_human;
                     $have_new_responses++;
 
