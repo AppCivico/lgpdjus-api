@@ -34,13 +34,16 @@ state $text_xslate = Text::Xslate->new(
             return 0;
         },
         json_array_to_string => sub {
-            my ($json, $extra_member) = @_;
+            my ($json, $extra_member, $skip_member) = @_;
             return 'is_json_member: not an json'  unless $json;
             return 'is_json_member: not an array' unless $json =~ /^\[/;
             my $str;
             my @items = @{from_json($json)};
-            if ($extra_member){
+            if ($extra_member) {
                 push @items, $extra_member;
+            }
+            if ($skip_member) {
+                @items = grep { $_ ne $skip_member } @items;
             }
             if (scalar @items == 1) {
                 $str = $items[0];
