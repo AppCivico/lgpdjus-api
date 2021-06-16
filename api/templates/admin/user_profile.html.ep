@@ -6,17 +6,25 @@
 
 % if ( $cliente ) {
 
-    <ul>
-        <li>
-        <a href="/admin/tickets?cliente_id=<%=$cliente->{id}%>">Total de <%=$total_ticket%> solicitações</a>
-        </li>
-        <li>
-        <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>">Total de <%=$total_blockchain%> registros em blockchain</a>
-        </li>
-    </ul>
-
     <div class="tab-content profile-tab" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <div class="row">
+            <div class="col-md-3 text-right">
+                <label>Total de solicitações</label>
+            </div>
+            <div class="col-md-6">
+                <a href="/admin/tickets?cliente_id=<%=$cliente->{id}%>"><%=$total_ticket%> solicitações</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 text-right">
+                <label>Total de registros em blockchain</label>
+            </div>
+            <div class="col-md-6">
+                <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>"><%=$total_blockchain%> registros em blockchain</a>
+            </div>
+        </div>
 
         % for my $item (@$fields) { next if !$cliente->{$item->[0]} && $item->[0] eq 'genero_outro'; next if !$item->[1];
         <div class="row">
