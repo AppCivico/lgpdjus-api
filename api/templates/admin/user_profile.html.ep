@@ -5,12 +5,6 @@
 <br/>
 
 % if ( $cliente ) {
-<div class="text-right">
-    <a class="btn btn-outline-dark" target="_blank"
-        href="https://lgpdjus-directus.appcivico.com/admin/collections/clientes/<%=$cliente->{id}%>">Abrir
-        no directus</a>
-</div>
-
 <div class="tab-content profile-tab" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
