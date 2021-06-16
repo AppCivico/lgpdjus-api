@@ -47,7 +47,7 @@
                     <a class="nav-link" href="/admin/tickets">Solicitações</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/users">Usuários</a>
+                    <a class="nav-link" href="/admin/users">Solicitantes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/notifications">Notificações</a>

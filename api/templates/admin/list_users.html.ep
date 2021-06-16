@@ -1,5 +1,5 @@
 <div class="border-bottom">
-    <h1 class="h2">Lista de usuários</h1>
+    <h1 class="h2">Lista de solicitantes</h1>
 </div>
 <br />
 % if ( $c->req->params->param('nome') ) {
