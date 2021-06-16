@@ -53,7 +53,7 @@ sub au_search {
                   me.apelido
                   me.nome_completo
                   me.email
-                  me.genero
+                  me.cpf
                   me.status
                   /,
                 (
@@ -82,6 +82,7 @@ sub au_search {
                     \['lower(me.nome_completo) like ?', "\%$nome\%"],
                     \['lower(me.apelido) like ?',       "\%$nome\%"],
                     \['lower(me.email) like ?',         "\%$nome\%"],
+                    \['me.cpf::text like ?',            "$nome\%"],
                 ],
             }
         );
@@ -103,10 +104,7 @@ sub au_search {
             [id                      => 'ID'],
             [nome_completo           => 'Nome Completo'],
             [status                  => 'Status'],
-            [genero                  => 'Gênero'],
-            [dt_nasc                 => 'Data de Nascimento', 'tz'],
-            [cep_cidade              => 'Cidade'],
-            [cep_estado              => 'Estado'],
+            [cpf                     => 'CPF'],
             [qtde_login_senha_normal => 'Nº Login'],
         );
 

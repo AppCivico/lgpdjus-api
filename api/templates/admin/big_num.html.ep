@@ -25,7 +25,6 @@
     % }
 
 </div>
-<hr/>
-<p>Tempo de execução total das queries <%== $elapsed %> segundos</p>
+
 
 % }
