@@ -26,7 +26,7 @@ sub job_generate_pdf_and_blockchain {
         $file       = $job->app->generate_account_pdf(
             user_obj => $user_obj,
         );
-        $name = 'criacao-conta-' . $user_obj->nome_completo . '.cpf';
+        $name = 'criacao-conta-' . $user_obj->nome_completo . '.pdf';
     }
     elsif ($type eq 'ticket') {
         my $ticket = $schema->resultset('Ticket')->find($object_id);
@@ -35,7 +35,7 @@ sub job_generate_pdf_and_blockchain {
         $file       = $job->app->generate_ticket_pdf(
             ticket => $ticket,
         );
-        $name = 'solicitacao-' . $ticket->protocol . '.cpf';
+        $name = 'solicitacao-' . $ticket->protocol . '.pdf';
     }
     on_scope_exit { unlink($file) };
 
