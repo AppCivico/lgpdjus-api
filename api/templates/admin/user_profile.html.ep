@@ -1,6 +1,6 @@
 % my $cliente = stash('cliente');
 <div class="border-bottom">
-    <h1 class="h2">Perfil de <%= $cliente->{nome_completo} || 'não encontrado'%></h1>
+    <h1 class="h2">Detalhes do solicitante <%= $cliente->{nome_completo} || 'não encontrado'%></h1>
 </div>
 <br/>
 
