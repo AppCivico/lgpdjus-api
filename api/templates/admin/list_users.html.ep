@@ -1,7 +1,25 @@
 <div class="border-bottom">
     <h1 class="h2">Lista de solicitantes</h1>
 </div>
-<br />
+    % if ( stash('segments') ) {
+    <hr />
+    <form method="GET">
+        <h3>Filtros</h3>
+        <div class="form-group">
+            <label for="filter1">Segmentação</label>
+            <select id="filter1" name="segment_id" class="form-control">
+                % for my $r (@{stash('segments') || []}) {
+                <option <%= $r->{id} == (stash('segment_id') || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' . $pg_timestamp2human->($r->{last_run_at}) %>
+                </option>
+                % }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Aplicar</button>
+    </form>
+    % }
+
+
 % if ( $c->req->params->param('nome') ) {
 <h2><%= stash('total_count') %>
     resultados para 「<%= $c->req->params->param('nome') %>」</h2>
@@ -17,8 +35,8 @@
 
 % if ( stash('segment_id') ) {
 <div class="text-right">
-    <a class="btn btn-outline-dark" href="/admin/add-notification?segment_id=<%= stash('segment_id')%>">Criar
-        notificação</a>
+    <a class="btn btn-sm btn-outline-dark" href="/admin/add-notification?segment_id=<%= stash('segment_id')%>">Criar
+        notificação para está segmentação dos solicitantes</a>
 </div>
 % }
 <br>
@@ -65,20 +83,4 @@
         página</a>
     % }
 
-    % if ( stash('segments') ) {
-    <hr />
-    <form method="GET">
-        <h3>Filtrar resultados</h3>
-        <div class="form-group">
-            <select name="segment_id" class="form-control">
-                % for my $r (@{stash('segments') || []}) {
-                <option <%= $r->{id} == (stash('segment_id') || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' . $pg_timestamp2human->($r->{last_run_at}) %>
-                </option>
-                % }
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Aplicar</button>
-    </form>
-    % }
 </div>

@@ -77,13 +77,16 @@ sub au_search {
 
     if ($nome) {
         $dirty++;    #nao atualizar o contador do segmento, se tiver.
+        my $nome_number = $nome;
+        $nome_number =~ s/[^\d]+//ag;
+
         $rs = $rs->search(
             {
                 '-or' => [
                     \['lower(me.nome_completo) like ?', "\%$nome\%"],
                     \['lower(me.apelido) like ?',       "\%$nome\%"],
                     \['lower(me.email) like ?',         "\%$nome\%"],
-                    \['me.cpf::text like ?',            "$nome\%"],
+                    ($nome_number ? (\['me.cpf::text like ?', "$nome_number\%"]) : ()),
                 ],
             }
         );
@@ -156,17 +159,21 @@ sub au_search {
         1
     );
 
-    my $segments = $c->schema->resultset('AdminClientesSegment')->search(
-        {
-            is_test => is_test() ? 1 : 0,
-            status  => 'published',
-        },
-        {
-            columns      => [qw/id label last_count last_run_at/],
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator',
-            order_by     => 'sort'
-        }
-    );
+    $c->stash(
+        segments => [
+            $c->schema->resultset('AdminClientesSegment')->search(
+                {
+                    is_test => is_test() ? 1 : 0,
+                    status  => 'published',
+                },
+                {
+                    columns      => [qw/id label last_count last_run_at/],
+                    result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                    order_by     => 'sort'
+                }
+            )->all()
+        ]
+    ) unless $render_detail;
 
     return $c->respond_to_if_web(
         json => {
@@ -175,7 +182,6 @@ sub au_search {
                 has_more    => $has_more,
                 next_page   => $has_more ? $next_page : undef,
                 total_count => $total_count,
-                segments    => [$segments->all]
             }
         },
         html => {
@@ -184,9 +190,9 @@ sub au_search {
             next_page          => $has_more ? $next_page : undef,
             total_count        => $total_count,
             pg_timestamp2human => \&pg_timestamp2human,
-            segments           => [$segments->all],
-            segment            => $segment,
-            segment_id         => $segment ? $segment->id : undef,
+
+            segment    => $segment,
+            segment_id => $segment ? $segment->id : undef,
         },
     );
 }

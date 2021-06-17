@@ -67,8 +67,8 @@
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/users">
-                <input name="nome" class="form-control mr-sm-2" type="text" placeholder="Nome, email ou apelido"
-                    aria-label="Nome ou apelido">
+                <input name="nome" class="form-control mr-sm-2" type="text" placeholder="Nome, email ou CPF"
+                    aria-label="Nome, email ou CPF" title="Busca de solicitantes">
                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
                     <span data-feather="search"></span>
                 </button>
