@@ -103,14 +103,14 @@ __PACKAGE__->belongs_to(
   {
     is_deferrable => 0,
     join_type     => "LEFT",
-    on_delete     => "CASCADE",
-    on_update     => "CASCADE",
+    on_delete     => "SET NULL",
+    on_update     => "NO ACTION",
   },
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-10 19:05:18
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:TxysHk1/J6X+xR1JzSHXJA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-16 16:30:59
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4uf49vC2GUIQqs7fQIfFvg
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

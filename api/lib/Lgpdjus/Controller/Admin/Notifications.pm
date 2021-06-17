@@ -23,8 +23,7 @@ sub unft_crud {
     );
 
     if ($valid->{notification_message_id}) {
-        my $notification_message
-          = $c->schema->resultset('NotificationMessage')->find($valid->{notification_message_id})
+        my $notification_message = $c->schema->resultset('NotificationMessage')->find($valid->{notification_message_id})
           or $c->reply_item_not_found();
 
         if ($valid->{action} && $valid->{action} eq 'delete') {
@@ -93,12 +92,12 @@ sub unft_crud {
                     icon    => 0,
                     meta    => to_json(
                         {
-                            created_by => $c->stash('admin_user')->id,
-                            ip         => $c->remote_addr(),
-                            count      => $message_count,
+                            ip    => $c->remote_addr(),
+                            count => $message_count,
                         }
                     ),
-                    created_at => \'now()',
+                    created_at               => \'now()',
+                    created_by_admin_user_id => $c->stash('admin_user')->id,
                 }
             );
             $message_id = $message_row->id;
@@ -233,7 +232,7 @@ sub unft_list {
     }
 
     my $rs = $c->schema->resultset('NotificationMessage')->search(
-        undef,
+        {'me.created_by_admin_user_id' => {'!=' => undef}},
         {
             order_by     => \'me.id DESC',
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'

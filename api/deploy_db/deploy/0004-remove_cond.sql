@@ -21,4 +21,7 @@ alter table quiz_config add column progress_bar smallint not null default 0;
 alter table quiz_config alter column question type text;
 alter table quiz_config add column appendix json not null default '[]';
 
+alter table notification_message add column created_by_admin_user_id uuid references directus_users(id);
+update notification_message set created_by_admin_user_id = (select id from directus_users limit 1) where meta::text like '%created_by%';
+
 COMMIT;
