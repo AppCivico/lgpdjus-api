@@ -40,6 +40,7 @@ sub a_blockchain_list_get {
         {
             order_by   => \'me.id DESC',
             join       => [qw/ticket cliente/],
+            prefetch   => 'media_upload',
             '+columns' => [
                 {
                     cliente_nome_completo => 'cliente.nome_completo',
@@ -76,6 +77,10 @@ sub a_blockchain_list_get {
         },
         1
     );
+
+    if ($valid->{cliente_id}) {
+        $c->stash(cliente => $c->schema->resultset('Cliente')->find($valid->{cliente_id}));
+    }
 
     return $c->respond_to_if_web(
         json => {

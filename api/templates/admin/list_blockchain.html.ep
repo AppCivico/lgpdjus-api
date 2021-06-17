@@ -5,9 +5,9 @@
 <hr />
 <form method="GET">
     <h3>Filtro:</h3>
-    % if ( $c->req->params->param('cliente_id') ) {
+    % if ( $c->req->params->param('cliente_id') && stash('cliente') ) {
     <input type="hidden" name="cliente_id" value="<%=$c->req->params->param('cliente_id')%>" />
-    <p>Filtrando por cliente.</p>
+    <p>Filtrando por cliente: Nome: <%=stash('cliente')->nome_completo %>, CPF: <%=stash('cliente')->cpf_formatted %></p>
     %}
     <div class="form-group">
         <select name="filter" class="form-control">

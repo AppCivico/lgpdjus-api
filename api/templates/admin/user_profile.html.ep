@@ -22,7 +22,7 @@
                 <label>Total de registros em blockchain</label>
             </div>
             <div class="col-md-6">
-                <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>"><%=$total_blockchain%> registros em blockchain</a>
+                <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>&filter=all"><%=$total_blockchain%> registros em blockchain</a>
             </div>
         </div>
 
