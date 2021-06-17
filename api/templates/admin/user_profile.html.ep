@@ -13,7 +13,7 @@
                 <label>Total de solicitações</label>
             </div>
             <div class="col-md-6">
-                <a href="/admin/tickets?cliente_id=<%=$cliente->{id}%>"><%=$total_ticket%> solicitações</a>
+                <a href="/admin/tickets?cliente_id=<%=$cliente->{id}%>&filter=all"><%=$total_ticket%> solicitações</a>
             </div>
         </div>
 
@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col-md-3 text-right">
-                <label>último uso do app</label>
+                <label>Último uso do aplicativo</label>
             </div>
             <div class="col-md-6">
                 <p><%= $pg_timestamp2human->($cliente->{activity}) %></p>

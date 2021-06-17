@@ -162,10 +162,11 @@ sub a_tickets_list_get {
     );
 
     my $valid = $c->validate_request_params(
-        rows       => {required => 0, type => 'Int'},
-        next_page  => {required => 0, type => 'Str'},
-        filter     => {required => 0, type => 'Str'},
-        cliente_id => {required => 0, type => 'Int'},
+        rows        => {required => 0, type => 'Int'},
+        next_page   => {required => 0, type => 'Str'},
+        filter      => {required => 0, type => 'Str'},
+        filter_type => {required => 0, type => 'Int'},
+        cliente_id  => {required => 0, type => 'Int'},
     );
     my $rows = $valid->{rows} || 10;
     $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
@@ -180,8 +181,9 @@ sub a_tickets_list_get {
 
     my $rs = $c->schema->resultset('Ticket')->search(
         {
-            ($ENV{ADMIN_FILTER_CLIENTE_ID} ? ('me.cliente_id' => $ENV{ADMIN_FILTER_CLIENTE_ID}) : ()),
-            ($valid->{cliente_id}          ? ('me.cliente_id' => $valid->{cliente_id})          : ()),
+            ($ENV{ADMIN_FILTER_CLIENTE_ID} ? ('me.cliente_id' => $ENV{ADMIN_FILTER_CLIENTE_ID})                   : ()),
+            ($valid->{cliente_id}          ? ('me.cliente_id' => $valid->{cliente_id})                            : ()),
+            ($valid->{filter_type} && $valid->{filter_type} != -1 ? ('questionnaire.id' => $valid->{filter_type}) : ()),
         },
         {
             order_by   => \'me.id DESC',
@@ -223,6 +225,10 @@ sub a_tickets_list_get {
         1
     );
 
+    if ($valid->{cliente_id}) {
+        $c->stash(cliente => $c->schema->resultset('Cliente')->find($valid->{cliente_id}));
+    }
+
     return $c->respond_to_if_web(
         json => {
             json => {
@@ -237,12 +243,24 @@ sub a_tickets_list_get {
         },
         html => {
             filter      => $valid->{filter},
+            filter_type      => $valid->{filter_type},
             filter_opts => [
                 {id => 'pending', label => 'Exibir todas solicitações pendentes'},
                 {id => 'all',     label => 'Exibir todas solicitações'},
                 {id => 'done',    label => 'Exibir todas solicitações finalizadas'},
                 {id => 'waiting', label => 'Exibir todas solicitações aguardando informações'},
 
+            ],
+            filter_type_opts => [
+                {id => -1, label => 'Todos os tipos'},
+                map { +{id => $_->{id}, label => $_->{label}} } $c->schema->resultset('Questionnaire')->search(
+                    {'me.is_test' => 0},
+                    {
+                        columns      => [qw/id label/],
+                        result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                        order_by     => 'me.sort'
+                    }
+                )
             ],
             rows      => \@rows,
             has_more  => $has_more,

@@ -388,5 +388,11 @@ sub as_hashref {
     };
 }
 
+sub cpf_formatted {
+    my $self = shift();
+    my $cpf   = $self->cpf =~ /(...)(...)(...)(..)/;
+    return "$1.$2.$3-$4";
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;
