@@ -105,7 +105,7 @@ sub au_search {
             [nome_completo => 'Nome Completo'],
             [apelido       => 'Como deseja ser chamado'],
             [email         => 'E-mail'],
-            [cpf           => 'CPF','cpf'],
+            [cpf           => 'CPF', 'cpf'],
         );
 
         foreach my $field (@fields) {
@@ -140,7 +140,11 @@ sub au_search {
         $segment->update({last_count => $total_count, last_run_at => \'NOW()'}) if $segment && !$dirty;
 
         $rs   = $rs->search(undef, {rows => $rows + 1, offset => $offset});
-        @rows = $rs->all;
+        @rows = map {
+            $_->{cpf} =~ /(...)(...)(...)(..)/;
+            $_->{cpf_formatted} = "$1.$2.$3-$4";
+            $_;
+        } $rs->all;
     }
 
     my $cur_count = scalar @rows;
