@@ -47,7 +47,8 @@ sub au_search {
             join     => 'clientes_app_activity',
             order_by => \'last_tm_activity DESC',
             columns  => [
-                {activity => 'clientes_app_activity.last_tm_activity'},
+                {activity      => 'clientes_app_activity.last_tm_activity'},
+                {tickets_count => \'(SELECT count(1) FROM tickets t WHERE t.cliente_id = me.id )'},
                 qw/
                   me.id
                   me.apelido

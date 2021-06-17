@@ -26,8 +26,10 @@ sub a_tickets_detail_get_post {
             join       => ['questionnaire', 'cliente'],
             '+columns' => [
                 {
-                    questionnaire_label   => 'questionnaire.label',
-                    cliente_nome_completo => 'cliente.nome_completo',
+                    questionnaire_label          => 'questionnaire.label',
+                    cliente_nome_completo        => 'cliente.nome_completo',
+                    cliente_verified             => 'cliente.account_verified',
+                    cliente_verification_pending => 'cliente.account_verification_pending',
                 }
             ],
         }
@@ -190,8 +192,10 @@ sub a_tickets_list_get {
             join       => ['questionnaire', 'cliente'],
             '+columns' => [
                 {
-                    questionnaire_label   => 'questionnaire.label',
-                    cliente_nome_completo => 'cliente.nome_completo',
+                    questionnaire_label          => 'questionnaire.label',
+                    cliente_nome_completo        => 'cliente.nome_completo',
+                    cliente_verified             => 'cliente.account_verified',
+                    cliente_verification_pending => 'cliente.account_verification_pending',
                 }
             ],
         }
@@ -243,7 +247,7 @@ sub a_tickets_list_get {
         },
         html => {
             filter      => $valid->{filter},
-            filter_type      => $valid->{filter_type},
+            filter_type => $valid->{filter_type},
             filter_opts => [
                 {id => 'pending', label => 'Exibir todas solicitações pendentes'},
                 {id => 'all',     label => 'Exibir todas solicitações'},
