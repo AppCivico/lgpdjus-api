@@ -61,10 +61,7 @@ sub au_search {
                     $render_detail
                     ? (
                         qw/
-                          me.qtde_login_senha_normal
-                          me.dt_nasc
-                          me.cep_cidade
-                          me.cep_estado
+                          me.apelido
                           me.perform_delete_at
                           /,
                       )
@@ -105,11 +102,10 @@ sub au_search {
 
 
         my @fields = (
-            [id                      => 'ID'],
-            [nome_completo           => 'Nome Completo'],
-            [status                  => 'Status'],
-            [cpf                     => 'CPF'],
-            [qtde_login_senha_normal => 'Nº Login'],
+            [nome_completo => 'Nome Completo'],
+            [apelido       => 'Como deseja ser chamado'],
+            [email         => 'E-mail'],
+            [cpf           => 'CPF','cpf'],
         );
 
         foreach my $field (@fields) {
@@ -120,6 +116,10 @@ sub au_search {
             }
             elsif ($type && $type eq 'bool') {
                 $cliente->{$key} = $cliente->{$key} ? 'Sim' : 'Não';
+            }
+            elsif ($type && $type eq 'cpf') {
+                $cliente->{$key} =~ /(...)(...)(...)(..)/;
+                $cliente->{$key} = "$1.$2.$3-$4";
             }
         }
 

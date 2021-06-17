@@ -4,7 +4,7 @@
 % if ( stash('filter_opts') ) {
 <hr />
 <form method="GET">
-    <h3>Filtro:</h3>
+    <h3>Filtros:</h3>
     % if ( $c->req->params->param('cliente_id') && stash('cliente') ) {
     <input type="hidden" name="cliente_id" value="<%=$c->req->params->param('cliente_id')%>" />
     <p>Filtrando por cliente: Nome: <%=stash('cliente')->nome_completo %>, CPF: <%=stash('cliente')->cpf_formatted %></p>
