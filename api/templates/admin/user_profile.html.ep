@@ -8,6 +8,22 @@
 
     <div class="tab-content profile-tab" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+        <div class="row">
+            <div class="col-md-3 text-right">
+                <label>Status da conta</label>
+            </div>
+            <div class="col-md-6">
+                % if ($cliente->{account_verified}){
+                    <span class="badge badge-pill badge-success">Conta verificada</span>
+                % } elsif ($cliente->{account_verification_pending}){
+                    <span class="badge badge-pill badge-warning">Verificação pendente</span>
+                % } else {
+                    <span class="badge badge-pill badge-danger">Conta não verificada</span>
+                % }
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-3 text-right">
                 <label>Total de solicitações</label>

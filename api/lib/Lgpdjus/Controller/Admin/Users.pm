@@ -63,6 +63,8 @@ sub au_search {
                         qw/
                           me.apelido
                           me.perform_delete_at
+                          me.account_verified
+                          me.account_verification_pending
                           /,
                       )
                     : ()
