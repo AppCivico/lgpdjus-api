@@ -18,5 +18,9 @@
             <input type="submit" value="Entrar">
         </form>
 
+        <small>
+            <a href="https://lgpdjus-directus.appcivico.com/admin/reset-password" target="_blank">Esqueci a senha</a>
+        </small>
+
     </div>
 </div>
