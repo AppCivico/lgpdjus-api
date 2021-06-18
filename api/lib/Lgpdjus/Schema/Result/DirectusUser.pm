@@ -86,5 +86,19 @@ sub name_or_email {
     return $self->first_name || $self->email;
 }
 
+sub set_password {
+    my ($self, $new_password) = @_;
+
+    state $passphrase = Crypt::Passphrase::Argon2->new();
+
+    my $newpass = $passphrase->hash_password($new_password);
+    $self->update(
+        {
+            password => $newpass,
+        }
+    );
+    return 1;
+}
+
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 1;

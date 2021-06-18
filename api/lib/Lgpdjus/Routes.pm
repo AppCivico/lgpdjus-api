@@ -79,6 +79,9 @@ sub register {
 
     $admin->get('blockchains')->to(controller => 'Admin::Blockchain', action => 'a_blockchain_list_get');
 
+    $admin->get('myacc')->to(controller => 'Admin::MyAccount', action => 'a_myacc_get');
+    $admin->post('myacc-save')->to(controller => 'Admin::MyAccount', action => 'a_myacc_save_post');
+
     # /admin/media-download
     $admin->get('media-download')->to(controller => 'MediaDownload', action => 'admin_logged_in_get_media');
 

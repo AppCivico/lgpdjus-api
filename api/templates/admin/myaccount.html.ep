@@ -1,0 +1,22 @@
+% my $admin = stash('admin_user');
+
+<div class="border-bottom">
+    <h1 class="h2">Minha conta</h1>
+</div>
+
+<form action="/admin/myacc-save" method="POST">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="text-right">Configurações</h4>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6"><label class="labels">Primeiro Nome</label><input type="text" required name="first_name" class="form-control" placeholder="Preencha o primeiro nome" value="<%= $admin->first_name %>"></div>
+        <div class="col-md-6"><label class="labels">Último nome</label><input type="text" name="last_name" class="form-control" value="<%= $admin->last_name %>" placeholder="Preencha o último nome"></div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-12"><label class="labels">Senha atual</label><input name="current_password" type="password" class="form-control" placeholder="Digite a senha atual" value=""></div>
+        <div class="col-md-6"><label class="labels">Nova senha</label><input name="password" minlength=6 type="password" class="form-control" placeholder="Digite a nova senha" value=""></div>
+        <div class="col-md-6"><label class="labels">Confirme a Nova senha</label><input name="password_confirm"  minlength=6 type="password" class="form-control" placeholder="Confirme a nova senha" value=""></div>
+    </div>
+
+    <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Salvar configurações</button></div>
+</form>
