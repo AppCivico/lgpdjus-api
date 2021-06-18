@@ -1,5 +1,5 @@
 <div class="border-bottom">
-    <h1 class="h2">Números</h1>
+    <h1 class="h2">Indicadores</h1>
 </div>
 
 % if ( stash('results') ) {
