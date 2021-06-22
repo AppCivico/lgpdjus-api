@@ -28,10 +28,6 @@ __PACKAGE__->add_columns(
   { data_type => "uuid", is_foreign_key => 1, is_nullable => 1, size => 16 },
   "date_updated",
   { data_type => "timestamp with time zone", is_nullable => 1 },
-  "prefixo",
-  { data_type => "text", is_nullable => 1 },
-  "sufixo",
-  { data_type => "text", is_nullable => 1 },
   "perguntas",
   { data_type => "json", is_nullable => 1 },
   "nome",
@@ -40,12 +36,20 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 400 },
   "is_test",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "introducao_linha_1",
+  { data_type => "text", is_nullable => 1 },
+  "introducao_linha_2",
+  { data_type => "text", is_nullable => 1 },
+  "rodape",
+  { data_type => "text", is_nullable => 1 },
+  "link_imagem",
+  { data_type => "varchar", is_nullable => 1, size => 255 },
 );
 __PACKAGE__->set_primary_key("id");
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-21 17:18:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:s7KJuH2sX9mpkjt+Hp72tA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-22 13:35:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:dj7UhQsg0oNqUYYl+GjnRA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

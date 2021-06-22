@@ -46,6 +46,10 @@ sub register {
       ->to(controller => 'Timeline', action => 'public_available_tickets_timeline_get');
 
 
+    # GET /sobrelgpd
+    $r->get('sobrelgpd')->to(controller=>'SobreLGPD', action => 'sobrelgpd_index_get');
+    $r->get('sobrelgpd/:sobrelgpd_id')->to(controller=>'SobreLGPD', action => 'sobrelgpd_detail_get');
+
     # "public" - used for pdf generator from html
     my $internal_media_download
       = $r->get('internal-media-download')->to(controller => 'MediaDownload', action => 'internal_get_media');
