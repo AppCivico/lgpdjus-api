@@ -41,7 +41,7 @@ sub test_sobrelgpd {
             descricao   => 'descricao2',
             link_imagem => 'http://imagem.com',
             perguntas   =>
-              '[{"pergunta":"xpt2", "resposta":"<p>paragrafo 1</p>"}, {"pergunta":"xpto", "resposta":"<p>paragrafo 1</p>"}]',
+              '[{"pergunta":"xpta", "resposta":"<p>paragrafo 1</p>"}, {"pergunta":"xpto", "resposta":"<p>paragrafo 1</p>"}]',
             introducao_linha_1 => 'introducao_linha_1',
             introducao_linha_2 => 'introducao_linha_2',
             rodape             => undef,
@@ -61,7 +61,14 @@ sub test_sobrelgpd {
 
     $t->get_ok(
         '/sobrelgpd/' . $c2->id,
-    )->status_is(200, 'puxando detalhe sobrelgpd');
+      )->status_is(200, 'puxando detalhe sobrelgpd')                  #
+      ->json_is('/sobrelgpd/rodape',               '', 'null is empty')     #
+      ->json_is('/sobrelgpd/introducao_linha_1',   'introducao_linha_1')    #
+      ->json_is('/sobrelgpd/introducao_linha_2',   'introducao_linha_2')    #
+      ->json_is('/sobrelgpd/perguntas/0/pergunta', 'xpta')                  #
+      ->json_is('/sobrelgpd/perguntas/0/resposta', '<p>paragrafo 1</p>')    #
+      ->json_is('/sobrelgpd/perguntas/1/pergunta', 'xpto')                  #
+      ->json_is('/sobrelgpd/rodape',               '', 'null is empty');
 
 
 }
