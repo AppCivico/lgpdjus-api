@@ -2,6 +2,19 @@
 % my $params = $c->stash('params');
 % my $notification_message = $c->stash('notification_message');
 <div class="border-bottom">
+    <div class="collapse-help">
+      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
+        <i class="bi bi-info-circle"></i> Ajuda
+      </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+      <div class="card card-body">
+        <p>Nesta tela você criar novas notifiacações que serão enviadas para os manifestantes. As notificações enviadas ficam disponíveis para o manifestante através do aplicativo.</p>
+        <h5>Segmentação</h5>
+        <p>A segmentação representa um conjunto de manifestantes que receberão a notificação.</p>
+        <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema para que ela seja adicionada.</p>
+      </div>
+    </div>
     <h1 class="h2"> <%= $notification_message ?  'Editar notificação' : 'Criar nova notificação' %></h1>
 </div>
 <br />

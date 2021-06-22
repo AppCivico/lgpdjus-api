@@ -1,4 +1,41 @@
 <div class="border-bottom">
+    <div class="collapse-help">
+        <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+            aria-controls="collapseHelp">
+            <i class="bi bi-info-circle"></i> Ajuda
+        </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+        <div class="card card-body">
+            <p>O sistema gera automaicamente durante toda iteração de uma solicitação e criação de conta um novo arquivo
+                PDF que fica registrado em blockchain.</p>
+            <p>Este registro garante a integridade dos dados fornecidos e garante que não houveram modificações nos
+                dados por ele enviados.</p>
+            <h5>Hash 256</h5>
+            Hash é um algoritmo matemático para a criptografia, na qual ocorre uma transformação do dado (como um
+            arquivo) em um conjunto alfanumérico com comprimento fixo de caracteres.
+            Este conjunto de caracteres pode representar a singularidade de arquivo, porém sem conter nenhuma informação
+            do arquivo.
+            A criptografia hash é utilizada para resumir dados, verificar integridade de arquivos e garantir a segurança
+            de senhas dentro de um servidor.
+            <h5>Blockchain e dcrtime</h5>
+            <p>A blockchain escolhida para registro é a blockchain da decred, que fornece gratuitamente o serviço
+                chamado <a href="https://docs.decred.org/advanced/dcrtime/">dcrtime</a> para uso público.
+                O uso gratuito só é possível pois o hash de diversos arquivos são acumulados na off-chain da dcrtime e
+                então um novo hash com todos os hashes enviados é calculado e este sim é enviado para a
+                blockchain. O processo de atualização com a blockchain leva em torno de 1 hora, e apenas após este
+                periodo é que o arquivo é considerado ancorado. </p>
+            <p>Após o registro do hash no sistema do dcrtime, o mesmo hash não poderá ser registrado novamente, criando
+                um carimbo do horário ele foi registrado a primeira vez. Isso signfica que não há criar um novo arquivo
+                (pois a hash seria diferente), tampouco enviar um arquivo com um horário no passado.</p>
+            <h5>Situação</h5>
+            <ul>
+                <li>Ancorado: O hash do arquivo já está incomporado na blockchain da decred.</li>
+                <li>Pendente: O registro foi enviado para a off-chain dcrtime da decred.</li>
+            </ul>
+        </div>
+    </div>
+
     <h1 class="h2">Lista de registro em blockchain</h1>
 </div>
 % if ( stash('filter_opts') ) {
@@ -7,13 +44,14 @@
     <h3>Filtros:</h3>
     % if ( $c->req->params->param('cliente_id') && stash('cliente') ) {
     <input type="hidden" name="cliente_id" value="<%=$c->req->params->param('cliente_id')%>" />
-    <p>Filtrando por cliente: Nome: <%=stash('cliente')->nome_completo %>, CPF: <%=stash('cliente')->cpf_formatted %></p>
+    <p>Filtrando por cliente: Nome: <%=stash('cliente')->nome_completo %>, CPF: <%=stash('cliente')->cpf_formatted %>
+    </p>
     %}
     <div class="form-group">
         <select name="filter" class="form-control">
             % for my $r (@{stash('filter_opts') || []}) {
-            <option <%= $r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                <%= $r->{label} %>
+            <option <%=$r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                    <%= $r->{label} %>
             </option>
             % }
         </select>
@@ -23,13 +61,13 @@
 % }
 
 <style>
-td.text-ellipsis
-{
- max-width: 100px;
- overflow: hidden;
- text-overflow: ellipsis;
- white-space: nowrap;
-}</style>
+    td.text-ellipsis {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+</style>
 <br>
 <div class="table-responsive">
     <table class="table table-striped table-sm table-hover">
@@ -41,40 +79,48 @@ td.text-ellipsis
                 <th>Hash 256</th>
                 <th>Horário bloco</th>
                 <th>Situação</th>
-               </tr>
+            </tr>
         </thead>
         <tbody>
             % for my $r (@{stash('rows') || []}) {
             <tr>
                 <td>
-                   <span title="<%= $r->created_at_utc() %> UTC"><%= $pg_timestamp2human->($r->created_at) %></span>
+                    <span title="<%= $r->created_at_utc() %> UTC">
+                        <%= $pg_timestamp2human->($r->created_at) %>
+                    </span>
                 </td>
                 <td>
-                    <a href="<%= $r->media_upload->media_generate_download_url_admin($c, 'hd', 0, $r->filename) %>">Baixar <%= $r->get_column('filename') %>
-                    % if ($r->get_column('ticket_protocol')){
-                        <br/>
-                        <a href="/admin/tickets-details?protocol=<%= $r->get_column('ticket_protocol') %>">Visualizar solicitação <%= $r->get_column('ticket_protocol') %> </a>
-                    %}
+                    <a href="<%= $r->media_upload->media_generate_download_url_admin($c, 'hd', 0, $r->filename) %>">Baixar
+                        <%= $r->get_column('filename') %>
+                            % if ($r->get_column('ticket_protocol')){
+                            <br />
+                            <a href="/admin/tickets-details?protocol=<%= $r->get_column('ticket_protocol') %>">Visualizar
+                                solicitação <%= $r->get_column('ticket_protocol') %> </a>
+                            %}
                 </td>
                 <td>
                     % if ($r->get_column('cliente_id')){
-                        <a href="/admin/users?cliente_id=<%= $r->get_column('cliente_id') %>"><%= $r->get_column('cliente_nome_completo') %></a>
+                    <a href="/admin/users?cliente_id=<%= $r->get_column('cliente_id') %>">
+                        <%= $r->get_column('cliente_nome_completo') %>
+                    </a>
                     % } else {
-                       usário removido
+                    usário removido
                     %}
                 </td>
                 <td title="De um duplo clique para selecionar o texto inteiro da coluna" class="text-ellipsis">
                     <%= $r->get_column('digest') %>
                 </td>
                 <td>
-                   % if ($r->dcrtime_timestamp){
-                    <span title="<%= $r->dcrtime_timestamp_utc() %> UTC"><%= $pg_timestamp2human->($r->dcrtime_timestamp) %> (São Paulo)</span>
+                    % if ($r->dcrtime_timestamp){
+                    <span title="<%= $r->dcrtime_timestamp_utc() %> UTC">
+                        <%= $pg_timestamp2human->($r->dcrtime_timestamp) %> (São Paulo)
+                    </span>
                     % } else {
-                        -
-                   %}
+                    -
+                    %}
                 </td>
                 <td class="text-ellipsis">
-                <%== $r->build_status() %>
+                    <%== $r->build_status() %>
                 </td>
 
             </tr>
@@ -87,13 +133,15 @@ td.text-ellipsis
     %}
 
     % if ( stash('has_more') ) {
-    <a href="/admin/blockchains?next_page=<%== stash('next_page') %>" class="btn btn-outline-dark btn-sm">carregar próxima
+    <a href="/admin/blockchains?next_page=<%== stash('next_page') %>" class="btn btn-outline-dark btn-sm">carregar
+        próxima
         página</a>
     % }
 
-    <hr/>
+    <hr />
     <div>
-    <p>Vocẽ pode acessar <a target="_blank" href="https://timestamp.decred.org/">este site</a> para verificar arquivos usando a colna Hash 256 para pesquisar.</p>
+        <p>Vocẽ pode acessar <a target="_blank" href="https://timestamp.decred.org/">este site</a> para verificar
+            arquivos usando a colna Hash 256 para pesquisar.</p>
 
     </div>
 

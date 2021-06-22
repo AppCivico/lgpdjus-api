@@ -1,9 +1,23 @@
 <div class="border-bottom">
+    <div class="collapse-help">
+      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
+        <i class="bi bi-info-circle"></i> Ajuda
+      </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+      <div class="card card-body">
+        <p>Nesta tela você pode visualizar todas as solicitações do sistema.</p>
+        <h5>Situações</h5>
+        <p><b>Pendente</b>: são as solicitações aguardando uma resposta do DPO.<br/>
+        <b>Finalizado</b>: são as solicitações já foram respondidas. Você pode reabrir para enviar novas respostas ou pedir mais dados.<br/>
+        <b>Aguardando informação adicional</b>: são as solicitações o operador do DPO pediu informações adicionais para o manifestante. Quando o manifestante responder, a nova situação será "Pendente".</p>
+      </div>
+    </div>
+
     <h1 class="h2">Lista de solicitações</h1>
 </div>
 
 % if ( stash('filter_opts') ) {
-<hr />
 <form method="GET">
     <h3>Filtros:</h3>
     % if ( $c->req->params->param('cliente_id') && stash('cliente') ) {

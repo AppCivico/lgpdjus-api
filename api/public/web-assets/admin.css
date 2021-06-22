@@ -126,3 +126,15 @@ body {
 .text-xl {
   font-size: 2.5rem !important;
 }
+
+.collapse-help {
+    float:right;
+}
+.collapse-help a{
+    margin-top: 10px;
+    display: block;
+}
+#collapseHelp {
+    clear: both;
+    margin: 10px;
+}

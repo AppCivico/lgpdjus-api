@@ -1,8 +1,19 @@
 <div class="border-bottom">
+    <div class="collapse-help">
+      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
+        <i class="bi bi-info-circle"></i> Ajuda
+      </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+      <div class="card card-body">
+        <p>Nesta tela você pode visualizar todos os manifestantes que criaram uma conta no aplicativo.</p>
+        <h5>Segmentação</h5>
+        <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema para que ela seja adicionada.</p>
+      </div>
+    </div>
     <h1 class="h2">Lista de solicitantes</h1>
 </div>
     % if ( stash('segments') ) {
-    <hr />
     <form method="GET">
         <h3>Filtros:</h3>
         <div class="form-group">

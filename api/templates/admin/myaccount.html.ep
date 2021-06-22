@@ -1,6 +1,18 @@
 % my $admin = stash('admin_user');
 
 <div class="border-bottom">
+
+    <div class="collapse-help">
+      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
+        <i class="bi bi-info-circle"></i> Ajuda
+      </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+      <div class="card card-body">
+        Nesta tela você pode mudar o nome e senha utilizados nesta interface.
+      </div>
+    </div>
+
     <h1 class="h2">Minha conta</h1>
 </div>
 

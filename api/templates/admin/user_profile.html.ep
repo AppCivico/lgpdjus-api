@@ -1,8 +1,18 @@
 % my $cliente = stash('cliente');
 <div class="border-bottom">
+    <div class="collapse-help">
+      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
+        <i class="bi bi-info-circle"></i> Ajuda
+      </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+      <div class="card card-body">
+        <p>Nesta tela você pode ter uma visão geral da conta de um manifestante. </p>
+        <p>Você também pode agendar a remoção da conta.</p>
+      </div>
+    </div>
     <h1 class="h2">Detalhes do solicitante <%= $cliente->{nome_completo} || 'não encontrado'%></h1>
 </div>
-<br/>
 
 % if ( $cliente ) {
 

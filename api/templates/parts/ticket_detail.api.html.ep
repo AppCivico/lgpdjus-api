@@ -1,3 +1,4 @@
+% my $quiz = stash('quiz');
 <b>Data de abertura: </b> <span>
     <%= $created_at_dmy_hms %>
 </span><br />
@@ -11,6 +12,7 @@
     <%= $prazo %>
 </span><br />
 
+% if ($quiz){
 <div class="card">
     <div class="card-body">
         <style>div.agentMessageWrap img {max-width: 100% !important;}</style>
@@ -40,3 +42,6 @@
         </dl>
     </div>
 </div>
+% }else{
+  <p class="alert alert-warning">Não existiram perguntas no questionário.</p>
+%}

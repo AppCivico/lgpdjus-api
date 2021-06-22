@@ -10,6 +10,42 @@
 
 % if ($ticket) {
 <div class="border-bottom">
+    <div class="collapse-help">
+        <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+            aria-controls="collapseHelp">
+            <i class="bi bi-info-circle"></i> Ajuda
+        </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+        <div class="card card-body">
+            <p>Nesta tela você iteragir com o manifestante através das ações.</p>
+            <h5>Ações</h5>
+            <p>
+                <b>Pedir informação adicional</b>:
+                Caso o manifestante não tenha fornecido todos os dados necessários para a execução da solicitação, você
+                pode utilizar esta função para que o usuário possa adicionar mais dados na solicitação.<br>
+                Caso a informação adicional seja um anexo de um documento, é recomendado que crie uma solicitação para
+                cada face do documento, ex: "Incluir novamente parte com foto do RG ou documento com CPF.".<br>
+                <b>Mudar prazo</b>: Caso o prazo calculado pelo sistema não seja adequado, você pode atualizar o prazo.
+                O manifestante será notificado da mudança automaticamente.
+                <b>Analisar e concluir</b>:
+                Caso já tenha todos os dados para enviar a resposta para o usuário, você deve utilizar esta opção para
+                gerar a resposta final ao manifestante.
+                <b>Analisar e verificar conta</b>:
+                No caso de uma solicitação de verificação de conta, além de enviar uma resposta final, você pode
+                escolher a situação da conta: <br>
+            <ul>
+                <li>Aprovada: Os documentos enviados estão de acordo com os dados fornecido.</li>
+                <li>Reprovada: Os documentos enviados não estão de acordo com os dados fornecidos.</li>
+            </ul>
+            </p>
+            <h5>Registro de atividades em blockchain</h5>
+            <p>Toda iteração com o manifestante gera um novo arquivo PDF que será registrado em blockchain. O
+                manifestante irá receber este arquivo por e-mail junto a notificação de mudança da situação.</p>
+            <p>Este registro garante a integridade dos dados fornecidos e garante que não houveram modificações nos
+                dados por ele enviados.</p>
+        </div>
+    </div>
     <h1 class="h2">Solicitação <%= $ticket->protocol %> </h1>
 </div>
 

@@ -1,4 +1,16 @@
 <div class="border-bottom">
+    <div class="collapse-help">
+        <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+            aria-controls="collapseHelp">
+            <i class="bi bi-info-circle"></i> Ajuda
+        </a>
+    </div>
+    <div class="collapse" id="collapseHelp">
+        <div class="card card-body">
+            <p>Nesta tela você acompanhar alguns números gerais do sistema.</p>
+            <p>Caso precise de um novo número, entre em contato com o administrador do sistema para que seja verificada a disponibilidade.</p>
+        </div>
+    </div>
     <h1 class="h2">Indicadores</h1>
 </div>
 
