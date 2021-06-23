@@ -159,21 +159,46 @@ subtest_buffered 'Testar envio de campo boolean com valor invalido + interpolati
     is $third_msg->{content},        'HELLOQuiz UserName!',    'question intro interpolation is working';
     is $input_msg->{content},        'yesno question☺️⚠️👍👭🤗🤳', 'yesno question question is present';
 };
+subtest_buffered 'Testar receber appendix e intro agrupados' => sub {
+    $json = $t->get_ok(
+        '/me',
+        {
+            'x-api-key'                => $session,
+            'x-compact-quiz-responses' => 1,
+        },
+        form => {session_id => $cadastro->{quiz_session}{session_id}}
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+
+    is $json->{quiz_session}{prev_msgs},    undef, 'no more prev_msgs';
+    is $json->{quiz_session}{current_msgs}, undef, 'no more current_msgs';
+
+    is $json->{quiz_session}{current_msg}{appendix}, '<div>appendix 1</div>';
+    is $json->{quiz_session}{current_msg}{intro},    '<div>intro1</div><div>HELLOQuiz UserName!</div>';
+    is $json->{quiz_session}{current_msg}{type},     'onlychoice';
+    ok $json->{quiz_session}{current_msg}{ref},      'has ref';
+    ok $json->{quiz_session}{current_msg}{options},  'has options';
+
+    is $json->{quiz_session}{current_msg}{options}[0]{display}, 'SIM', 'sim é o index 0';
+
+    my $field_ref = $json->{quiz_session}{current_msg}{ref};
+
+    $json = $t->post_ok(
+        '/me/quiz',
+        {
+            'x-api-key'                => $session,
+            'x-compact-quiz-responses' => 1,
+        },
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => $json->{quiz_session}{current_msg}{options}[0]{index},    # responde YES
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+};
 
 my $choose_rand = rand;
 subtest_buffered 'Seguindo fluxo ate o final usando caminho Y' => sub {
-    my $field_ref = $cadastro->{quiz_session}{current_msgs}[-2]{ref};    # atençaõ, -2 por causa do appendix
-    $json = $t->post_ok(
-        '/me/quiz',
-        {'x-api-key' => $session},
-        form => {
-            session_id => $cadastro->{quiz_session}{session_id},
-            $field_ref => 'Y',
-        }
-    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
 
-
-    my $input_msg = $json->{quiz_session}{current_msgs}[-1];
+    my $input_msg = $json->{quiz_session}{current_msg};
 
     is $input_msg->{content}, 'question for YES', 'flow is working!';
     is $input_msg->{type},    'text',             'flow is working!';

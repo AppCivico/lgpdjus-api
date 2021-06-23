@@ -43,8 +43,7 @@ sub setup {
     $self->helper('process_quiz_session'         => sub { &process_quiz_session(@_) });
     $self->helper('create_quiz_session'          => sub { &create_quiz_session(@_) });
     $self->helper('list_questionnaires'          => sub { &list_questionnaires(@_) });
-
-
+    $self->helper('_compact_quiz_session'        => sub { &_compact_quiz_session(@_) });
 }
 
 sub load_quiz_config {
@@ -270,6 +269,11 @@ sub _quiz_get_vars {
     return {cliente => $user, %{$responses || {}}};
 }
 
+sub _is_input {
+    my $item = shift;
+    return $item->{type} ne 'displaytext' && $item->{type} ne 'create_ticket';
+}
+
 sub load_quiz_session {
     my ($c, %opts) = @_;
 
@@ -326,7 +330,7 @@ sub load_quiz_session {
 
                 # pegamos um item que eh input, entao vamos sair do loop nesta vez
                 # create_ticket tambem nao é um input, mas tem uma ação que precisa ser executada
-                $is_last_item = 1 if $item->{type} ne 'displaytext' && $item->{type} ne 'create_ticket';
+                $is_last_item = 1 if _is_input($item);
 
                 if (!$has) {
                     log_info("question is not relevant, testing next question...");
@@ -520,6 +524,8 @@ sub load_quiz_session {
                 ],
             }
         );
+
+        $c->_compact_quiz_session();
     }
 
 }
@@ -621,6 +627,16 @@ sub process_quiz_session {
             log_info("msg type " . $msg->{type});
 
             if ($msg->{type} eq 'yesno') {
+
+                # converte o index para YES/NO
+                if ($c->req->headers->header('x-compact-quiz-responses')) {
+                    if ($val eq '0') {
+                        $val = 'Y';
+                    }
+                    else {
+                        $val = 'N';
+                    }
+                }
 
                 if ($val =~ /^(Y|N)$/) {
 
@@ -1086,6 +1102,61 @@ sub _get_error_questionnaire_stash {
         ]
     };
 
+}
+
+sub _compact_quiz_session {
+    my ($c) = @_;
+
+    my $compact = $c->req->headers->header('x-compact-quiz-responses');
+    return 1 unless $compact;
+    my $quiz_session = $c->stash('quiz_session');
+    confess 'missing stash.quiz_session' unless $quiz_session;
+
+    delete $quiz_session->{prev_msgs};
+
+    use DDP;
+    p $quiz_session;
+
+    my $intro    = '';
+    my $appendix = '';
+    my $input;
+    foreach my $msg (@{delete $quiz_session->{current_msgs}}) {
+        if (_is_input($msg)) {
+            if ($msg->{type} eq 'yesno') {
+                $input = {
+                    type    => 'onlychoice',
+                    content => $msg->{content},
+                    ref     => $msg->{ref},
+                    options => [
+                        {
+                            display => $msg->{yes_label},
+                            index   => 0,
+                        },
+                        {
+                            display => $msg->{no_label},
+                            index   => 1,
+                        },
+                    ]
+                };
+            }
+            else {
+                $input = $msg;
+            }
+        }
+        else {
+            if ($input) {
+                $appendix .= '<div>' . $msg->{content} . '</div>';
+            }
+            else {
+                $intro .= '<div>' . $msg->{content} . '</div>';
+            }
+        }
+    }
+
+    $input->{intro}              = $intro;
+    $input->{appendix}           = $appendix;
+    $quiz_session->{current_msg} = $input;
+    return 1;
 }
 
 1;
