@@ -1,42 +1,54 @@
-<div class="border-bottom">
-    <div class="collapse-help">
-      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
-        <i class="bi bi-info-circle"></i> Ajuda
-      </a>
-    </div>
-    <div class="collapse" id="collapseHelp">
-      <div class="card card-body">
-        <p>Nesta tela você pode visualizar todos os manifestantes que criaram uma conta no aplicativo.</p>
-        <h5>Segmentação</h5>
-        <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema para que ela seja adicionada.</p>
-      </div>
-    </div>
+<div class="border-bottom margin-bottom">
+
+
     <h1 class="h2">Lista de solicitantes</h1>
-</div>
-    % if ( stash('segments') ) {
-    <form method="GET">
-        <h3>Filtros:</h3>
-        <div class="form-group">
-            <label for="filter1">Segmentação</label>
-            <select id="filter1" name="segment_id" class="form-control">
-                % for my $r (@{stash('segments') || []}) {
-                <option <%= $r->{id} == (stash('segment_id') || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' . $pg_timestamp2human->($r->{last_run_at}) %>
-                </option>
-                % }
-            </select>
+    <div class="start-help">
+        Nesta tela você pode visualizar todos os manifestantes que criaram uma conta no aplicativo.
+        <div class="collapse-help">
+            <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+                aria-controls="collapseHelp">
+                ver mais <i class="bi bi-info-circle"></i>
+            </a>
+            <div class="collapse" id="collapseHelp">
+                <div class="card card-body">
+                    <h5>Segmentação</h5>
+                    <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema
+                        para
+                        que ela seja adicionada.</p>
+                </div>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Aplicar</button>
-    </form>
-    % }
+    </div>
+</div>
+
+% if ( stash('segments') ) {
+<form method="GET">
+    <h3>Filtros:</h3>
+    <div class="form-group">
+        <label for="filter1">Segmentação</label>
+        <select id="filter1" name="segment_id" class="form-control">
+            % for my $r (@{stash('segments') || []}) {
+            <option <%=$r->{id} == (stash('segment_id') || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' .
+                        $pg_timestamp2human->($r->{last_run_at}) %>
+            </option>
+            % }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Aplicar</button>
+</form>
+% }
 
 
 % if ( $c->req->params->param('nome') ) {
-<h2><%= stash('total_count') %>
-    resultados para 「<%= $c->req->params->param('nome') %>」</h2>
+<h2>
+    <%= stash('total_count') %>
+        resultados para 「<%= $c->req->params->param('nome') %>」
+</h2>
 % }else{
-<h2><%= stash('total_count') %>
-    resultados
+<h2>
+    <%= stash('total_count') %>
+        resultados
 </h2>
 
 % if ( stash('segment') ) {
@@ -66,13 +78,20 @@
             <tr>
                 <td style="width: 25em">
                     <a href="/admin/users?cliente_id=<%= $r->{id} %>">
-                        <%= $r->{nome_completo} %></a>
+                        <%= $r->{nome_completo} %>
+                    </a>
                     % if ($r->{status} ne 'active') {
-                    <span class="badge badge-warning"><%=$r->{status}%></span>
+                    <span class="badge badge-warning">
+                        <%=$r->{status}%>
+                    </span>
                     % }
                 </td>
-                <td style="width: 25em"><%= $r->{email} %></td>
-                <td style="width: 10em"><%= $r->{cpf_formatted} %></td>
+                <td style="width: 25em">
+                    <%= $r->{email} %>
+                </td>
+                <td style="width: 10em">
+                    <%= $r->{cpf_formatted} %>
+                </td>
                 <td>
                     <%= $r->{tickets_count} %>
                 </td>

@@ -48,13 +48,13 @@
                     <a class="nav-link" href="/admin/tickets">Solicitações</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/users">Solicitantes</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="/admin/notifications">Notificações</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/blockchains">Blockchain</a>
+                    <a class="nav-link" href="/admin/users">Solicitantes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/blockchains">Registros</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/bignum">Indicadores</a>
@@ -72,8 +72,8 @@
 
             </ul>
             <form class="form-inline my-2 my-lg-0" method="GET" action="/admin/users">
-                <input name="nome" class="form-control mr-sm-2" type="text" placeholder="Nome, email ou CPF"
-                    aria-label="Nome, email ou CPF" title="Busca de solicitantes">
+                <input name="nome" class="form-control mr-sm-2" type="text" placeholder="Buscar por nome, email ou CPF"
+                    aria-label="Buscar por nome, email ou CPF" title="Busca de solicitantes">
                 <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">
                     <span data-feather="search"></span>
                 </button>

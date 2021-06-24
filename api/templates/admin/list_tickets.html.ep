@@ -1,20 +1,27 @@
-<div class="border-bottom">
-    <div class="collapse-help">
-      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
-        <i class="bi bi-info-circle"></i> Ajuda
-      </a>
-    </div>
-    <div class="collapse" id="collapseHelp">
-      <div class="card card-body">
-        <p>Nesta tela você pode visualizar todas as solicitações do sistema.</p>
-        <h5>Situações</h5>
-        <p><b>Pendente</b>: são as solicitações aguardando uma resposta do DPO.<br/>
-        <b>Finalizado</b>: são as solicitações já foram respondidas. Você pode reabrir para enviar novas respostas ou pedir mais dados.<br/>
-        <b>Aguardando informação adicional</b>: são as solicitações o operador do DPO pediu informações adicionais para o manifestante. Quando o manifestante responder, a nova situação será "Pendente".</p>
-      </div>
-    </div>
-
+<div class="border-bottom margin-bottom">
     <h1 class="h2">Lista de solicitações</h1>
+    <div class="start-help">
+        Nesta tela você pode visualizar todas as solicitações do sistema.
+
+        <div class="collapse-help">
+            <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+                aria-controls="collapseHelp">
+                ver mais <i class="bi bi-info-circle"></i>
+            </a>
+            <div class="collapse" id="collapseHelp">
+                <div class="card card-body">
+                    <h5>Situações</h5>
+                    <p><b>Pendente</b>: são as solicitações aguardando uma resposta do DPO.<br />
+                        <b>Finalizado</b>: são as solicitações já foram respondidas. Você pode reabrir para enviar novas
+                        respostas ou pedir mais dados.<br />
+                        <b>Aguardando informação adicional</b>: são as solicitações o operador do DPO pediu informações
+                        adicionais para o manifestante. Quando o manifestante responder, a nova situação será
+                        "Pendente".
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 % if ( stash('filter_opts') ) {
@@ -22,7 +29,8 @@
     <h3>Filtros:</h3>
     % if ( $c->req->params->param('cliente_id') && stash('cliente') ) {
     <input type="hidden" name="cliente_id" value="<%=$c->req->params->param('cliente_id')%>" />
-    <p>Filtrando por cliente: Nome: <%=stash('cliente')->nome_completo %>, CPF: <%=stash('cliente')->cpf_formatted %></p>
+    <p>Filtrando por cliente: Nome: <%=stash('cliente')->nome_completo %>, CPF: <%=stash('cliente')->cpf_formatted %>
+    </p>
     %}
 
     <div class="form-row">
@@ -31,8 +39,8 @@
             <label for="filter1">Situação</label>
             <select id="filter1" name="filter" class="form-control">
                 % for my $r (@{stash('filter_opts') || []}) {
-                <option <%= $r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} %>
+                <option <%=$r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                        <%= $r->{label} %>
                 </option>
                 % }
             </select>
@@ -42,8 +50,8 @@
             <label for="filter2">Tipo da solicitação</label>
             <select id="filter2" name="filter_type" class="form-control">
                 % for my $r (@{stash('filter_type_opts') || []}) {
-                <option <%= $r->{id} eq (stash('filter_type')) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} %>
+                <option <%=$r->{id} eq (stash('filter_type')) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                        <%= $r->{label} %>
                 </option>
                 % }
             </select>
@@ -64,13 +72,14 @@
                 <th>Situação</th>
                 <th>Prazo</th>
                 <th>Solicitante</th>
-               </tr>
+            </tr>
         </thead>
         <tbody>
             % for my $r (@{stash('rows') || []}) {
             <tr>
                 <td>
-                    <a href="/admin/tickets-details?protocol=<%= $r->protocol() %>"><%= $r->protocol() %>
+                    <a href="/admin/tickets-details?protocol=<%= $r->protocol() %>">
+                        <%= $r->protocol() %>
                 </td>
                 <td>
                     <%= $r->get_column('questionnaire_label') %>
@@ -86,9 +95,9 @@
                         <%= $r->get_column('cliente_nome_completo') %>
                     </a>
                     % if ($r->get_column('cliente_verification_pending')) {
-                        <span class="badge badge-pill badge-warning">Aguardando verificação</span>
+                    <span class="badge badge-pill badge-warning">Aguardando verificação</span>
                     % } elsif (!$r->get_column('cliente_verified')) {
-                        <span class="badge badge-pill badge-danger">Não verificado</span>
+                    <span class="badge badge-pill badge-danger">Não verificado</span>
                     % }
                 </td>
 
