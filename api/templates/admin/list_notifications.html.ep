@@ -40,12 +40,11 @@
     </table>
 
     % if ( $c->req->params->param('next_page') ) {
-    <a href="#" class="btn btn-outline-dark btn-sm" onclick="window.history.back();window.close();">voltar</a>
+    <a href="#" class="btn btn-outline-dark btn-sm" onclick="window.history.back();window.close();">Página anterior</a>
     %}
 
     % if ( stash('has_more') ) {
-    <a href="/admin/notifications?next_page=<%== stash('next_page') %>" class="btn btn-outline-dark btn-sm">carregar próxima
-        página</a>
+    <a href="/admin/notifications?next_page=<%== stash('next_page') %>" class="btn btn-outline-dark btn-sm">Avançar</a>
     % }
 
 </div>
