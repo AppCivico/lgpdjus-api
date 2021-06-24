@@ -1,15 +1,8 @@
 <div class="border-bottom margin-bottom">
-    <div class="collapse-help">
-      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
-        <i class="bi bi-info-circle"></i> Ajuda
-      </a>
-    </div>
-    <div class="collapse" id="collapseHelp">
-      <div class="card card-body">
-        <p>Nesta tela você pode visualizar todas as notifiacações enviadas pelos DPO para os manifestantes. As notificações enviadas ficam disponíveis para o manifestante através do aplicativo.</p>
-      </div>
-    </div>
     <h1 class="h2">Lista de notificações</h1>
+    <div class="start-help">
+        Nesta tela você pode visualizar todas as notifiacações enviadas pelos DPO para os manifestantes. As notificações enviadas ficam disponíveis para o manifestante através do aplicativo.
+    </div>
 </div>
 <br />
 <div class="text-right">

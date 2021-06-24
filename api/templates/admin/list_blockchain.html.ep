@@ -1,42 +1,54 @@
 <div class="border-bottom margin-bottom">
-    <div class="collapse-help">
-        <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
-            aria-controls="collapseHelp">
-            <i class="bi bi-info-circle"></i> Ajuda
-        </a>
-    </div>
-    <div class="collapse" id="collapseHelp">
-        <div class="card card-body">
-            <p>O sistema gera automaicamente durante toda iteração de uma solicitação e criação de conta um novo arquivo
-                PDF que fica registrado em blockchain.</p>
-            <p>Este registro garante a integridade dos dados fornecidos e garante que não houveram modificações nos
-                dados por ele enviados.</p>
-            <h5>Hash 256</h5>
-            Hash é um algoritmo matemático para a criptografia, na qual ocorre uma transformação do dado (como um
-            arquivo) em um conjunto alfanumérico com comprimento fixo de caracteres.
-            Este conjunto de caracteres pode representar a singularidade de arquivo, porém sem conter nenhuma informação
-            do arquivo.
-            A criptografia hash é utilizada para resumir dados, verificar integridade de arquivos e garantir a segurança
-            de senhas dentro de um servidor.
-            <h5>Blockchain e dcrtime</h5>
-            <p>A blockchain escolhida para registro é a blockchain da decred, que fornece gratuitamente o serviço
-                chamado <a href="https://docs.decred.org/advanced/dcrtime/">dcrtime</a> para uso público.
-                O uso gratuito só é possível pois o hash de diversos arquivos são acumulados na off-chain da dcrtime e
-                então um novo hash com todos os hashes enviados é calculado e este sim é enviado para a
-                blockchain. O processo de atualização com a blockchain leva em torno de 1 hora, e apenas após este
-                periodo é que o arquivo é considerado ancorado. </p>
-            <p>Após o registro do hash no sistema do dcrtime, o mesmo hash não poderá ser registrado novamente, criando
-                um carimbo do horário ele foi registrado a primeira vez. Isso signfica que não há criar um novo arquivo
-                (pois a hash seria diferente), tampouco enviar um arquivo com um horário no passado.</p>
-            <h5>Situação</h5>
-            <ul>
-                <li>Ancorado: O hash do arquivo já está incomporado na blockchain da decred.</li>
-                <li>Pendente: O registro foi enviado para a off-chain dcrtime da decred.</li>
-            </ul>
+    <h1 class="h2">Lista de registros em blockchain</h1>
+    <div class="start-help">
+        Nesta tela você pode acompanhar os registros em blockchain.
+        <div class="collapse-help">
+            <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+                aria-controls="collapseHelp">
+                ver mais <i class="bi bi-info-circle"></i>
+            </a>
+            <div class="collapse" id="collapseHelp">
+                <div class="card card-body">
+                    <p>O sistema registra automaticamente durante toda iteração de uma solicitação e criação de conta um
+                        novo arquivo
+                        PDF que fica registrado em blockchain.</p>
+                    <p>Este registro garante a integridade dos dados fornecidos e garante que não houveram modificações
+                        nos
+                        dados enviados pelo manifestante.</p>
+                    <h5>Hash SHA-256</h5>
+                    Hash é um algoritmo matemático para a criptografia, na qual ocorre uma transformação do dado (como
+                    um
+                    arquivo) em um conjunto alfanumérico com comprimento fixo de caracteres.
+                    Este conjunto de caracteres pode representar a singularidade de arquivo, e ao mesmo tempo não conter
+                    nenhuma informação
+                    do arquivo.
+                    A criptografia hash é utilizada para resumir dados, verificar integridade de arquivos e garantir a
+                    segurança
+                    de senhas dentro de um servidor.
+                    <h5>Blockchain e dcrtime</h5>
+                    <p>A blockchain escolhida para registro é a blockchain da decred, que fornece gratuitamente o
+                        serviço
+                        chamado <a href="https://docs.decred.org/advanced/dcrtime/">dcrtime</a> para uso público.
+                        O uso gratuito só é possível pois o hash de diversos arquivos são acumulados na off-chain da
+                        dcrtime e
+                        então um novo hash com todos os hashes enviados é calculado e este sim é enviado para a
+                        blockchain. O processo de atualização com a blockchain leva em torno de 1 hora, e apenas após
+                        este
+                        periodo é que o arquivo é considerado registrado. </p>
+                    <p>Após o registro do hash no sistema do dcrtime, o mesmo hash não poderá ser registrado novamente,
+                        criando
+                        um carimbo do horário ele foi registrado a primeira vez. Isso signfica que não há criar um novo
+                        arquivo
+                        (pois a hash seria diferente), tampouco enviar um arquivo com um horário no passado.</p>
+                    <h5>Situação</h5>
+                    <ul>
+                        <li>Registrado: O hash do arquivo já está incomporado na blockchain da decred.</li>
+                        <li>Pendente de registro: O registro foi enviado para a off-chain dcrtime da decred.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
-
-    <h1 class="h2">Lista de registro em blockchain</h1>
 </div>
 % if ( stash('filter_opts') ) {
 <hr />
@@ -73,11 +85,11 @@
     <table class="table table-striped table-sm table-hover">
         <thead>
             <tr>
-                <th>Horário criação</th>
-                <th>Documento</th>
-                <th>Cliente</th>
-                <th>Hash 256</th>
-                <th>Horário bloco</th>
+                <th>Horário de criação</th>
+                <th>Arquivo</th>
+                <th>Manifestante</th>
+                <th>Hash SHA-256</th>
+                <th>Horário do registro</th>
                 <th>Situação</th>
             </tr>
         </thead>
@@ -137,12 +149,5 @@
         próxima
         página</a>
     % }
-
-    <hr />
-    <div>
-        <p>Vocẽ pode acessar <a target="_blank" href="https://timestamp.decred.org/">este site</a> para verificar
-            arquivos usando a colna Hash 256 para pesquisar.</p>
-
-    </div>
 
 </div>

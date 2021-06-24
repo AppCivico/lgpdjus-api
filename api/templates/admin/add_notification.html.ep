@@ -2,47 +2,56 @@
 % my $params = $c->stash('params');
 % my $notification_message = $c->stash('notification_message');
 <div class="border-bottom margin-bottom">
-    <div class="collapse-help">
-      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
-        <i class="bi bi-info-circle"></i> Ajuda
-      </a>
+    <h1 class="h2">
+        <%= $notification_message ? 'Editar notificação' : 'Criar nova notificação' %>
+    </h1>
+    <div class="start-help">
+        Nesta tela você criar novas notifiacações que serão enviadas para os manifestantes. As notificações enviadas
+        ficam disponíveis para o manifestante através do aplicativo.
+        <div class="collapse-help">
+            <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+                aria-controls="collapseHelp">
+                ver mais <i class="bi bi-info-circle"></i>
+            </a>
+            <div class="collapse" id="collapseHelp">
+                <div class="card card-body">
+                    <h5>Segmentação</h5>
+                    <p>A segmentação representa um conjunto de manifestantes que receberão a notificação.</p>
+                    <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema
+                        para que ela seja adicionada.</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="collapse" id="collapseHelp">
-      <div class="card card-body">
-        <p>Nesta tela você criar novas notifiacações que serão enviadas para os manifestantes. As notificações enviadas ficam disponíveis para o manifestante através do aplicativo.</p>
-        <h5>Segmentação</h5>
-        <p>A segmentação representa um conjunto de manifestantes que receberão a notificação.</p>
-        <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema para que ela seja adicionada.</p>
-      </div>
-    </div>
-    <h1 class="h2"> <%= $notification_message ?  'Editar notificação' : 'Criar nova notificação' %></h1>
 </div>
 <br />
 <form method="POST" action="/admin/add-notification">
     <div class="form-group">
 
         % if ( stash('segment_id') ) {
-            <label for="filter1">Segmentação</label>
+        <label for="filter1">Segmentação</label>
         <select name="segment_id" class="form-control" id="exampleFormControlSelect1" readonly>
             <option selected value="<%= stash('segment_id') %>">
-                <%= stash('segment')->label . ' - ' . stash('segment')->last_count . ' resultados, contado em ' . $pg_timestamp2human->(stash('segment')->last_run_at) %>
+                <%= stash('segment')->label . ' - ' . stash('segment')->last_count . ' resultados, contado em ' .
+                    $pg_timestamp2human->(stash('segment')->last_run_at) %>
             </option>
         </select>
         % }
         % if ( stash('segments') ) {
-            <label for="filter1">Segmentação</label>
-            <select id="filter1" name="segment_id" class="form-control">
-                % for my $r (@{stash('segments') || []}) {
-                <option <%= $r->{id} == ($params->{segment_id} || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' . $pg_timestamp2human->($r->{last_run_at}) %>
-                </option>
-                % }
-            </select>
+        <label for="filter1">Segmentação</label>
+        <select id="filter1" name="segment_id" class="form-control">
+            % for my $r (@{stash('segments') || []}) {
+            <option <%=$r->{id} == ($params->{segment_id} || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' .
+                        $pg_timestamp2human->($r->{last_run_at}) %>
+            </option>
+            % }
+        </select>
         % }
 
         % if ($notification_message){
         <p>Está notificação foi enviada para <%= $notification_message->meta__count %> solicitantes.</p>
-        <hr/>
+        <hr />
         <input type="hidden" name="notification_message_id" value="<%=$notification_message->id %>" />
         % }
 
@@ -95,13 +104,15 @@
 
     </div>
 
-    <button type="submit" class="btn btn-primary"> <%= $notification_message ?'Salvar' : 'Criar' %> </button>
+    <button type="submit" class="btn btn-primary">
+        <%= $notification_message ?'Salvar' : 'Criar' %>
+    </button>
     % if ($notification_message){
-        <hr />
-        <div class="text-right">
-            <button type="submit" name="action" value="delete" class="btn btn-sm btn-danger">Apagar</button>
+    <hr />
+    <div class="text-right">
+        <button type="submit" name="action" value="delete" class="btn btn-sm btn-danger">Apagar</button>
 
-        </div>
+    </div>
     % }
 
 

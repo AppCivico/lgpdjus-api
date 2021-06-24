@@ -131,10 +131,10 @@ sub build_status {
     my $self = shift();
     return $self->decred_capture_txid
       ? sprintf(
-        'Ancorado<br/> <a target="_blank" href="%s">txid: %s</a>',
+        'Registrado<br/> <a target="_blank" href="%s">txid: %s</a>',
         'https://explorer.dcrdata.org/tx/' . $self->decred_capture_txid, $self->decred_capture_txid
       )
-      : 'Pendente';
+      : 'Pendente de registro';
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

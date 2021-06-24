@@ -1,22 +1,25 @@
 % my $cliente = stash('cliente');
 <div class="border-bottom margin-bottom">
-    <div class="collapse-help">
-      <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false" aria-controls="collapseHelp">
-        <i class="bi bi-info-circle"></i> Ajuda
-      </a>
-    </div>
-    <div class="collapse" id="collapseHelp">
-      <div class="card card-body">
-        <p>Nesta tela você pode ter uma visão geral da conta de um manifestante. </p>
-        <p>Você também pode agendar a remoção da conta.</p>
-      </div>
-    </div>
     <h1 class="h2">Detalhes do solicitante <%= $cliente->{nome_completo} || 'não encontrado'%></h1>
+    <div class="start-help">
+        Nesta tela você pode ter uma visão geral da conta de um manifestante.
+        <div class="collapse-help">
+            <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
+                aria-controls="collapseHelp">
+                ver mais <i class="bi bi-info-circle"></i>
+            </a>
+            <div class="collapse" id="collapseHelp">
+                <div class="card card-body">
+                    Você também pode agendar a remoção da conta caso ela não tenha feito nenhuma solicitação.
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 % if ( $cliente ) {
 
-    <div class="tab-content profile-tab" id="myTabContent">
+<div class="tab-content profile-tab" id="myTabContent">
     <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
 
         <div class="row">
@@ -25,11 +28,11 @@
             </div>
             <div class="col-md-6">
                 % if ($cliente->{account_verified}){
-                    <span class="badge badge-pill badge-success">Conta verificada</span>
+                <span class="badge badge-pill badge-success">Conta verificada</span>
                 % } elsif ($cliente->{account_verification_pending}){
-                    <span class="badge badge-pill badge-warning">Verificação pendente</span>
+                <span class="badge badge-pill badge-warning">Verificação pendente</span>
                 % } else {
-                    <span class="badge badge-pill badge-danger">Conta não verificada</span>
+                <span class="badge badge-pill badge-danger">Conta não verificada</span>
                 % }
             </div>
         </div>
@@ -39,7 +42,9 @@
                 <label>Total de solicitações</label>
             </div>
             <div class="col-md-6">
-                <a href="/admin/tickets?cliente_id=<%=$cliente->{id}%>&filter=all"><%=$total_ticket%> solicitações</a>
+                <a href="/admin/tickets?cliente_id=<%=$cliente->{id}%>&filter=all">
+                    <%=$total_ticket%> solicitações
+                </a>
             </div>
         </div>
 
@@ -48,14 +53,19 @@
                 <label>Total de registros em blockchain</label>
             </div>
             <div class="col-md-6">
-                <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>&filter=all"><%=$total_blockchain%> registros em blockchain</a>
+                <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>&filter=all">
+                    <%=$total_blockchain%> registros em blockchain
+                </a>
             </div>
         </div>
 
-        % for my $item (@$fields) { next if !$cliente->{$item->[0]} && $item->[0] eq 'genero_outro'; next if !$item->[1];
+        % for my $item (@$fields) { next if !$cliente->{$item->[0]} && $item->[0] eq 'genero_outro'; next if
+        !$item->[1];
         <div class="row">
             <div class="col-md-3 text-right">
-                <label><%=$item->[1]%></label>
+                <label>
+                    <%=$item->[1]%>
+                </label>
             </div>
             <div class="col-md-6">
                 <%=$cliente->{$item->[0]}%>
@@ -68,7 +78,9 @@
                 <label>Último uso do aplicativo</label>
             </div>
             <div class="col-md-6">
-                <p><%= $pg_timestamp2human->($cliente->{activity}) %></p>
+                <p>
+                    <%= $pg_timestamp2human->($cliente->{activity}) %>
+                </p>
             </div>
         </div>
     </div>
@@ -77,47 +89,52 @@
 
 <form method="POST" action="/admin/schedule-delete?cliente_id=<%=$cliente->{id}%>">
 
-<div class="card col-md-6">
-    <div class="card-body">
-      <h5 class="card-title">Confirmar apagar conta</h5>
+    <div class="card col-md-6">
+        <div class="card-body">
+            <h5 class="card-title">Confirmar apagar conta</h5>
 
-      <p class="alert alert-warning">Após a remoção da conta, todos os arquivos serão removidos exceto os registros em blockchain.</p>
+            <p class="alert alert-warning">Após a remoção da conta, todos os arquivos serão removidos exceto os
+                registros em blockchain.</p>
 
-      <div class="form-group">
-        <label for="delete_date">Data para remoção</label>
-          <input id="delete_date" required name="delete_date" type="date" class="form-control"/>
-      </div>
-      <button type="submit" class="btn btn-danger">confirmar</button>
+            <div class="form-group">
+                <label for="delete_date">Data para remoção</label>
+                <input id="delete_date" required name="delete_date" type="date" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-danger">confirmar</button>
 
+        </div>
     </div>
-</div>
 
 </form>
 
 % } elsif ($cliente->{perform_delete_at}) {
 
 <div class="card col-md-6">
-  <div class="card-body">
-    <h5 class="card-title">Remoção agendada!</h5>
-    <h6 class="card-subtitle mb-2 text-warning">A conta será removido em <%= $pg_timestamp2human->($cliente->{perform_delete_at}) %></h6>
-    <p class="card-text">A conta será removido dentro de alguns minutos após este horário. Todos os arquivos são removidos exceto os registros em blockchain.</p>
+    <div class="card-body">
+        <h5 class="card-title">Remoção agendada!</h5>
+        <h6 class="card-subtitle mb-2 text-warning">A conta será removido em <%= $pg_timestamp2human->
+                ($cliente->{perform_delete_at}) %></h6>
+        <p class="card-text">A conta será removido dentro de alguns minutos após este horário. Todos os arquivos são
+            removidos exceto os registros em blockchain.</p>
 
-    <a href="/admin/unschedule-delete?cliente_id=<%=$cliente->{id}%>" class="card-link btn btn-primary">cancelar remoção</a>
+        <a href="/admin/unschedule-delete?cliente_id=<%=$cliente->{id}%>" class="card-link btn btn-primary">cancelar
+            remoção</a>
 
-  </div>
+    </div>
 </div>
 
 % } else {
-    <div class="card col-md-6">
-        <div class="card-body">
-          <h5 class="card-title">Remover conta</h5>
+<div class="card col-md-6">
+    <div class="card-body">
+        <h5 class="card-title">Remover conta</h5>
 
-          <p class="card-text">Clique no botão abaixo para iniciar a remoção da conta.</p>
+        <p class="card-text">Clique no botão abaixo para iniciar a remoção da conta.</p>
 
-          <a href="/admin/users?load_delete_form=1&cliente_id=<%=$cliente->{id}%>" class="card-link btn btn-outline-dark">Agendar remoção</a>
+        <a href="/admin/users?load_delete_form=1&cliente_id=<%=$cliente->{id}%>"
+            class="card-link btn btn-outline-dark">Agendar remoção</a>
 
-        </div>
     </div>
+</div>
 
 % }
 
