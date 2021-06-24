@@ -67,11 +67,11 @@
 
         <b>Status da conta: </b> <span>
             % if ($cliente->account_verified()){
-            <span class="badge badge-pill badge-success">Conta verificada</span>
+            <span class="badge badge-pill badge-success">verificada</span>
             % } elsif ($cliente->account_verification_pending()){
-            <span class="badge badge-pill badge-warning">Verificação pendente</span>
+            <span class="badge badge-pill badge-warning">verificação pendente</span>
             % } else {
-            <span class="badge badge-pill badge-danger">Conta não verificada</span>
+            <span class="badge badge-pill badge-danger">não verificada</span>
             % }
         </span><br />
 

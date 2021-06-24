@@ -95,9 +95,11 @@
                         <%= $r->get_column('cliente_nome_completo') %>
                     </a>
                     % if ($r->get_column('cliente_verification_pending')) {
-                    <span class="badge badge-pill badge-warning">Aguardando verificação</span>
+                    <span class="badge badge-pill badge-warning">verificação pendente</span>
                     % } elsif (!$r->get_column('cliente_verified')) {
-                    <span class="badge badge-pill badge-danger">Não verificado</span>
+                    <span class="badge badge-pill badge-danger">não verificada</span>
+                    % }else {
+                        <span class="badge badge-pill badge-success">verificada</span>
                     % }
                 </td>
 

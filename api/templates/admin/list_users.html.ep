@@ -85,6 +85,13 @@
                         <%=$r->{status}%>
                     </span>
                     % }
+                    % if ($r->{account_verified}){
+                    <span class="badge badge-pill badge-success">verificada</span>
+                    % } elsif ($r->{account_verification_pending}){
+                    <span class="badge badge-pill badge-warning">verificação pendente</span>
+                    % } else {
+                    <span class="badge badge-pill badge-danger">não verificada</span>
+                    % }
                 </td>
                 <td style="width: 25em">
                     <%= $r->{email} %>
@@ -93,7 +100,8 @@
                     <%= $r->{cpf_formatted} %>
                 </td>
                 <td>
-                    <%= $r->{tickets_count} %>
+                    <a href="/admin/tickets?cliente_id=<%=$r->{id}%>"><%= $r->{tickets_count} %> solicitações
+                    </a>
                 </td>
             </tr>
             % }

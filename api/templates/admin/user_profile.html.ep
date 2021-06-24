@@ -28,11 +28,11 @@
             </div>
             <div class="col-md-6">
                 % if ($cliente->{account_verified}){
-                <span class="badge badge-pill badge-success">Conta verificada</span>
+                <span class="badge badge-pill badge-success">verificada</span>
                 % } elsif ($cliente->{account_verification_pending}){
-                <span class="badge badge-pill badge-warning">Verificação pendente</span>
+                <span class="badge badge-pill badge-warning">verificação pendente</span>
                 % } else {
-                <span class="badge badge-pill badge-danger">Conta não verificada</span>
+                <span class="badge badge-pill badge-danger">não verificada</span>
                 % }
             </div>
         </div>
@@ -59,8 +59,9 @@
             </div>
         </div>
 
-        % for my $item (@$fields) { next if !$cliente->{$item->[0]} && $item->[0] eq 'genero_outro'; next if
-        !$item->[1];
+        % for my $item (@$fields) {
+        % next if !$cliente->{$item->[0]} && $item->[0] eq 'genero_outro';
+        % next if !$item->[1];
         <div class="row">
             <div class="col-md-3 text-right">
                 <label>

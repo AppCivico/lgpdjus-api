@@ -56,6 +56,8 @@ sub au_search {
                   me.email
                   me.cpf
                   me.status
+                  me.account_verified
+                  me.account_verification_pending
                   /,
                 (
                     $render_detail
@@ -63,8 +65,6 @@ sub au_search {
                         qw/
                           me.apelido
                           me.perform_delete_at
-                          me.account_verified
-                          me.account_verification_pending
                           /,
                       )
                     : ()
