@@ -29,7 +29,7 @@
         integrity="sha512-RAKGi5Lz3BrsIKXW8sSbTM2sgNbf5m3n7zApdXDTL1IH0OvG1Xe1q2yI2R2gTDqsd2PLuQIIiPnDJeOSLikJTA=="
         crossorigin="anonymous"></script>
     % }
-    <title><%= (stash 'title') || 'Padrão' %></title>
+    <title><%= (stash 'title') || 'LGPDjus' %></title>
 
     </style>
 

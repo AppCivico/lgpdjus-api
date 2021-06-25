@@ -4,7 +4,7 @@ use common::sense;
 sub setup {
     my $app = shift;
 
-    $app->defaults(layout => 'padrao', title => 'default');
+    $app->defaults(layout => 'padrao', title => '');
 
     # Hypnotoad.
     my $api_port      = int($ENV{API_PORT});
