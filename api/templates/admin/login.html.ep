@@ -2,8 +2,10 @@
     <link rel="stylesheet" href="/web-assets/login.css" />
 
     <div id="formContent">
+        <img height=180 src="/web-assets/LogoPreta_LGPD_jus.svg" onerror="this.src='/web-assets/LogoPreta_LGPD_jus.png'">
+
         <form class="form-signin" method="POST">
-            <h2>Administração</h2>
+            <h2>Administração DPO</h2>
 
             % if (my $message = stash ('message')) {
             <div class="alert alert-danger" role="alert">
