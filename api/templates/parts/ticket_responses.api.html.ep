@@ -1,9 +1,9 @@
 % my $responses = stash('responses');
-<h2>Iterações: </h2>
+<h2>Histórico de ações: </h2>
 
 % if (!scalar @$responses ){
 
-<p>Não há iterações</p>
+<p>Não há histórico de ações</p>
 
 % } else {
 
