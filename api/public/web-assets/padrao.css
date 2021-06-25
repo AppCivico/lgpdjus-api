@@ -6,6 +6,11 @@ a:hover {
   color: #007bff;
   text-decoration: none;
 }
+html {
+    position: relative;
+    min-height: 100%;
+}
+
 
 /* Custom default button */
 .btn-secondary,
@@ -22,6 +27,9 @@ body {
   height: 100%;
   color: #FFF;
   background-color: #fff;
+}
+body {
+    margin-bottom: 40px;
 }
 
 main {
@@ -70,3 +78,13 @@ div.card-header h5 {
     background-color: rgba(0,0,0,0.15);
 }
 .h-need-help {padding-top: 2em; text-align: center;}
+
+.custom-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 40px; /* Set the fixed height of the footer here */
+    line-height: 40px; /* Vertically center the text there */
+    background-color: #f5f5f5;
+    font-size: 0.8rem;
+}

@@ -36,4 +36,10 @@ $('.collapse').on('show.bs.collapse', function(e) {
   }, 500);
 });</script>
 
+<footer class="footer custom-footer">
+  <div class="container">
+    <span class="text-muted">Desenvolvido por <a target="_blank" href="https://itsrio.org/pt/home/">ITS-Rio</a> e <a target="_blank" href="https://www.appcivico.com/">AppCívico</a></span>
+  </div>
+</footer>
+
 </html>

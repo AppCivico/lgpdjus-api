@@ -113,6 +113,12 @@
     </script>
 
     <script src="/web-assets/offcanvas.js?v=<%==$version%>"></script>
+    <footer class="footer custom-footer">
+      <div class="container">
+        <span class="text-muted">Desenvolvido por <a target="_blank" href="https://itsrio.org/pt/home/">ITS-Rio</a> e <a target="_blank" href="https://www.appcivico.com/">AppCívico</a></span>
+      </div>
+    </footer>
+
 </body>
 
 </html>
