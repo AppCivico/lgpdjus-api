@@ -140,3 +140,17 @@ body {
 #collapseHelp {
     font-size: 1rem;
 }
+
+.form-group--flex .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.form-group--flex button.btn {
+    width: 100%;
+}
+
+.btn-light {
+    border-color: #007bff !important;
+}

@@ -33,32 +33,35 @@
     </p>
     %}
 
-    <div class="form-row">
+    <div class="form-row form-group--flex">
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-5">
             <label for="filter1">Situação</label>
             <select id="filter1" name="filter" class="form-control">
                 % for my $r (@{stash('filter_opts') || []}) {
-                <option <%=$r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                <option <%=$r->{id} eq (stash('filter') || '') ? 'selected' : '' %> value="<%= $r->{id} %>">
                         <%= $r->{label} %>
                 </option>
                 % }
             </select>
         </div>
 
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-5">
             <label for="filter2">Tipo da solicitação</label>
             <select id="filter2" name="filter_type" class="form-control">
                 % for my $r (@{stash('filter_type_opts') || []}) {
-                <option <%=$r->{id} eq (stash('filter_type')) ? 'selected' : '' %> value="<%= $r->{id} %>">
+                <option <%=$r->{id} eq (stash('filter_type') || '') ? 'selected' : '' %> value="<%= $r->{id} %>">
                         <%= $r->{label} %>
                 </option>
                 % }
             </select>
         </div>
+        <div class="form-group col-md-2">
+
+            <button type="submit" class="btn btn-primary">Aplicar</button>
+        </div>
 
     </div>
-    <button type="submit" class="btn btn-primary">Aplicar</button>
 </form>
 % }
 
@@ -99,7 +102,7 @@
                     % } elsif (!$r->get_column('cliente_verified')) {
                     <span class="badge badge-pill badge-danger">não verificada</span>
                     % }else {
-                        <span class="badge badge-pill badge-success">verificada</span>
+                    <span class="badge badge-pill badge-success">verificada</span>
                     % }
                 </td>
 
