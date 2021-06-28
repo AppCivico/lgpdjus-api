@@ -161,7 +161,8 @@ sub verify_blockchain {
     my $json  = $verify->json;
     my $chain = $json->{digests}[0]{chaininformation};
     if (   $chain->{merkleroot} ne '0000000000000000000000000000000000000000000000000000000000000000'
-        && $chain->{transaction} ne '0000000000000000000000000000000000000000000000000000000000000000')
+        && $chain->{transaction} ne '0000000000000000000000000000000000000000000000000000000000000000'
+        && $chain->{chaintimestamp} > 0)
     {
         slog_info('updating record');
         my $update = $record->update(
