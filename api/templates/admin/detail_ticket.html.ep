@@ -65,18 +65,17 @@
     <div class="col">
         <h3>Dados do solicitante</h3>
 
-        <b>Status da conta: </b> <span>
-            % if ($cliente->account_verified()){
+        <b>Nome completo: </b> <span>
+            <a href="/admin/users?cliente_id=<%= $cliente->get_column('id') %>">
+            <%= $cliente->nome_completo() %>
+        </a>
+        % if ($cliente->account_verified()){
             <span class="badge badge-pill badge-success">verificada</span>
             % } elsif ($cliente->account_verification_pending()){
             <span class="badge badge-pill badge-warning">verificação pendente</span>
             % } else {
             <span class="badge badge-pill badge-danger">não verificada</span>
             % }
-        </span><br />
-
-        <b>Nome completo: </b> <span>
-            <%= $cliente->nome_completo() %>
         </span><br />
         <b>CPF: </b> <span>
             <%= $cliente->cpf_formatted() %>
@@ -136,7 +135,7 @@
                     % }
                 </div>
 
-                <button type="submit" class="btn btn-primary"><%=$action_button_text%></button>
+                <button type="submit" class="btn btn-primary"><%=stash('action_button_text') || 'Enviar' %></button>
 
             </div>
         </form>
