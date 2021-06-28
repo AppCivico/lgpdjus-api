@@ -7,5 +7,5 @@
         <a href="<%= web_link_to 'current', query => [{ next_page => stash('next_page') }] %>" class="btn btn-outline-dark btn-sm">Avançar</a>
     % }
 
-    <%= stash('current_page_number') %> de <%= stash('total_page_number') %> páginas
+    Página <%= stash('current_page_number') %> de <%= stash('total_page_number') %>
 </p>
