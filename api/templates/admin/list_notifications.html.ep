@@ -32,7 +32,7 @@
                     <%== $r->{content_text} %>
                 </td>
                 <td class="text-right">
-                    <a href="/admin/message-detail?id=<%== $r->{id} %>"
+                    <a href="/admin/notifications-message-detail?id=<%== $r->{id} %>"
                         class="btn btn-primary btn-sm">editar</a>
                 </td>
             </tr>

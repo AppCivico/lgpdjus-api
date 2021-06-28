@@ -55,7 +55,7 @@ sub unft_crud {
             },
             html => sub {
                 $c->flash_to_redis({success_message => 'Salvo com sucesso!'});
-                $c->redirect_to('/admin/message-detail?id=' . $notification_message->id);
+                $c->redirect_to('/admin/notifications-message-detail?id=' . $notification_message->id);
             }
         );
     }
@@ -135,7 +135,7 @@ sub unft_crud {
         },
         html => sub {
             $c->flash_to_redis({success_message => $message});
-            $c->redirect_to('/admin/message-detail?id=' . $message_id);
+            $c->redirect_to('/admin/notifications-message-detail?id=' . $message_id);
         }
     );
 }

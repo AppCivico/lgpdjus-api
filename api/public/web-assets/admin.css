@@ -216,3 +216,7 @@ body {
     margin-bottom: -25px;
     margin-right: -20px;
 }
+
+.navbar-custom .nav-item.active .nav-link {
+    color: #3c3c3b;
+}

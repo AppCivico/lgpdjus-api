@@ -73,7 +73,7 @@ sub register {
 
     $admin->post('add-notification')->to(controller => 'Admin::Notifications', action => 'unft_crud');
     $admin->get('add-notification')->to(controller => 'Admin::Notifications', action => 'unft_new_template');
-    $admin->get('message-detail')->to(controller => 'Admin::Notifications', action => 'unft_explore');
+    $admin->get('notifications-message-detail')->to(controller => 'Admin::Notifications', action => 'unft_explore');
     $admin->get('notifications')->to(controller => 'Admin::Notifications', action => 'unft_list');
     $admin->get('bignum')->to(controller => 'Admin::BigNum', action => 'abignum_get');
 
