@@ -79,7 +79,7 @@
             </ul>
 
             <form class="form-inline my-auto d-md-none d-lg-block my-lg-0" method="GET" action="/admin/users">
-                <input name="nome" class="form-control mr-sm-2" type="text" placeholder="Buscar por nome, email ou CPF"
+                <input name="search" class="form-control mr-sm-2" type="text" placeholder="Buscar por nome, email ou CPF"
                     aria-label="Buscar por nome, email ou CPF" title="Busca de solicitantes">
                 <button class="btn btn-outline-white my-2 my-sm-0" type="submit">
                     <span class="feather-white" data-feather="search"></span>

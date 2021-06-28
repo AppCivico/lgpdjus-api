@@ -15,7 +15,7 @@
             </a>
             <div class="collapse" id="collapseHelp">
                 <div class="card card-body">
-                    <h5>Segmentação</h5>
+                    <h5>Tipo</h5>
                     <p>A segmentação representa um conjunto de manifestantes que receberão a notificação.</p>
                     <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema
                         para que ela seja adicionada.</p>
@@ -29,7 +29,7 @@
     <div class="form-group">
 
         % if ( stash('segment_id') ) {
-        <label for="filter1">Segmentação</label>
+        <label for="filter1">Tipo</label>
         <select name="segment_id" class="form-control" id="exampleFormControlSelect1" readonly>
             <option selected value="<%= stash('segment_id') %>">
                 <%= stash('segment')->label . ' - ' . stash('segment')->last_count . ' resultados, contado em ' .
@@ -38,12 +38,11 @@
         </select>
         % }
         % if ( stash('segments') ) {
-        <label for="filter1">Segmentação</label>
+        <label for="filter1">Tipo</label>
         <select id="filter1" name="segment_id" class="form-control">
             % for my $r (@{stash('segments') || []}) {
             <option <%=$r->{id} == ($params->{segment_id} || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} . ' ----- ' . $r->{last_count} . ' resultados, contado em ' .
-                        $pg_timestamp2human->($r->{last_run_at}) %>
+                    <%= $r->{label} . ' - aproximadamente ' . $r->{last_count} . ' manifestantes' %>
             </option>
             % }
         </select>

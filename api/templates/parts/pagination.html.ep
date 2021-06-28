@@ -1,0 +1,11 @@
+<p>
+    % if ( $c->req->params->param('next_page') ) {
+    <a href="#" class="btn btn-outline-dark btn-sm" onclick="window.history.back();window.close();">Página anterior</a>
+    %}
+
+    % if ( stash('has_more') ) {
+        <a href="<%= web_link_to 'current', query => [{ next_page => stash('next_page') }] %>" class="btn btn-outline-dark btn-sm">Avançar</a>
+    % }
+
+    <%= stash('current_page_number') %> de <%= stash('total_page_number') %> páginas
+</p>

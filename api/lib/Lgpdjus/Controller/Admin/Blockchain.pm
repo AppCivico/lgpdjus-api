@@ -24,12 +24,16 @@ sub a_blockchain_list_get {
     my $rows = $valid->{rows} || 10;
     $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
 
-    my $offset = 0;
+    my $offset       = 0;
+    my $current_page = 1;
+    my $total_count;
     if ($valid->{next_page}) {
         my $tmp = eval { $c->decode_jwt($valid->{next_page}) };
         $c->reply_invalid_param('next_page')
           if ($tmp->{iss} || '') ne 'BLOCKCHAIN:NP';
-        $offset = $tmp->{offset};
+        $offset       = $tmp->{offset};
+        $current_page = $tmp->{page};
+        $total_count  = $tmp->{count};
     }
 
     my $rs = $c->schema->resultset('BlockchainRecord')->search(
@@ -60,7 +64,11 @@ sub a_blockchain_list_get {
 
     $valid->{filter} = 'all' unless $filter;
 
-    $rs = $rs->search($filter, {rows => $rows + 1, offset => $offset});
+    $rs = $rs->search($filter);
+    $total_count ||= $rs->count;
+    $rs = $rs->search(undef, {rows => $rows + 1, offset => $offset});
+
+
     my @rows = $rs->all;
 
     my $cur_count = scalar @rows;
@@ -74,6 +82,8 @@ sub a_blockchain_list_get {
         {
             iss    => 'BLOCKCHAIN:NP',
             offset => $offset + $cur_count,
+            page   => $current_page + 1,
+            count  => $total_count,
         },
         1
     );
@@ -101,9 +111,12 @@ sub a_blockchain_list_get {
                 {id => 'pending',  label => 'Aguardando ancoragem'},
                 {id => 'anchored', label => 'Ancorado'},
             ],
-            rows      => \@rows,
-            has_more  => $has_more,
-            next_page => $has_more ? $next_page : undef,
+            rows                => \@rows,
+            has_more            => $has_more,
+            next_page           => $has_more ? $next_page : undef,
+            total_count         => $total_count,
+            current_page_number => $current_page,
+            total_page_number   => ceil( $total_count / $rows),
         },
     );
 }

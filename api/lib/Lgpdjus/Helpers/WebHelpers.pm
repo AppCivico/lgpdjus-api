@@ -13,6 +13,8 @@ sub setup {
     $c->helper(respond_to_if_web => \&respond_to_if_web);
     $c->helper(flash_to_redis    => \&flash_to_redis);
     $c->helper(use_redis_flash   => \&use_redis_flash);
+    $c->helper(web_link_to   => \&web_link_to);
+
 }
 
 sub respond_to_if_web {
@@ -75,5 +77,26 @@ sub flash_to_redis {
     $c->kv->redis->setex($redis_key, 15, to_json($content));
     $c->flash(flashredis => $redis_key);
 }
+
+
+sub web_link_to {
+    my ($c, $basepath, %other) = @_;
+
+    my $url = $basepath;
+    if ($basepath eq 'current'){
+        $url = $c->req->url->to_string();
+    }
+    $url = Mojo::URL->new($url);
+
+    if (keys %other) {
+        while (my ($method, $args) = each %other) {
+            $url = $url->$method(@$args);
+        }
+    }
+
+    $url = $url->to_string();
+    return $url;
+}
+
 
 1;

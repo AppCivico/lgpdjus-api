@@ -223,12 +223,16 @@ sub unft_list {
     my $rows = $valid->{rows} || 10;
     $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
 
+    my $current_page = 1;
+    my $total_count;
     my $offset = 0;
     if ($valid->{next_page}) {
         my $tmp = eval { $c->decode_jwt($valid->{next_page}) };
         $c->reply_invalid_param('next_page')
           if ($tmp->{iss} || '') ne 'NFT:NP';
-        $offset = $tmp->{offset};
+        $offset       = $tmp->{offset};
+        $current_page = $tmp->{page};
+        $total_count  = $tmp->{count};
     }
 
     my $rs = $c->schema->resultset('NotificationMessage')->search(
@@ -239,6 +243,7 @@ sub unft_list {
         }
     );
 
+    $total_count ||= $rs->count;
     $rs = $rs->search(undef, {rows => $rows + 1, offset => $offset});
     my @rows = $rs->all;
 
@@ -258,6 +263,8 @@ sub unft_list {
         {
             iss    => 'NFT:NP',
             offset => $offset + $cur_count,
+            page   => $current_page + 1,
+            count  => $total_count,
         },
         1
     );
@@ -274,6 +281,9 @@ sub unft_list {
             rows      => \@rows,
             has_more  => $has_more,
             next_page => $has_more ? $next_page : undef,
+            total_count         => $total_count,
+            current_page_number => $current_page,
+            total_page_number   => ceil( $total_count / $rows),
         },
     );
 }

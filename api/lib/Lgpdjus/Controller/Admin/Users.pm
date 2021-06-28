@@ -20,25 +20,29 @@ sub au_search {
         rows       => {required => 0, type => 'Int'},
         cliente_id => {required => 0, type => 'Int'},
         next_page  => {required => 0, type => 'Str'},
-        nome       => {required => 0, type => 'Str', empty_is_valid => 1, max_length => 99},
-        segment_id => {required => 0, type => 'Int'},
+        search     => {required => 0, type => 'Str', empty_is_valid => 1, max_length => 99},
+        segment_id => {required => 0, type => 'Int',},
 
         load_delete_form => {required => 0, type => 'Bool'},
     );
 
-    my $dirty = 0;
-    my $nome  = $valid->{nome};
-    my $rows  = $valid->{rows} || 10;
-    $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
+    my $dirty  = 0;
+    my $search = $valid->{search};
+    my $rows   = $valid->{rows} || 10;
+    $rows = 10 if !is_test() && ($rows > 100 || $rows < 2);
+    my $current_page = 1;
 
     my $render_detail = $valid->{cliente_id} && $c->accept_html();
     my $offset        = 0;
+    my $total_count;
     if ($valid->{next_page}) {
         my $tmp = eval { $c->decode_jwt($valid->{next_page}) };
         $c->reply_invalid_param('next_page')
           if ($tmp->{iss} || '') ne 'AU:NP';
-        $offset = $tmp->{offset};
+        $offset              = $tmp->{offset};
         $valid->{segment_id} = $tmp->{segment_id} if defined $tmp->{segment_id};
+        $current_page        = $valid->{page};
+        $total_count         = $valid->{count};
     }
 
     my $rs = $c->schema->resultset('Cliente')->search(
@@ -74,17 +78,17 @@ sub au_search {
         }
     );
 
-    if ($nome) {
+    if ($search) {
         $dirty++;    #nao atualizar o contador do segmento, se tiver.
-        my $nome_number = $nome;
+        my $nome_number = $search;
         $nome_number =~ s/[^\d]+//ag;
 
         $rs = $rs->search(
             {
                 '-or' => [
-                    \['lower(me.nome_completo) like ?', "\%$nome\%"],
-                    \['lower(me.apelido) like ?',       "\%$nome\%"],
-                    \['lower(me.email) like ?',         "\%$nome\%"],
+                    \['lower(me.nome_completo) like ?', "\%$search\%"],
+                    \['lower(me.apelido) like ?',       "\%$search\%"],
+                    \['lower(me.email) like ?',         "\%$search\%"],
                     ($nome_number ? (\['me.cpf::text like ?', "$nome_number\%"]) : ()),
                 ],
             }
@@ -98,7 +102,7 @@ sub au_search {
         $rs = $segment->apply_to_rs($c, $rs);
     }
 
-    my ($total_count, @rows);
+    my @rows;
     if ($render_detail) {
         my $cliente = $rs->next or $c->reply_item_not_found();
 
@@ -138,8 +142,9 @@ sub au_search {
 
     }
     else {
-        $total_count = $rs->count;
-        $segment->update({last_count => $total_count, last_run_at => \'NOW()'}) if $segment && !$dirty;
+        $segment->update({last_count => $total_count, last_run_at => \'NOW()'})
+          if $segment && !$dirty && defined $total_count;
+        $total_count ||= $rs->count;
 
         $rs   = $rs->search(undef, {rows => $rows + 1, offset => $offset});
         @rows = map {
@@ -160,7 +165,9 @@ sub au_search {
         {
             iss        => 'AU:NP',
             offset     => $offset + $cur_count,
-            segment_id => $valid->{segment_id}
+            segment_id => $valid->{segment_id},
+            count      => $total_count,
+            page       => $current_page + 1,
         },
         1
     );
@@ -199,6 +206,11 @@ sub au_search {
 
             segment    => $segment,
             segment_id => $segment ? $segment->id : undef,
+
+            search              => $search || '',
+            current_page_number => $current_page,
+            total_page_number   => ceil($total_count / $rows),
+
         },
     );
 }

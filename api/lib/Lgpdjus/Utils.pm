@@ -91,6 +91,8 @@ state $text_xslate = Text::Xslate->new(
   check_password_or_die
 
   linkfy
+
+  ceil
 );
 
 
@@ -212,6 +214,10 @@ sub _nearest_floor {
     my @res  = map { $targ * POSIX::ceil(($_ - 0.50000000000008 * $targ) / $targ) } @_;
 
     return wantarray ? @res : $res[0];
+}
+
+sub ceil {
+    POSIX::ceil(@_)
 }
 
 # semelhante a sprintf( '%0.5f', shift ) porem tem mais chance de cair em hit do cache
