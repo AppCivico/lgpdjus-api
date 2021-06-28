@@ -40,18 +40,21 @@ sub a_tickets_detail_get_post {
     }
     my $is_verify = $ticket->questionnaire->code eq 'verify_account';
 
-    my $base_url        = '/admin/tickets-details?protocol=' . $ticket->protocol;
+    my $base_url = '/admin/tickets-details?protocol=' . $ticket->protocol;
+
+    # action, class, placeholder, button
     my $actions_by_code = {
-        reopen       => ['Reabrir', 'btn-light'],
+        reopen       => ['Reabrir', 'btn-light', '(placeholder)', '(button)'],
         ask_add_info => [
             'Pedir informação adicional', 'btn-light', 'Descreva qual informação adicional é necessária',
-            'Precio que me envie novamente a foto do...'
+            'Precio que me envie novamente a foto do...', 'Enviar pedido'
         ],
-        close      => ['Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...'],
-        change_due => ['Mudar prazo',         'btn-light',   'Escolha o novo prazo',              ''],
+        close =>
+          ['Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'],
+        change_due => ['Mudar prazo', 'btn-light', 'Escolha o novo prazo', '(placeholder)', 'Mudar prazo'],
         verify     => [
             'Analisar e verificar conta', 'btn-primary', 'Comentário',
-            'Descreva o resultado ou motivo da negação'
+            'Descreva o resultado ou motivo da negação', 'Verificar conta'
         ],
     };
     my $selected_action = $valid->{selected_action} ? $actions_by_code->{$valid->{selected_action}} : undef;
@@ -71,6 +74,7 @@ sub a_tickets_detail_get_post {
         $c->stash(
             action_text_label       => $selected_action->[2],
             action_text_placeholder => $selected_action->[3],
+            action_button_text      => $selected_action->[4],
         );
         if ($c->req->method eq 'POST') {
             my $param2;
@@ -129,9 +133,10 @@ sub a_tickets_detail_get_post {
         else {
             for my $code (qw/ask_add_info change_due/, ($is_verify ? ('verify') : ('close'))) {
                 push @actions, {
-                    name  => $actions_by_code->{$code}[0],
-                    class => $actions_by_code->{$code}[1],
-                    href  => "$base_url&selected_action=$code",
+                    name    => $actions_by_code->{$code}[0],
+                    class   => $actions_by_code->{$code}[1],
+                    href    => "$base_url&selected_action=$code",
+                    skip_br => $code =~ /ask_add_info/ ? 1 : 0,
                 };
             }
 

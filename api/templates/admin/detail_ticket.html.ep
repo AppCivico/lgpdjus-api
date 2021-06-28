@@ -94,8 +94,10 @@
         <a href="<%= $action->{href} %>" class="btn <%= $action->{class} %>">
             <%= $action->{name} %>
         </a>
+        % unless ($action->{skip_br}){
         </br>
         </br>
+        % }
         %}
         %} else{
         <h3>Ação: <%= $action_name %>
@@ -134,7 +136,7 @@
                     % }
                 </div>
 
-                <button type="submit" class="btn btn-primary">Enviar</button>
+                <button type="submit" class="btn btn-primary"><%=$action_button_text%></button>
 
             </div>
         </form>
