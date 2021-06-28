@@ -220,4 +220,5 @@ body {
 
 .navbar-custom .nav-item.active .nav-link {
     color: #3c3c3b;
+    text-shadow: none;
 }
