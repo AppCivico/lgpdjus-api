@@ -1,5 +1,5 @@
 % my $responses = stash('responses');
-<h2>Histórico de ações: </h2>
+<h3>Histórico de ações: </h3>
 
 % if (!scalar @$responses ){
 
@@ -10,10 +10,10 @@
 % for my $response (@{$responses}) {
 <div>
 
-    <small>
+    <p>
         <%= $pg_timestamp2human->($response->{created_on}) %>
             <%= $response->{user_name} %> <%= $response->{response_type} %>:
-    </small>
+    </p>
     <p>
         <span style="background-color: #EEEEEE; border-radius: 6px; padding: 8px; display:inline-block">
             <%= $response->{reply_content} %>
@@ -23,9 +23,9 @@
     % if ($response->{type} eq 'request-additional-info') {
 
     % if ($response->{cliente_reply}) {
-    <small>
+    <p>
         <%= $pg_timestamp2human->($response->{cliente_reply_created_at}) %> solicitante respondeu
-    </small>
+    </p>
     <div class="card">
         <div class="card-body" style="text-align: right;">
             <span
