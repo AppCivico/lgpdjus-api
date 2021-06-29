@@ -108,8 +108,8 @@ sub a_blockchain_list_get {
             filter      => $valid->{filter},
             filter_opts => [
                 {id => 'all',      label => 'Todos os registros'},
-                {id => 'pending',  label => 'Aguardando ancoragem'},
-                {id => 'anchored', label => 'Ancorado'},
+                {id => 'pending',  label => 'Aguardando registro'},
+                {id => 'anchored', label => 'Registrado'},
             ],
             rows                => \@rows,
             has_more            => $has_more,
