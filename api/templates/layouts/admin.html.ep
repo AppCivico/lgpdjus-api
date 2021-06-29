@@ -17,7 +17,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
 
-    % my $version = 4;
+    % my $version = 5;
     % if (stash('is_login')) {
     <link rel="stylesheet" href="/web-assets/login.css?v=<%==$version%>" />
     % } else {
@@ -117,8 +117,24 @@
         crossorigin="anonymous"></script>
     <!-- Icons -->
     <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script src="/web-assets/iframeResizer.min.js"></script>
     <script>
-        feather.replace()
+        feather.replace();
+        jQuery(document).ready(function () {
+            $('body').delegate('#input_base_url', 'change', function () {
+                $("#metabase_iframe")[0].src = $("#input_base_url").val();
+                iFrameResize({
+                    resizedCallback: function () {
+                        if (inIframe()){
+                            sendMessage({ contentHeight: document.body.scrollHeight });
+                        }
+                    }
+                }, '#metabase_iframe');
+                return true;
+            });
+
+            $('#input_base_url').change();
+        });
     </script>
 
     <script src="/web-assets/offcanvas.js?v=<%==$version%>"></script>

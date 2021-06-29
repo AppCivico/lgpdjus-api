@@ -222,3 +222,10 @@ body {
     color: #3c3c3b;
     text-shadow: none;
 }
+.metabase_iframe {
+    display: block;
+    width: 1px;
+    min-width: 100%;
+    margin: 0;
+    overflow: scroll;
+}
