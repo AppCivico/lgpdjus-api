@@ -15,7 +15,7 @@
                         <b>Finalizado</b>: são as solicitações já foram respondidas. Você pode reabrir para enviar novas
                         respostas ou pedir mais dados.<br />
                         <b>Aguardando informação adicional</b>: são as solicitações o operador do DPO pediu informações
-                        adicionais para o manifestante. Quando o manifestante responder, a nova situação será
+                        adicionais para o solicitante. Quando o solicitante responder, a nova situação será
                         "Pendente".
                     </p>
                 </div>

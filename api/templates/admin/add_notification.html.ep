@@ -6,8 +6,8 @@
         <%= $notification_message ? 'Editar notificação' : 'Criar nova notificação' %>
     </h1>
     <div class="start-help">
-        Nesta tela você criar novas notifiacações que serão enviadas para os manifestantes. As notificações enviadas
-        ficam disponíveis para o manifestante através do aplicativo.
+        Nesta tela você criar novas notifiacações que serão enviadas para os solicitantes. As notificações enviadas
+        ficam disponíveis para o solicitante através do aplicativo.
         <div class="collapse-help">
             <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
                 aria-controls="collapseHelp">
@@ -16,7 +16,7 @@
             <div class="collapse" id="collapseHelp">
                 <div class="card card-body">
                     <h5>Tipo</h5>
-                    <p>A segmentação representa um conjunto de manifestantes que receberão a notificação.</p>
+                    <p>A segmentação representa um conjunto de solicitantes que receberão a notificação.</p>
                     <p>Caso precise de um segmentação mais avançada, entre em contato com o administrador do sistema
                         para que ela seja adicionada.</p>
                 </div>
@@ -42,7 +42,7 @@
         <select id="filter1" name="segment_id" class="form-control">
             % for my $r (@{stash('segments') || []}) {
             <option <%=$r->{id} == ($params->{segment_id} || 0) ? 'selected' : '' %> value="<%= $r->{id} %>">
-                    <%= $r->{label} . ' - aproximadamente ' . $r->{last_count} . ' manifestantes' %>
+                    <%= $r->{label} . ' - aproximadamente ' . $r->{last_count} . ' solicitantes' %>
             </option>
             % }
         </select>

@@ -9,12 +9,12 @@
             </a>
             <div class="collapse" id="collapseHelp">
                 <div class="card card-body">
-                    <p>O sistema registra automaticamente durante toda iteração de uma solicitação e criação de conta um
-                        novo arquivo
-                        PDF que fica registrado em blockchain.</p>
+                    <p>O sistema registra automaticamente durante toda ação executada nas solicitações, assim como
+                        durante a criação de conta do solicitante, um
+                        novo arquivo PDF é gerado onde ficam registrados as informações relevantes do evento, e
+                        este arquivo é adicionado na blockchain.</p>
                     <p>Este registro garante a integridade dos dados fornecidos e garante que não houveram modificações
-                        nos
-                        dados enviados pelo manifestante.</p>
+                        nos dados enviados pelo solicitante.</p>
                     <h5>Hash SHA-256</h5>
                     Hash é um algoritmo matemático para a criptografia, na qual ocorre uma transformação do dado (como
                     um
@@ -84,7 +84,9 @@
         white-space: nowrap;
     }
 </style>
-<p><%= stash('total_count') %> resultados</p>
+<p>
+    <%= stash('total_count') %> resultados
+</p>
 <br>
 <div class="table-responsive">
     <table class="table table-striped table-sm table-hover">
@@ -92,7 +94,7 @@
             <tr>
                 <th>Horário de criação</th>
                 <th>Arquivo</th>
-                <th>Manifestante</th>
+                <th>Solicitante</th>
                 <th>Hash SHA-256</th>
                 <th>Horário do registro</th>
                 <th>Situação</th>

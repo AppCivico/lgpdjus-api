@@ -33,7 +33,7 @@ sub abignum_get {
     }
 
     my @rows = (
-        {name => 'Resumo manifestantes', resource => {dashboard => 1}, params => {}},
+        {name => 'Resumo solicitantes', resource => {dashboard => 1}, params => {}},
     );
     my $metabase_secret = $ENV{METABASE_SECRET} || 'secret';
     my @ret             = ();

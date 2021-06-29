@@ -2,7 +2,7 @@
 <div class="border-bottom margin-bottom">
     <h1 class="h2">Detalhes do solicitante <%= $cliente->{nome_completo} || 'não encontrado'%></h1>
     <div class="start-help">
-        Nesta tela você pode ter uma visão geral da conta de um manifestante.
+        Nesta tela você pode ter uma visão geral da conta de um solicitante.
         <div class="collapse-help">
             <a href="#" data-toggle="collapse" data-target="#collapseHelp" aria-expanded="false"
                 aria-controls="collapseHelp">
