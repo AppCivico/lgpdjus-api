@@ -94,6 +94,12 @@ __PACKAGE__->add_columns(
   { data_type => "smallint", default_value => 0, is_nullable => 0 },
   "appendix",
   { data_type => "json", default_value => "[]", is_nullable => 0 },
+  "text_validation",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -109,8 +115,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-16 16:30:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4uf49vC2GUIQqs7fQIfFvg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-01 16:56:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FPzd17j7j9QEvKcxmp+cOg
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

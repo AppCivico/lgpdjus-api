@@ -11,6 +11,7 @@ use DateTime;
 use Lgpdjus::Logger;
 use Scope::OnExit;
 use Mojo::Util qw/xml_escape/;
+use Business::BR::CPF qw(test_cpf);
 
 # a chave do cache é composta por horarios de modificações do quiz_config e questionnaires
 use Lgpdjus::KeyValueStorage;
@@ -476,7 +477,7 @@ sub load_quiz_session {
     }
     else {
         # importante só processar o create_ticket no render após o update do banco,
-        # então ele é gerado imediatamente antes do retorno para o frotnend
+        # então ele é gerado imediatamente antes do retorno para o frontend
 
         my $progress_bar = 0;
         my @real_frontend_msg;
@@ -684,9 +685,21 @@ sub process_quiz_session {
             }
             elsif ($msg->{type} eq 'text') {
 
+                if ($msg->{text_validation} && $msg->{text_validation} eq 'cpf') {
+                    my $onlydigit = $val;
+                    $onlydigit =~ s/[^0-9]//g;
+                    if (!test_cpf($val)) {
+                        push @preprend_msg, &_new_displaytext_error(sprintf('%s não é um CPF válido!', $val));
+                        goto CONTINUE;
+                    }
+
+                }
+
                 $responses->{$code} = $val;
                 $msg->{display_response} = $val;
                 $have_new_responses++;
+
+              CONTINUE:
 
             }
             elsif ($msg->{type} eq 'photo_attachment') {
