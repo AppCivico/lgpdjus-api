@@ -685,7 +685,7 @@ sub process_quiz_session {
             }
             elsif ($msg->{type} eq 'text') {
 
-                if ($msg->{text_validation} && $msg->{text_validation} eq 'cpf') {
+                if ($msg->{_text_validation} && $msg->{_text_validation} eq 'cpf') {
                     my $onlydigit = $val;
                     $onlydigit =~ s/[^0-9]//g;
                     if (!test_cpf($val)) {
@@ -907,12 +907,13 @@ sub _init_questionnaire_stash {
         }
         elsif ($qc->{type} eq 'text') {
             push @questions, {
-                type          => 'text',
-                content       => $qc->{question},
-                ref           => 'FT' . $qc->{id},
-                _relevance    => $relevance,
-                _code         => $qc->{code},
-                _progress_bar => $qc->{progress_bar},
+                type             => 'text',
+                content          => $qc->{question},
+                ref              => 'FT' . $qc->{id},
+                _text_validation => $qc->{text_validation},
+                _relevance       => $relevance,
+                _code            => $qc->{code},
+                _progress_bar    => $qc->{progress_bar},
             };
         }
         elsif ($qc->{type} eq 'yesnogroup') {
