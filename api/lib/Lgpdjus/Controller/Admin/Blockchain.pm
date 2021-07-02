@@ -20,6 +20,7 @@ sub a_blockchain_list_get {
         next_page  => {required => 0, type => 'Str'},
         filter     => {required => 0, type => 'Str'},
         cliente_id => {required => 0, type => 'Int'},
+        protocol   => {required => 0, type => 'Int', empty_is_valid => 1},
     );
     my $rows = $valid->{rows} || 10;
     $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
@@ -38,8 +39,10 @@ sub a_blockchain_list_get {
 
     my $rs = $c->schema->resultset('BlockchainRecord')->search(
         {
-            ($ENV{ADMIN_FILTER_CLIENTE_ID} ? ('me.cliente_id' => $ENV{ADMIN_FILTER_CLIENTE_ID}) : ()),
-            ($valid->{cliente_id}          ? ('me.cliente_id' => $valid->{cliente_id})          : ()),
+            ($ENV{ADMIN_FILTER_CLIENTE_ID} ? ('me.cliente_id'   => $ENV{ADMIN_FILTER_CLIENTE_ID}) : ()),
+            ($valid->{cliente_id}          ? ('me.cliente_id'   => $valid->{cliente_id})          : ()),
+            ($valid->{protocol}            ? ('ticket.protocol' => $valid->{protocol})            : ()),
+
         },
         {
             order_by   => \'me.id DESC',
@@ -111,12 +114,13 @@ sub a_blockchain_list_get {
                 {id => 'pending',  label => 'Aguardando registro'},
                 {id => 'anchored', label => 'Registrado'},
             ],
+            filter_protocol     => $valid->{protocol},
             rows                => \@rows,
             has_more            => $has_more,
             next_page           => $has_more ? $next_page : undef,
             total_count         => $total_count,
             current_page_number => $current_page,
-            total_page_number   => ceil( $total_count / $rows),
+            total_page_number   => ceil($total_count / $rows),
         },
     );
 }

@@ -50,11 +50,11 @@
 
         <div class="row">
             <div class="col-md-3 text-right">
-                <label>Total de registros em blockchain</label>
+                <label>Total de registros</label>
             </div>
             <div class="col-md-6">
                 <a href="/admin/blockchains?cliente_id=<%=$cliente->{id}%>&filter=all">
-                    <%=$total_blockchain%> registros em blockchain
+                    <%=$total_blockchain%> arquivos
                 </a>
             </div>
         </div>

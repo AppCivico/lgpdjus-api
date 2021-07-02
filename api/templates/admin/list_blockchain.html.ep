@@ -59,7 +59,7 @@
     </p>
     %}
     <div class="form-row form-group--flex">
-        <div class="form-group col-md-10">
+        <div class="form-group col-md-5">
             <select name="filter" class="form-control">
                 % for my $r (@{stash('filter_opts') || []}) {
                 <option <%=$r->{id} eq (stash('filter')) ? 'selected' : '' %> value="<%= $r->{id} %>">
@@ -67,6 +67,10 @@
                 </option>
                 % }
             </select>
+        </div>
+        <div class="form-group col-md-5">
+            <label for="filter2">Protocolo</label>
+            <input id="filter2" name="protocol" min="21000000000" max="999999999999" type="number" class="form-control" value="<%= stash('filter_protocol') || '' %>" />
         </div>
         <div class="form-group col-md-2">
             <button type="submit" class="btn btn-primary">Aplicar</button>

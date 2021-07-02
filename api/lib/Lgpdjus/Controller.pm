@@ -199,6 +199,9 @@ sub validate_request_params {
         my $me   = $fields{$key};
         my $type = $me->{type};
         next if !exists $params->{$key} && !$me->{required};
+        if ($type eq 'Int' && !exists $me->{max_length}) {
+            $me->{max_length} = '19';
+        }
 
         my $val = $params->{$key};
         if (!defined $val && $me->{undef_if_missing}) {
