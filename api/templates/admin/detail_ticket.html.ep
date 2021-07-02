@@ -57,7 +57,7 @@
 </div>
 
 <div class="row">
-    <div class="col">
+    <div class="col-12 col-md-6">
         <div class="custom-border">
             <h3>Dados da solicitação</h3>
             <%== $ticket->html_detail( admin => 1, c => $c ) %>
@@ -71,7 +71,7 @@
             <br>
         </div>
     </div>
-    <div class="col">
+    <div class="col-12 col-md-6">
         <div class="custom-border">
 
             <h3>Dados do solicitante</h3>

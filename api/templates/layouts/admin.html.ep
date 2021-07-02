@@ -42,7 +42,7 @@
     <%= content %>
     % } else {
 
-    <nav class="navbar navbar-expand-md fixed-top navbar-custom">
+    <nav class="navbar navbar-expand-md fixed-top navbar-custom navbar-light">
     <div class="container">
         <a class="navbar-brand" href="/admin">
         <img class="lgpdjus-logo" alt="LGPDjus" title="LGPDjus" height=56 src="/web-assets/LogoPrincipal_LGPD_jus.svg" onerror="this.src='/web-assets/LogoPrincipal_LGPD_jus.png'"></a>
@@ -50,7 +50,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+        <div class="navbar-collapse offcanvas-collapse navbar-custom" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item <%= $c->req->url->path =~ q|^/admin/tickets| ? 'active' : '' %>">
                     <a class="nav-link" href="/admin/tickets">Solicitações</a>
