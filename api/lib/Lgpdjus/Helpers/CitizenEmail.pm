@@ -22,6 +22,8 @@ sub cliente_send_email {
     my $cliente_id = $opts{cliente_id} or confess 'missing cliente_id';
     my $ticket_id  = $opts{ticket_id};
 
+    my $extra_variables = $opts{extra_variables} || {};
+
     my $content = '';
     open my $fh, '<:raw', $file or die sprintf 'cannot read %s %s', $file, $!;
     $content .= $_ while <$fh>;
@@ -40,6 +42,7 @@ sub cliente_send_email {
     my $variables = {
         ticket  => $ticket ? $ticket->as_hashref() : undef,
         cliente => $cliente->as_hashref(),
+        %$extra_variables
     };
 
     my $subject = tt_render($email_config->{subject}, $variables);

@@ -7,6 +7,7 @@ my $tomorrow = DateTime->today(time_zone => 'America/Sao_Paulo')->add(days => 1)
 use Lgpdjus::Test;
 my $t = test_instance;
 my $json;
+use Lgpdjus::Minion::Tasks::AddBlockchain;
 
 my ($session, $user_id) = get_user_session('43866555490');
 my $cliente = get_schema->resultset('Cliente')->find($user_id);
@@ -36,6 +37,13 @@ app->schema->resultset('ClientesQuizSession')->search(
         'cliente_id' => $user_id,
     }
 )->delete;
+
+my $job = Minion::Job->new(
+    id     => fake_int(1, 99)->(),
+    minion => $t->app->minion,
+    task   => 'testmocked',
+    notes  => {hello => 'mock'}
+);
 
 $ENV{QUESTIONNAIRE_ICON_BASE_URL} = '';
 my $cadastro = $t->get_ok(
@@ -626,7 +634,14 @@ subtest_buffered 'list do ticket' => sub {
             is $p2->status, 'wait-additional-info', 'status is wait-additional-info';
 
             ok $p2->as_hashref(), 'has call as_hashref on ticket';
-            $t->app->generate_ticket_pdf(ticket => $p2);
+            #$t->app->generate_ticket_pdf(ticket => $p2);
+
+            ok(
+                Lgpdjus::Minion::Tasks::AddBlockchain::job_generate_pdf_and_blockchain(
+                    $job, test_get_minion_args_job($ENV{LAST_PDF_JOB_ID})
+                ),
+                'generate pdf'
+            );
         }
 
 

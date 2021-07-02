@@ -123,6 +123,8 @@ sub as_hashref {
           is_test
           due_days
           sort
+          category_full
+          category_short
           /,
     };
 }

@@ -323,7 +323,7 @@ sub obtain_lock {
 sub _generate_pdf {
     my ($self, $c, $helper, $helper_opts) = @_;
 
-    $c->minion->enqueue(
+    $ENV{LAST_PDF_JOB_ID} = $c->minion->enqueue(
         'generate_pdf_and_blockchain',
         ['ticket', $self->id, $helper, $helper_opts] => {attempts => 5, delay => 1}
     );
@@ -340,11 +340,12 @@ sub action_reopen {
             $self->discard_changes;
             if ($self->status eq 'done') {
                 $success = 1;
+                my $content = 'Reabrindo solicitação';
                 $self->tickets_responses->create(
                     {
                         user_id       => $admin_user->id(),
                         cliente_id    => $self->cliente_id(),
-                        reply_content => 'Reabrindo solicitação',
+                        reply_content => $content,
                         created_on    => \'now()',
                         type          => 'reopen'
                     }
@@ -353,7 +354,11 @@ sub action_reopen {
                 $self->_generate_pdf(
                     $c, 'cliente_send_email',
                     {
-                        template => 'ticket_reopen',
+                        template        => 'ticket_reopen',
+                        extra_variables => {
+                            message          => $content,
+                            admin_first_name => $admin_user->first_name(),
+                        }
                     }
                 );
             }
@@ -390,7 +395,11 @@ sub action_ask_add_info {
                 $self->_generate_pdf(
                     $c, 'cliente_send_email',
                     {
-                        template => 'ticket_request_additional_info',
+                        template        => 'ticket_request_additional_info',
+                        extra_variables => {
+                            message          => $message,
+                            admin_first_name => $admin_user->first_name(),
+                        },
                     }
                 );
             }
@@ -468,7 +477,11 @@ sub action_verify_cliente {
                 $self->_generate_pdf(
                     $c, 'cliente_send_email',
                     {
-                        template => 'ticket_' . $type,
+                        template        => 'ticket_' . $type,
+                        extra_variables => {
+                            message          => $message,
+                            admin_first_name => $admin_user->first_name(),
+                        },
                     }
                 );
             }
@@ -506,11 +519,12 @@ sub action_change_due {
                     $c->reply_invalid_param('Novo prazo não pode igual.');
                 }
 
+                my $message = 'Prazo anterior: ' . $old_due . '. Novo prazo: ' . $self->due_date_dmy();
                 $self->tickets_responses->create(
                     {
                         user_id       => $admin_user->id(),
                         cliente_id    => $self->cliente_id(),
-                        reply_content => 'Prazo anterior: ' . $old_due . '. Novo prazo: ' . $self->due_date_dmy(),
+                        reply_content => $message,
                         created_on    => \'now()',
                         type          => 'due_change'
                     }
@@ -518,7 +532,13 @@ sub action_change_due {
                 $self->_generate_pdf(
                     $c, 'cliente_send_email',
                     {
-                        template => 'ticket_change_due',
+                        template        => 'ticket_change_due',
+                        extra_variables => {
+                            message          => $message,
+                            admin_first_name => $admin_user->first_name(),
+                            old_due          => $old_due,
+                            new_due          => $self->due_date_dmy()
+                        },
                     }
                 );
             }
@@ -559,7 +579,11 @@ sub action_close {
                 $self->_generate_pdf(
                     $c, 'cliente_send_email',
                     {
-                        template => 'ticket_close',
+                        template        => 'ticket_close',
+                        extra_variables => {
+                            message          => $message,
+                            admin_first_name => $admin_user->first_name(),
+                        },
                     }
                 );
             }
