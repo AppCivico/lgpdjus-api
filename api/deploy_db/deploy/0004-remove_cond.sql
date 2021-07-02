@@ -26,4 +26,7 @@ update notification_message set created_by_admin_user_id = (select id from direc
 
 alter table quiz_config add column text_validation varchar;
 
+alter table public.configuracoes add column dpo_email_destinatary varchar;
+alter table public.configuracoes add column dpo_email_config json DEFAULT '[]'::json NOT NULL;
+
 COMMIT;

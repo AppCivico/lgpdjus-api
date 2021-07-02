@@ -92,9 +92,7 @@ sub list_available_tickets {
     my $questionnaires = $c->list_questionnaires(%opts);
 
     return {
-        rows => [
-            @{$questionnaires->{rows}}
-        ],
+        rows     => [@{$questionnaires->{rows}}],
         has_more => 0,
     };
 }
@@ -158,6 +156,8 @@ sub create_ticket_response_reply {
                     template => 'ticket_response_reply',
                 }
             );
+
+            $c->dpo_send_email(ticket => $ticket, template => 'new_response');
         }
     );
 

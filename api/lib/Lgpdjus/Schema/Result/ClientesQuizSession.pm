@@ -126,6 +126,7 @@ sub generate_ticket {
                     }
                 );
                 $self->update({ticket_id => $ticket->id, can_delete => 0});
+                $c->dpo_send_email(ticket => $ticket, template => 'new_ticket');
             }
         );
     };

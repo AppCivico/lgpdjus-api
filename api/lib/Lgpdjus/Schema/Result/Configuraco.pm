@@ -28,12 +28,20 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "email_config",
   { data_type => "json", default_value => "[]", is_nullable => 0 },
+  "dpo_email_destinatary",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "dpo_email_config",
+  { data_type => "json", default_value => "[]", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-05-22 13:08:56
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AZ5pkj8nTr8XiLHQZ+Lxsg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-02 09:16:10
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:knGDCCYGeryDaUm1tkmNKA
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
