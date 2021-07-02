@@ -130,6 +130,8 @@ sub dpo_send_email {
     my @emails = split /\;/, $dpo_email_destinatary;
 
     foreach my $to (@emails) {
+        next if is_test();
+
         my $email = $c->schema->resultset('EmaildbQueue')->create(
             {
                 to        => $to,
