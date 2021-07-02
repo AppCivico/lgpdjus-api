@@ -144,7 +144,7 @@ sub create_ticket_response_reply {
             $response->update(
                 {
                     cliente_reply            => $form->{content},
-                    cliente_attachments      => to_json([$media_id]),
+                    cliente_attachments      => to_json([$media_id ? ($media_id) : ()]),
                     cliente_reply_created_at => \'now()',
                 }
             );
