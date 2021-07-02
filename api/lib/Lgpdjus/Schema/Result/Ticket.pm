@@ -209,14 +209,14 @@ sub html_detail {
         if ($type eq 'photo_attachment') {
             my $media = $user_obj->cliente_get_media_by_id($response);
             if ($is_pdf) {
-                $response = $media->media_generate_download_url_internal($c);
+                $response = $media && $media->media_generate_download_url_internal($c);
             }
             elsif ($is_admin) {
-                $response    = $media->media_generate_download_url_admin($c);
-                $response_hd = $media->media_generate_download_url_admin($c, 'hd');
+                $response    = $media && $media->media_generate_download_url_admin($c);
+                $response_hd = $media && $media->media_generate_download_url_admin($c, 'hd');
             }
             else {
-                $response = $media->media_generate_download_url($c);
+                $response = $media && $media->media_generate_download_url($c);
             }
         }
 
@@ -277,14 +277,14 @@ sub html_ticket_responses {
 
         my $media = $user_obj->cliente_get_media_by_id($attachment);
         if ($is_pdf) {
-            $response->{img_href} = $media->media_generate_download_url_internal($c);
+            $response->{img_href} = $media && $media->media_generate_download_url_internal($c);
         }
         elsif ($is_admin) {
-            $response->{img_href}    = $media->media_generate_download_url_admin($c);
-            $response->{img_href_hd} = $media->media_generate_download_url_admin($c, 'hd');
+            $response->{img_href}    = $media && $media->media_generate_download_url_admin($c);
+            $response->{img_href_hd} = $media && $media->media_generate_download_url_admin($c, 'hd');
         }
         else {
-            $response->{img_href} = $media->media_generate_download_url($c);
+            $response->{img_href} = $media && $media->media_generate_download_url($c);
         }
 
 

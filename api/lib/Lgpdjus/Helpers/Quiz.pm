@@ -551,7 +551,7 @@ sub _render_question {
         confess 'cannot load image without user' unless $user_obj;
         confess 'cannot load image without $c'   unless $c;
         my $media = $user_obj->cliente_get_media_by_id($q->{display_response});
-        $public->{image_link} = $media->media_generate_download_url($c);
+        $public->{image_link} = $media && $media->media_generate_download_url($c);
     }
 
     while (my ($k, $v) = each $q->%*) {

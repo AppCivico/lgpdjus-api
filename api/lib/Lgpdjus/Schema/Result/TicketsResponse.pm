@@ -93,8 +93,14 @@ sub tr_detail_body {
     my $media = from_json($self->cliente_attachments);
     foreach my $media_id (@{$media}) {
         my $media = $self->cliente->cliente_get_media_by_id($media_id);
-        my $src   = $media->media_generate_download_url($c);
-        $content .= sprintf '<img src="%s" />', xml_escape($src);
+
+        if ($media) {
+            my $src = $media->media_generate_download_url($c);
+            $content .= sprintf '<img src="%s" />', xml_escape($src);
+        }
+        else {
+            $content .= sprintf '<p>arquivo %s não encontrado</p>', $media_id;
+        }
     }
     $content .= '</div>';
 
