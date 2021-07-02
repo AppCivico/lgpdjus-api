@@ -242,6 +242,7 @@ sub html_ticket_responses {
     my $is_admin = $opts{admin};
 
     my $vars = {
+        is_pdf             => $is_pdf,
         pg_timestamp2human => \&pg_timestamp2human,
         responses          => [
             $self->tickets_responses->search(

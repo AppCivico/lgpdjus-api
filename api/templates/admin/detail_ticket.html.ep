@@ -58,88 +58,103 @@
 
 <div class="row">
     <div class="col">
-        <h3>Dados da solicitação</h3>
-        <%== $ticket->html_detail( admin => 1, c => $c ) %>
+        <div class="custom-border">
+            <h3>Dados da solicitação</h3>
+            <%== $ticket->html_detail( admin => 1, c => $c ) %>
+        </div>
+        <div class="custom-border">
             <%== $ticket->html_ticket_responses( admin => 1, c => $c ) %>
+            <hr>
+                <b>Registros: </b> <a href="/admin/blockchains?protocol=<%= $ticket->protocol %>">
+                <%= stash('blockchain_count') %> arquivos
+            </a>
+            <br>
+        </div>
     </div>
     <div class="col">
-        <h3>Dados do solicitante</h3>
+        <div class="custom-border">
 
-        <b>Nome completo: </b> <span>
-            <a href="/admin/users?cliente_id=<%= $cliente->get_column('id') %>">
-            <%= $cliente->nome_completo() %>
-        </a>
-        % if ($cliente->account_verified()){
-            <span class="badge badge-pill badge-success">verificada</span>
-            % } elsif ($cliente->account_verification_pending()){
-            <span class="badge badge-pill badge-warning">verificação pendente</span>
-            % } else {
-            <span class="badge badge-pill badge-danger">não verificada</span>
+            <h3>Dados do solicitante</h3>
+
+            <b>Nome completo: </b> <span>
+                <a href="/admin/users?cliente_id=<%= $cliente->get_column('id') %>">
+                    <%= $cliente->nome_completo() %>
+                </a>
+                % if ($cliente->account_verified()){
+                <span class="badge badge-pill badge-success">verificada</span>
+                % } elsif ($cliente->account_verification_pending()){
+                <span class="badge badge-pill badge-warning">verificação pendente</span>
+                % } else {
+                <span class="badge badge-pill badge-danger">não verificada</span>
+                % }
+            </span><br />
+            <b>CPF: </b> <span>
+                <%= $cliente->cpf_formatted() %>
+            </span><br />
+            <b>Como deseja ser chamado: </b> <span>
+                <%= $cliente->apelido() %>
+            </span>
+        </div>
+
+
+        <div class="custom-border">
+            % if (!$selected_action) {
+            <h3>Ações disponíveis</h3>
+
+            % for my $action (@{$actions}){
+            <a href="<%= $action->{href} %>" class="btn <%= $action->{class} %>">
+                <%= $action->{name} %>
+            </a>
+            % unless ($action->{skip_br}){
+            </br>
+            </br>
             % }
-        </span><br />
-        <b>CPF: </b> <span>
-            <%= $cliente->cpf_formatted() %>
-        </span><br />
-        <b>Como deseja ser chamado: </b> <span>
-            <%= $cliente->apelido() %>
-        </span>
-        <hr />
+            %}
+            %} else{
+            <h3>Ação: <%= $action_name %>
+            </h3>
+            <a href="<%= $base_url %>" class="btn btn-light">Escolher outra ação</a>
+            <hr />
 
+            <form action="<%= $base_url %>" method="POST">
+                <input type="hidden" name="selected_action" value="<%= $selected_action %>" />
 
-        % if (!$selected_action) {
-        <h3>Ações disponíveis</h3>
-
-        % for my $action (@{$actions}){
-        <a href="<%= $action->{href} %>" class="btn <%= $action->{class} %>">
-            <%= $action->{name} %>
-        </a>
-        % unless ($action->{skip_br}){
-        </br>
-        </br>
-        % }
-        %}
-        %} else{
-        <h3>Ação: <%= $action_name %>
-        </h3>
-        <a href="<%= $base_url %>" class="btn btn-light">Escolher outra ação</a>
-        <hr />
-
-        <form action="<%= $base_url %>" method="POST">
-            <input type="hidden" name="selected_action" value="<%= $selected_action %>" />
-
-            % if ($selected_action eq 'verify') {
-            <div class="form-group">
-                <label for="response_content">
-                    Avaliação:
-                </label>
-                <select class="form-control" name="verified" id="verified">
-                    <option selected value=0>Recusar</option>
-                    <option value=1>Aceitar e verificar conta</option>
-                </select>
-            </div>
-            % }
-
-            <div class="form-group">
-                <label for="response_content">
-                    <%= $action_text_label %>
-                </label>
+                % if ($selected_action eq 'verify') {
                 <div class="form-group">
-                    % if ($selected_action eq 'change_due') {
-                    <input type="date" class="form-control"
-                        value="<%= $params->{response_content} || $ticket->due_date_ymd() %>" name="response_content"
-                        id="response_content" />
-                    % }else{
-                    <textarea rows=3 max-length=10000 class="form-control" placeholder="<%= $action_text_placeholder %>"
-                        name="response_content"
-                        id="response_content"><%= $params->{response_content} || '' %></textarea>
-                    % }
+                    <label for="response_content">
+                        Avaliação:
+                    </label>
+                    <select class="form-control" name="verified" id="verified">
+                        <option selected value=0>Recusar</option>
+                        <option value=1>Aceitar e verificar conta</option>
+                    </select>
                 </div>
+                % }
 
-                <button type="submit" class="btn btn-primary"><%=stash('action_button_text') || 'Enviar' %></button>
+                <div class="form-group">
+                    <label for="response_content">
+                        <%= $action_text_label %>
+                    </label>
+                    <div class="form-group">
+                        % if ($selected_action eq 'change_due') {
+                        <input type="date" class="form-control"
+                            value="<%= $params->{response_content} || $ticket->due_date_ymd() %>"
+                            name="response_content" id="response_content" />
+                        % }else{
+                        <textarea rows=3 max-length=10000 class="form-control"
+                            placeholder="<%= $action_text_placeholder %>" name="response_content"
+                            id="response_content"><%= $params->{response_content} || '' %></textarea>
+                        % }
+                    </div>
 
-            </div>
-        </form>
-        %}
+                    <button type="submit" class="btn btn-primary">
+                        <%=stash('action_button_text') || 'Enviar' %>
+                    </button>
+
+                </div>
+            </form>
+            %}
+        </div>
 
     </div>
 </div>

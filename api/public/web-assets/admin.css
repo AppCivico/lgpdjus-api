@@ -229,3 +229,29 @@ body {
     margin: 0;
     overflow: scroll;
 }
+
+.custom-border {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.cliente_reply {
+    border-left: 5px solid rgba(0,0,0,.125);
+    padding-left: 5px;
+    margin-top: -10px;
+}
+
+.dpo_ask {
+    border-left: 5px solid #ce7e39;
+    margin-top: -10px;
+    padding-left: 5px;
+    font-weight: 700;
+}
+
+.ticket_actions .ticket_actions--item:not(:last-child){
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    margin-bottom: 10px;
+}

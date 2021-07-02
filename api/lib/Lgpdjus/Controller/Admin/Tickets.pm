@@ -38,6 +38,9 @@ sub a_tickets_detail_get_post {
         $c->flash_to_redis({message => 'Solicitação não encontrada!'});
         return $c->redirect_to('/admin/tickets');
     }
+
+    $c->stash(blockchain_count => $ticket->blockchain_records->count);
+
     my $is_verify = $ticket->questionnaire->code eq 'verify_account';
 
     my $base_url = '/admin/tickets-details?protocol=' . $ticket->protocol;

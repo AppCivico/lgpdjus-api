@@ -13,34 +13,33 @@
 </span><br />
 
 % if ($quiz){
-<div class="card">
-    <div class="card-body">
-        <style>div.agentMessageWrap img {max-width: 100% !important;}</style>
-        <dl>
-        % for my $quiz (@{$quiz}) {
-        <dt class="agentMessageWrap">
-            <%== $quiz->{question} %>
-        </dt>
-        % if (defined $quiz->{response}){
-        <dd>
-            % if ($quiz->{type} eq 'photo_attachment'){
-            % if ($is_admin){ # apenas no admin colocar o link
-            <a title="Clique para ampliar" href="<%= $quiz->{response_hd} %>" target="_blank">
-                <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
-            </a>
-            %}else{
+<hr>
+<h4 class="ticket-data-header">Detalhes da solicitação</h4>
+<div class="ticket-data-wrap">
+    %# usado tambem no PDF, entao precisa ir inline
+    <style>div.agentMessageWrap img {max-width: 100% !important;}</style>
+    <dl>
+    % for my $quiz (@{$quiz}) {
+    <dt class="agentMessageWrap">
+        <%== $quiz->{question} %>
+    </dt>
+    % if (defined $quiz->{response}){
+    <dd>
+        % if ($quiz->{type} eq 'photo_attachment'){
+        % if ($is_admin){ # apenas no admin colocar o link
+        <a title="Clique para ampliar" href="<%= $quiz->{response_hd} %>" target="_blank">
             <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
-            %}
-            %}else{
-
-                <%= $quiz->{response} %>
-
-            %}
-        </dd>
-        % } # defined
-        % } # foreach
-        </dl>
-    </div>
+        </a>
+        %}else{
+        <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
+        %}
+        %}else{
+            • <%= $quiz->{response} %>
+        %}
+    </dd>
+    % } # defined
+    % } # foreach
+    </dl>
 </div>
 % }else{
   <p class="alert alert-warning">Não existiram perguntas no questionário.</p>

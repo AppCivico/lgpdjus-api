@@ -7,33 +7,30 @@
 
 % } else {
 
-% for my $response (@{$responses}) {
-<div>
+<div class="ticket_actions">
+    % for my $response (@{$responses}) {
+    <div class="ticket_actions--item">
 
-    <p>
-        <%= $pg_timestamp2human->($response->{created_on}) %>
-            <%= $response->{user_name} %> <%= $response->{response_type} %>:
-    </p>
-    <p>
-        <span style="background-color: #EEEEEE; border-radius: 6px; padding: 8px; display:inline-block">
+        <p>
+            <%= $pg_timestamp2human->($response->{created_on}) %>
+                <%= $response->{user_name} %> <%= $response->{response_type} %>:
+        </p>
+        <p class="dpo_ask">
             <%= $response->{reply_content} %>
-        </span>
-    </p>
+        </p>
 
-    % if ($response->{type} eq 'request-additional-info') {
+        % if ($response->{type} eq 'request-additional-info') {
 
-    % if ($response->{cliente_reply}) {
-    <p>
-        <%= $pg_timestamp2human->($response->{cliente_reply_created_at}) %> solicitante respondeu
-    </p>
-    <div class="card">
-        <div class="card-body" style="text-align: right;">
-            <span
-                style="background-color: #3078DE; color: white; border-radius: 6px; padding: 8px; display:inline-block">
-                <%= $response->{cliente_reply} %>
-            </span>
-            % if ($response->{img_href}) {
-            <p>
+        % if ($response->{cliente_reply}) {
+        <p>
+            <%= $pg_timestamp2human->($response->{cliente_reply_created_at}) %> solicitante respondeu
+        </p>
+
+        <p class="cliente_reply">
+            <%= $response->{cliente_reply} %>
+
+                % if ($response->{img_href}) {
+                <br>
                 % if ($response->{img_href_hd}) {
                 <a title="Clique para ampliar" href="<%= $response->{img_href_hd} %>" target="_blank">
                     <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
@@ -41,20 +38,22 @@
                 %}else{
                 <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
                 %}
-            </p>
-            %}
+        </p>
+        %}
+
+        %} else {
+        <div class="alert alert-warning" role="alert">
+            Aguardando resposta
         </div>
-    </div>
-    %} else {
-    <div class="alert alert-warning" role="alert">
-        Aguardando resposta
-    </div>
-    %}
+        %}
 
+        % }
+
+    </div>
+    % if (stash('is_pdf')){
+    <hr />
     % }
-
+    % } # foreach
 </div>
-<hr />
-% } # foreach
 
 % }
