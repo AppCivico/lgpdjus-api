@@ -10,6 +10,7 @@ use Lgpdjus::Types qw/UploadIntention/;
 use Lgpdjus::Uploader;
 use Lgpdjus::Utils qw/get_media_filepath random_string/;
 use Lgpdjus::Logger;
+use Lgpdjus::ImageUtils;
 
 use File::Temp;
 use Fcntl qw(SEEK_SET);
@@ -120,6 +121,8 @@ sub mm_upload_post {
         $image->read(file => $media);
         die {error => 'imager_error', message => "Erro ao processar imagem: " . $image->errstr}
           if $image->errstr;
+
+        $image = Lgpdjus::ImageUtils::rotate_filepath($image, $media);
 
         my $max_xpixels_sd = $ENV{MAX_UPLOAD_SD_X_PIXELS} || 720;
         my $max_ypixels_sd = $ENV{MAX_UPLOAD_SD_Y_PIXELS} || 480;

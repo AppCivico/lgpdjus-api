@@ -54,6 +54,7 @@ my %WriteMakefileArgs = (
     "Furl" => 0,
     "IO::Handle" => 0,
     "IO::Socket::SSL" => 0,
+    "Image::ExifTool" => 0,
     "Imager" => 0,
     "Imager::File::GIF" => 0,
     "Imager::File::JPEG" => 0,
