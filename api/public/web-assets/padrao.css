@@ -96,4 +96,5 @@ div.card-header h5 {
     background: -webkit-linear-gradient(180deg, rgba(255,252,248,1) 0%, rgba(252,255,245,1) 47%, rgba(255,252,248,1) 100%);
     background: linear-gradient(180deg, rgba(255,252,248,1) 0%, rgba(252,255,245,1) 47%, rgba(255,252,248,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#fffcf8",endColorstr="#fffcf8",GradientType=1);
+    background-attachment: fixed;
 }
