@@ -24,13 +24,11 @@ sub register {
     # GET /get-proxy
     $r->get('get-proxy')->to(controller => 'MediaDownload', action => 'public_get_proxy');
 
-    # GET /web/faq
+    # GET /web/
     my $web = $r->under('web')->to(controller => 'WebFAQ', action => 'apply_rps');
-    my $faq = $web->any('faq');
-    $faq->get()->to(action => 'webfaq_index');
 
-    # GET /web/faq/_botao_contato_
-    $faq->get('_botao_contato_')->to(action => 'webfaq_botao_contato');
+    # GET /web/sobre
+    $web->get('sobre')->to(action => 'web_sobre');
 
     # GET /web/termos-de-uso
     $web->get('termos-de-uso')->to(action => 'web_termos_de_uso');

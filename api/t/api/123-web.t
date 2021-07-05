@@ -66,8 +66,8 @@ sub test_cli_seg {
         form => {segment_id => $q->id}
     )->status_is(200, 'filtro de segmento');
 
-    ok $q->discard_changes->last_run_at, 'run is not null';
-    is $q->last_count, 1, 'one row found';
+    #ok $q->discard_changes->last_run_at, 'run is not null';
+    #is $q->last_count, 1, 'one row found';
 
     db_transaction2 {
 
@@ -142,55 +142,6 @@ sub test_blockchain {
 
 sub test_faq {
 
-    my $cats = $schema->resultset('FaqTelaSobreCategoria')->search(
-        {
-            is_test => '1',
-        }
-    );
-    $cats->search_related('faq_tela_sobres')->delete;
-    $cats->delete;
-    my $c2 = $cats->create(
-        {
-            title  => 'Cat2',
-            sort   => 2,
-            status => 'published',
-        }
-    );
-    my $c1 = $cats->create(
-        {
-            title  => 'Cat1',
-            sort   => 1,
-            status => 'published',
-        }
-    );
-
-    $c1->faq_tela_sobres->create(
-        {
-            title        => 'c1.a',
-            content_html => 'content a',
-            sort         => 2,
-            status       => 'published',
-        }
-    );
-
-    $c1->faq_tela_sobres->create(
-        {
-            title        => 'c1.b',
-            content_html => 'content b',
-            sort         => 3,
-            status       => 'published',
-        }
-    );
-
-    $c2->faq_tela_sobres->create(
-        {
-            title        => 'c2.a',
-            content_html => 'content a 2',
-            sort         => 1,
-            status       => 'published',
-        }
-    );
-
     $t->get_ok(
         '/web/termos-de-uso',
     )->status_is(200, 'puxando termos_de_uso');
@@ -200,12 +151,7 @@ sub test_faq {
     )->status_is(200, 'puxando politica-privacidade');
 
     $t->get_ok(
-        '/web/faq',
-      )->status_is(200, 'puxando faq')    #
-      ->element_count_is('a.faq-sobre-link', '3', '3 links faq')                    #
-      ->text_like('div[id=heading' . $c1->id . '] h5', qr/Cat1/, 'cat1 present')    #
-      ->text_like('div[id=heading' . $c2->id . '] h5', qr/Cat2/, 'cat2 present');
+        '/web/sobre',
+    )->status_is(200, 'puxando sobre');
 
-    $cats->search_related('faq_tela_sobres')->delete;
-    $cats->delete;
 }
