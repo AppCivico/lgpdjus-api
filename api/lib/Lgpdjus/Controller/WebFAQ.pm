@@ -14,7 +14,11 @@ sub apply_rps {
     $c->stash(apply_rps_on => 'WEB' . substr($remote_ip, 0, 18));
     $c->apply_request_per_second_limit(100, 3600);
 
-    $c->stash(template => 'webfaq/index');
+    $c->stash(
+        template          => 'webfaq/texto',
+        texto             => 'not defined',
+        add_body_gradient => 1,
+    );
 
     return 1;
 }
@@ -22,9 +26,7 @@ sub apply_rps {
 sub web_sobre {
     my $c = shift;
 
-    $c->stash(
-        texto => $c->schema->resultset('Configuraco')->get_column('texto_faq_index')->next()
-    );
+    $c->stash(texto    => $c->schema->resultset('Configuraco')->get_column('texto_faq_index')->next());
     $c->stash(template => 'webfaq/texto');
 
     return $c->render(html => {});
@@ -33,9 +35,7 @@ sub web_sobre {
 sub web_politica_privacidade {
     my $c = shift;
 
-    $c->stash(
-        texto => $c->schema->resultset('Configuraco')->get_column('privacidade')->next()
-    );
+    $c->stash(texto => $c->schema->resultset('Configuraco')->get_column('privacidade')->next());
 
     $c->stash(template => 'webfaq/texto');
 
@@ -45,9 +45,7 @@ sub web_politica_privacidade {
 sub web_termos_de_uso {
     my $c = shift;
 
-    $c->stash(
-        texto => $c->schema->resultset('Configuraco')->get_column('termos_de_uso')->next()
-    );
+    $c->stash(texto => $c->schema->resultset('Configuraco')->get_column('termos_de_uso')->next());
 
     $c->stash(template => 'webfaq/texto');
 
