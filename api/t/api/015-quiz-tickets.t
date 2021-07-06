@@ -352,7 +352,7 @@ subtest_buffered 'group de questoes boolean' => sub {
 
     is $input_msg->{type},           'photo_attachment', 'is a photo_attachment';
     is $input_msg->{lens_direction}, 'back',             'has lens_direction';
-    is $input_msg->{button_style},   'default',          'has button_style';
+    is $input_msg->{button_style},   'primary',          'has button_style';
     is $input_msg->{content},        'ponha o arquivo',  'button has content';
     is $input_msg->{label},          'anexar',           'botao tem label';
     is $input_msg->{action},         undef,              'photo_attachment has no action';
@@ -386,7 +386,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $input_msg->{type},         'CPF',          'is a CPF';
     is $input_msg->{content},      'digite o cpf', '..';
     is $input_msg->{label},        'Continuar',    'botao tem label';
-    is $input_msg->{button_style}, 'default',      'has button_style';
+    is $input_msg->{button_style}, 'primary',      'has button_style';
     is $input_msg->{action},       undef,          'CPF has no button';
 
     # envia um CPF "valido" mas que nao existe
@@ -493,7 +493,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $input_msg->{type},         'button',                               'is a button';
     is $input_msg->{content},      'Fim. MC=a e c. A_Member=1 D_Member=0', 'button has content and functions validated';
     is $input_msg->{label},        'btn label fim',                        'botao tem label';
-    is $input_msg->{button_style}, 'green',                                'has button_style';
+    is $input_msg->{button_style}, 'success',                              'has button_style';
     is $input_msg->{action},       'none',                                 'button action is none [btn-fim]';
     is $json->{quiz_session}{progress_bar}, 99, 'progress is 99 (saved on btn_fim) question';
 

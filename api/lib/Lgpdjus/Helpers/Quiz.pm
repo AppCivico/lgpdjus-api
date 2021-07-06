@@ -937,7 +937,7 @@ sub _init_questionnaire_stash {
                 content          => $qc->{question},
                 ref              => 'FT' . $qc->{id},
                 label            => $qc->{button_label} || 'Continuar',
-                button_style     => $qc->{button_style} || 'default',
+                button_style     => $qc->{button_style} || 'primary',
                 _text_validation => $qc->{text_validation},
                 _relevance       => $relevance,
                 _code            => $qc->{code},
@@ -991,7 +991,7 @@ sub _init_questionnaire_stash {
                 ref            => 'BT' . $qc->{id},
                 lens_direction => $qc->{camera_lens_direction} || 'back',
                 label          => $qc->{button_label}          || 'Fotografar',
-                button_style   => $qc->{button_style}          || 'default',
+                button_style   => $qc->{button_style}          || 'primary',
                 _relevance     => $relevance,
                 _code          => $qc->{code},
                 _progress_bar  => $qc->{progress_bar},
@@ -1019,7 +1019,7 @@ sub _init_questionnaire_stash {
                 ref            => 'BT' . $qc->{id},
                 lens_direction => $qc->{camera_lens_direction} || 'back',
                 label          => $qc->{button_label}          || 'Enviar',
-                button_style   => $qc->{button_style}          || 'default',
+                button_style   => $qc->{button_style}          || 'primary',
                 _relevance     => $relevance,
                 _code          => $qc->{code},
                 _progress_bar  => $qc->{progress_bar},
@@ -1035,7 +1035,7 @@ sub _init_questionnaire_stash {
                 content       => $qc->{question},
                 ref           => ($is_mc ? 'MC' : 'OC') . $qc->{id},
                 label         => $qc->{button_label} || 'Continuar',
-                button_style  => $qc->{button_style} || 'default',
+                button_style  => $qc->{button_style} || 'primary',
                 _code         => $qc->{code},
                 _progress_bar => $qc->{progress_bar},
                 _relevance    => $relevance,
@@ -1089,7 +1089,7 @@ sub _init_questionnaire_stash {
                 die sprintf "question %s is missing $missing\n", to_json($qq), $missing if !$qq->{$missing};
             }
             die sprintf "question button_style is not valid! %s\n", to_json($qq)
-              if $qq->{button_style} !~ /^(default|green)$/;
+              if $qq->{button_style} !~ /^(primary|success)$/;
         }
         elsif ($qq->{type} eq 'photo_attachment') {
             for my $missing (qw/lens_direction label button_style/) {
@@ -1097,6 +1097,8 @@ sub _init_questionnaire_stash {
             }
             die sprintf "question lens_direction is not valid! %s\n", to_json($qq)
               if $qq->{lens_direction} !~ /^(back|front)$/;
+            die sprintf "question button_style is not valid! %s\n", to_json($qq)
+              if $qq->{button_style} !~ /^(primary|success)$/;
         }
         elsif ($qq->{type} eq 'multiplechoices' || $qq->{type} eq 'onlychoice') {
             for my $missing (qw/options ref label button_style/) {
@@ -1106,6 +1108,8 @@ sub _init_questionnaire_stash {
             for my $option ($qq->{options}->@*) {
                 die sprintf "question option is missing text\n", to_json($qq) if !$option->{display};
             }
+            die sprintf "question button_style is not valid! %s\n", to_json($qq)
+              if $qq->{button_style} !~ /^(primary|success)$/;
         }
         elsif (exists $qq->{_text_validation}) {
             for my $missing (qw/content label/) {

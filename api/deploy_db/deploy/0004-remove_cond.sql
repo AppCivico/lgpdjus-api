@@ -36,7 +36,7 @@ alter table public.configuracoes add column texto_sobre varchar not null default
 
 
 alter table public.quiz_config add column camera_lens_direction varchar;
-alter table public.quiz_config add column button_style varchar not null default 'default';
+alter table public.quiz_config add column button_style varchar default 'primary';
 
 
 COMMIT;
