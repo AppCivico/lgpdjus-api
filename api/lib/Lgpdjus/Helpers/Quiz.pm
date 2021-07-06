@@ -2,7 +2,7 @@ package Lgpdjus::Helpers::Quiz;
 use common::sense;
 use Carp qw/croak confess/;
 use Digest::MD5 qw/md5_hex/;
-use Lgpdjus::Utils qw/tt_test_condition tt_render is_test/;
+use Lgpdjus::Utils qw/tt_test_condition tt_render is_test is_valid_birthday format_cpf/;
 use JSON;
 use utf8;
 use warnings;
@@ -683,16 +683,30 @@ sub process_quiz_session {
                     push @preprend_msg, &_new_displaytext_error(sprintf('Campo %s deve ser Y ou N', $ref));
                 }
             }
-            elsif ($msg->{type} eq 'text') {
+            elsif (exists $msg->{_text_validation}) {
 
-                if ($msg->{_text_validation} && $msg->{_text_validation} eq 'cpf') {
+                if ($msg->{_text_validation} && $msg->{_text_validation} eq 'CPF') {
                     my $onlydigit = $val;
                     $onlydigit =~ s/[^0-9]//g;
-                    if (!test_cpf($val)) {
+                    if ($onlydigit ne $val || !test_cpf($onlydigit) || $onlydigit =~ /^(\d)\1+$/) {
                         push @preprend_msg, &_new_displaytext_error(sprintf('%s não é um CPF válido!', $val));
                         goto CONTINUE;
                     }
 
+                    # formata o valor
+                    $val = format_cpf($val);
+                }
+                elsif ($msg->{_text_validation} && $msg->{_text_validation} eq 'birthday') {
+                    my ($year, $mon, $day) = $val =~ /^(\d{4})-(\d{2})-(\d{2})$/;
+
+                    if (!is_valid_birthday($year, $mon, $day)) {
+                        push @preprend_msg,
+                          &_new_displaytext_error(sprintf('%s não é uma data de nascimento válida!', $val));
+                        goto CONTINUE;
+                    }
+
+                    # formata pro Brasil
+                    $val = "$day/$mon/$year";
                 }
 
                 $responses->{$code} = $val;
@@ -887,6 +901,9 @@ sub _init_questionnaire_stash {
                     style      => 'normal',
                     content    => $intro->{text},
                     _relevance => $relevance,
+
+                    # nao mostrar no history do ticket
+                    _skip_questionnaire_reply => 1,
                 };
             }
         }
@@ -906,10 +923,21 @@ sub _init_questionnaire_stash {
             };
         }
         elsif ($qc->{type} eq 'text') {
+            my $type = 'text';
+
+            if ($qc->{text_validation} eq 'CPF') {
+                $type = 'CPF';
+            }
+            elsif ($qc->{text_validation} eq 'birthday') {
+                $type = 'birthday';
+            }
+
             push @questions, {
-                type             => 'text',
+                type             => $type,
                 content          => $qc->{question},
                 ref              => 'FT' . $qc->{id},
+                label            => $qc->{button_label} || 'Continuar',
+                button_style     => $qc->{button_style} || 'default',
                 _text_validation => $qc->{text_validation},
                 _relevance       => $relevance,
                 _code            => $qc->{code},
@@ -958,13 +986,15 @@ sub _init_questionnaire_stash {
         elsif ($qc->{type} eq 'photo_attachment') {
 
             push @questions, {
-                type          => 'photo_attachment',
-                content       => $qc->{question},
-                ref           => 'BT' . $qc->{id},
-                label         => $qc->{button_label} || 'Selecionar foto',
-                _relevance    => $relevance,
-                _code         => $qc->{code},
-                _progress_bar => $qc->{progress_bar},
+                type           => 'photo_attachment',
+                content        => $qc->{question},
+                ref            => 'BT' . $qc->{id},
+                lens_direction => $qc->{camera_lens_direction} || 'back',
+                label          => $qc->{button_label}          || 'Fotografar',
+                button_style   => $qc->{button_style}          || 'default',
+                _relevance     => $relevance,
+                _code          => $qc->{code},
+                _progress_bar  => $qc->{progress_bar},
             };
 
         }
@@ -983,15 +1013,17 @@ sub _init_questionnaire_stash {
         elsif ($qc->{type} eq 'botao_fim') {
 
             push @questions, {
-                type          => 'button',
-                content       => $qc->{question},
-                action        => 'none',
-                ref           => 'BT' . $qc->{id},
-                label         => $qc->{button_label} || 'Enviar',
-                _relevance    => $relevance,
-                _code         => $qc->{code},
-                _progress_bar => $qc->{progress_bar},
-                _end_chat     => 1,
+                type           => 'button',
+                content        => $qc->{question},
+                action         => 'none',
+                ref            => 'BT' . $qc->{id},
+                lens_direction => $qc->{camera_lens_direction} || 'back',
+                label          => $qc->{button_label}          || 'Enviar',
+                button_style   => $qc->{button_style}          || 'default',
+                _relevance     => $relevance,
+                _code          => $qc->{code},
+                _progress_bar  => $qc->{progress_bar},
+                _end_chat      => 1,
             };
 
         }
@@ -1002,6 +1034,8 @@ sub _init_questionnaire_stash {
                 type          => $is_mc ? 'multiplechoices' : 'onlychoice',
                 content       => $qc->{question},
                 ref           => ($is_mc ? 'MC' : 'OC') . $qc->{id},
+                label         => $qc->{button_label} || 'Continuar',
+                button_style  => $qc->{button_style} || 'default',
                 _code         => $qc->{code},
                 _progress_bar => $qc->{progress_bar},
                 _relevance    => $relevance,
@@ -1033,6 +1067,9 @@ sub _init_questionnaire_stash {
                     style      => 'normal',
                     content    => $appendix->{text},
                     _relevance => $relevance,
+
+                    # nao mostrar no history do ticket
+                    _skip_questionnaire_reply => 1,
                 };
             }
             $last_question->{_appendix} = \@appendix;
@@ -1048,17 +1085,31 @@ sub _init_questionnaire_stash {
         die "%s is missing _relevance", to_json($qq) if !$qq->{_relevance};
 
         if ($qq->{type} eq 'button') {
-            for my $missing (qw/content action label ref/) {
+            for my $missing (qw/content action label button_style ref /) {
                 die sprintf "question %s is missing $missing\n", to_json($qq), $missing if !$qq->{$missing};
             }
+            die sprintf "question button_style is not valid! %s\n", to_json($qq)
+              if $qq->{button_style} !~ /^(default|green)$/;
+        }
+        elsif ($qq->{type} eq 'photo_attachment') {
+            for my $missing (qw/lens_direction label button_style/) {
+                die sprintf "question %s is missing $missing\n", to_json($qq), $missing if !$qq->{$missing};
+            }
+            die sprintf "question lens_direction is not valid! %s\n", to_json($qq)
+              if $qq->{lens_direction} !~ /^(back|front)$/;
         }
         elsif ($qq->{type} eq 'multiplechoices' || $qq->{type} eq 'onlychoice') {
-            for my $missing (qw/options ref/) {
+            for my $missing (qw/options ref label button_style/) {
                 die sprintf "question %s is missing $missing\n", to_json($qq), $missing if !$qq->{$missing};
             }
 
             for my $option ($qq->{options}->@*) {
                 die sprintf "question option is missing text\n", to_json($qq) if !$option->{display};
+            }
+        }
+        elsif (exists $qq->{_text_validation}) {
+            for my $missing (qw/content label/) {
+                die sprintf "question %s is missing $missing\n", to_json($qq), $missing if !$qq->{$missing};
             }
         }
         elsif (exists $qq->{_sub}) {
@@ -1127,9 +1178,6 @@ sub _compact_quiz_session {
     confess 'missing stash.quiz_session' unless $quiz_session;
 
     delete $quiz_session->{prev_msgs};
-
-    use DDP;
-    p $quiz_session;
 
     my $intro    = '';
     my $appendix = '';

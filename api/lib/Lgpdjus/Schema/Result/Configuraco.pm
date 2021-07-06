@@ -22,10 +22,6 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 0 },
   "privacidade",
   { data_type => "text", is_nullable => 0 },
-  "texto_faq_index",
-  { data_type => "text", is_nullable => 1 },
-  "texto_faq_contato",
-  { data_type => "text", is_nullable => 1 },
   "email_config",
   { data_type => "json", default_value => "[]", is_nullable => 0 },
   "dpo_email_destinatary",
@@ -36,12 +32,19 @@ __PACKAGE__->add_columns(
   },
   "dpo_email_config",
   { data_type => "json", default_value => "[]", is_nullable => 0 },
+  "texto_sobre",
+  {
+    data_type     => "text",
+    default_value => "texto tela sobre",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
 );
 __PACKAGE__->set_primary_key("id");
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-02 09:16:10
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:knGDCCYGeryDaUm1tkmNKA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-05 22:28:03
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JdSjW6DY1nHkvVmC5XOt6Q
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

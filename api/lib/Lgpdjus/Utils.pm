@@ -93,6 +93,9 @@ state $text_xslate = Text::Xslate->new(
   linkfy
 
   ceil
+
+  is_valid_birthday
+  format_cpf
 );
 
 
@@ -101,6 +104,30 @@ sub is_test {
         return 1;
     }
     return 0;
+}
+
+sub format_cpf {
+    my $cpf   = shift() =~ /(...)(...)(...)(..)/;
+    return "$1.$2.$3-$4";
+}
+
+sub is_valid_birthday {
+    my ($year, $mon, $day) = @_;
+
+    return 0 if !$year || !$mon || !$day;
+
+    my $dt = eval {
+        DateTime->new(
+            year      => $year,
+            month     => $mon,
+            day       => $day,
+            time_zone => 'America/Sao_Paulo',
+        );
+    };
+    return 0 unless $dt;
+
+    # precisa estar no futuro
+    return time() - $dt->epoch() > 0;
 }
 
 sub env { return $ENV{${\shift}} }
@@ -217,7 +244,7 @@ sub _nearest_floor {
 }
 
 sub ceil {
-    POSIX::ceil(@_)
+    POSIX::ceil(@_);
 }
 
 # semelhante a sprintf( '%0.5f', shift ) porem tem mais chance de cair em hit do cache

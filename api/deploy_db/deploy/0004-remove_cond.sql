@@ -29,4 +29,14 @@ alter table quiz_config add column text_validation varchar;
 alter table public.configuracoes add column dpo_email_destinatary varchar;
 alter table public.configuracoes add column dpo_email_config json DEFAULT '[]'::json NOT NULL;
 
+alter table public.configuracoes drop column texto_faq_index;
+alter table public.configuracoes drop column texto_faq_contato;
+--delete from directus_fields where field='texto_faq_contato' or field= 'texto_faq_index';
+alter table public.configuracoes add column texto_sobre varchar not null default 'texto tela sobre';
+
+
+alter table public.quiz_config add column camera_lens_direction varchar;
+alter table public.quiz_config add column button_style varchar not null default 'default';
+
+
 COMMIT;

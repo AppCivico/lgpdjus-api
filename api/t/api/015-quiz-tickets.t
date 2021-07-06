@@ -350,10 +350,12 @@ subtest_buffered 'group de questoes boolean' => sub {
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    is $input_msg->{type},    'photo_attachment', 'is a photo_attachment';
-    is $input_msg->{content}, 'ponha o arquivo',  'button has content';
-    is $input_msg->{label},   'anexar',           'botao tem label';
-    is $input_msg->{action},  undef,              'photo_attachment has no action';
+    is $input_msg->{type},           'photo_attachment', 'is a photo_attachment';
+    is $input_msg->{lens_direction}, 'back',             'has lens_direction';
+    is $input_msg->{button_style},   'default',          'has button_style';
+    is $input_msg->{content},        'ponha o arquivo',  'button has content';
+    is $input_msg->{label},          'anexar',           'botao tem label';
+    is $input_msg->{action},         undef,              'photo_attachment has no action';
 
     # respondendo a segunda (e ultima) boolean do grupo
     $field_ref = $input_msg->{ref};
@@ -367,6 +369,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     )->status_is(200)->json_has('/quiz_session')
       ->json_is('/quiz_session/current_msgs/0/content', 'upload foobar não é válido');
 
+    # depois do upload, retorna o input cpf
     trace_popall;
     $json = $t->post_ok(
         '/me/quiz',
@@ -376,15 +379,122 @@ subtest_buffered 'group de questoes boolean' => sub {
             $field_ref => $media->{id},
         }
     )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    is $input_msg->{type},         'CPF',          'is a CPF';
+    is $input_msg->{content},      'digite o cpf', '..';
+    is $input_msg->{label},        'Continuar',    'botao tem label';
+    is $input_msg->{button_style}, 'default',      'has button_style';
+    is $input_msg->{action},       undef,          'CPF has no button';
+
+    # envia um CPF "valido" mas que nao existe
+    $field_ref = $input_msg->{ref};
+    $json      = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => '11111111111',
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    like $first_msg->{content}, qr/não é um CPF válido/, 'not valid cpf was sent';
+    is $input_msg->{type},      'CPF',                   'is a CPF';
+
+    # envia um cpf inválido
+    $field_ref = $input_msg->{ref};
+    $json      = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => '66567786079',
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    like $first_msg->{content}, qr/não é um CPF válido/, 'not valid cpf was sent';
+    is $input_msg->{type},      'CPF',                   'is a CPF';
+
+    # envia um CPF válido
+    $field_ref = $input_msg->{ref};
+    $json      = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => '66567786078',
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    is $input_msg->{type}, 'birthday', 'is a birthday';
+
+
+    # envia uma data de nascimento invalida
+    $field_ref = $input_msg->{ref};
+    $json      = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => '2010-1-1',
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    like $first_msg->{content}, qr/não é uma data de nascimento válida/, 'not valid birthday';
+
+    is $input_msg->{type}, 'birthday', 'is a birthday';
+
+    # envia uma data de nascimento invalida (no futuro)
+    $field_ref = $input_msg->{ref};
+    $json      = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => DateTime->now(time_zone => 'America/Sao_Paulo')->add(days => 1)->ymd(),
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    like $first_msg->{content}, qr/não é uma data de nascimento válida/, 'not valid birthday';
+
+    my $today = DateTime->now(time_zone => 'America/Sao_Paulo');
+
+    # envia uma data de nascimento valida
+    $field_ref = $input_msg->{ref};
+    trace_popall;
+    $json = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => $today->ymd(),
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
     ok $ticket_id = trace_grep('generate_ticket:new'), 'got a ticket';
 
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    is $input_msg->{type},    'button',                               'is a button';
-    is $input_msg->{content}, 'Fim. MC=a e c. A_Member=1 D_Member=0', 'button has content and functions validated';
-    is $input_msg->{label},   'btn label fim',                        'botao tem label';
-    is $input_msg->{action},  'none',                                 'button action is none [btn-fim]';
+    is $input_msg->{type},         'button',                               'is a button';
+    is $input_msg->{content},      'Fim. MC=a e c. A_Member=1 D_Member=0', 'button has content and functions validated';
+    is $input_msg->{label},        'btn label fim',                        'botao tem label';
+    is $input_msg->{button_style}, 'green',                                'has button_style';
+    is $input_msg->{action},       'none',                                 'button action is none [btn-fim]';
     is $json->{quiz_session}{progress_bar}, 99, 'progress is 99 (saved on btn_fim) question';
 
     my $prev_msgs = $t->get_ok(
@@ -409,7 +519,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     }
 
     like $load_as_image_response, qr/media-download\/\?m=$media->{id}/, 'media id';
-    is scalar @$prev_msgs, 12, '12 prev questions';
+    is scalar @$prev_msgs, 14, '14 prev questions';
 
     ok my $session_id = $json->{quiz_session}{session_id}, 'has session id';
 
@@ -434,6 +544,9 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $responses->{mc},                'opção a, opção c', 'use human label for mc';
     is $responses->{mc_json},           '["a","c"]',        'a and c for mc';
     is $responses->{oc},                '3',                '3 for oc';
+    is $responses->{test_cpf},          '665.677.860-78',   'cpf is formatted';
+    is $responses->{test_birthday},     $today->dmy('/'), 'birthday is formatted';
+    is $responses->{oc},                '3', '3 for oc';
 };
 
 
@@ -634,6 +747,7 @@ subtest_buffered 'list do ticket' => sub {
             is $p2->status, 'wait-additional-info', 'status is wait-additional-info';
 
             ok $p2->as_hashref(), 'has call as_hashref on ticket';
+
             #$t->app->generate_ticket_pdf(ticket => $p2);
 
             ok(

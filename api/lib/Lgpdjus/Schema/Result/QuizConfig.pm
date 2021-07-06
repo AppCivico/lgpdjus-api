@@ -100,6 +100,18 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "camera_lens_direction",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "button_style",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->belongs_to(
@@ -115,8 +127,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-01 16:56:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:FPzd17j7j9QEvKcxmp+cOg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-05 22:33:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2lJ1QIoQ+vuQVtfyKVr4ng
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

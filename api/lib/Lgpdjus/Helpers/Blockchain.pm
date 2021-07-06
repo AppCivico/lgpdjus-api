@@ -99,7 +99,7 @@ sub add_to_blockchain {
                             id      => 'lgpdjus',
                             digests => [$digest]
                         }
-                    )->result;
+                    )->res;
                     if ($register->code == 200) {
                         slog_info('decred response %s', $register->to_string);
                         last;
@@ -170,7 +170,7 @@ sub verify_blockchain {
                 id      => 'lgpdjus',
                 digests => [$record->digest]
             }
-        )->result;
+        )->res;
         if ($verify->code == 200) {
             slog_info('decred response %s', $verify->to_string);
             last;

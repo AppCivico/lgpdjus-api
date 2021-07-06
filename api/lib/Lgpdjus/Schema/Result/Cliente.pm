@@ -207,7 +207,7 @@ __PACKAGE__->has_many(
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nMlSEFKpbyevv+hFN0wA5w
 
 use Carp qw/confess/;
-use Lgpdjus::Utils qw/is_uuid_v4/;
+use Lgpdjus::Utils qw/is_uuid_v4 format_cpf/;
 
 use Moose;
 use MooseX::NonMoose;
@@ -390,8 +390,7 @@ sub as_hashref {
 
 sub cpf_formatted {
     my $self = shift();
-    my $cpf   = $self->cpf =~ /(...)(...)(...)(..)/;
-    return "$1.$2.$3-$4";
+    return format_cpf($self->cpf);
 }
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
