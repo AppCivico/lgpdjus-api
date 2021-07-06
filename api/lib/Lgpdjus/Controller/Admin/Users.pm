@@ -7,7 +7,7 @@ use DateTime;
 
 use Lgpdjus::Types qw/DateStr/;
 use MooseX::Types::Email qw/EmailAddress/;
-use Mojo::Util qw/humanize_bytes/;
+use Mojo::Util qw/trim humanize_bytes/;
 
 sub au_search {
     my $c = shift;
@@ -78,6 +78,7 @@ sub au_search {
         }
     );
 
+    $search = trim($search) if defined $search;
     if ($search) {
         $dirty++;    #nao atualizar o contador do segmento, se tiver.
         my $nome_number = $search;
@@ -86,9 +87,9 @@ sub au_search {
         $rs = $rs->search(
             {
                 '-or' => [
-                    \['lower(me.nome_completo) like ?', "\%$search\%"],
-                    \['lower(me.apelido) like ?',       "\%$search\%"],
-                    \['lower(me.email) like ?',         "\%$search\%"],
+                    \['lower(me.nome_completo) ilike ?', "\%$search\%"],
+                    \['lower(me.apelido) ilike ?',       "\%$search\%"],
+                    \['lower(me.email) ilike ?',         "\%$search\%"],
                     ($nome_number ? (\['me.cpf::text like ?', "$nome_number\%"]) : ()),
                 ],
             }
