@@ -194,7 +194,6 @@ sub build_questionnaire_questions_reply {
 
     my $stash = from_json($self->stash);
     foreach my $message (@{$stash->{prev_msgs}}) {
-        next if $message->{_skip_questionnaire_reply};
 
         push @quiz, {
             content => tt_render($message->{content}, $vars),

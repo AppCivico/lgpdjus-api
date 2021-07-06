@@ -519,7 +519,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     }
 
     like $load_as_image_response, qr/media-download\/\?m=$media->{id}/, 'media id';
-    is scalar @$prev_msgs, 14, '14 prev questions';
+    is scalar @$prev_msgs, 13, '13 prev questions';
 
     ok my $session_id = $json->{quiz_session}{session_id}, 'has session id';
 

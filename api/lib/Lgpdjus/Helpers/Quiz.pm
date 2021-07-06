@@ -839,13 +839,13 @@ sub process_quiz_session {
             else {
                 push $stash->{prev_msgs}->@*, $msg;
 
-                if (exists $msg->{_appendix}) {
-                    my $vars = &_quiz_get_vars({$user_obj->get_columns()}, $responses);
-
-                    foreach my $appendix (@{$msg->{_appendix}}) {
-                        push $stash->{prev_msgs}->@*, &_render_question($appendix, $vars, $user_obj, $session, $c);
-                    }
-                }
+                # descomente para voltar a salvar os appendix
+                #if (exists $msg->{_appendix}) {
+                #    my $vars = &_quiz_get_vars({$user_obj->get_columns()}, $responses);
+                #foreach my $appendix (@{$msg->{_appendix}}) {
+                #    push $stash->{prev_msgs}->@*, &_render_question($appendix, $vars, $user_obj, $session, $c);
+                #}
+                #}
 
             }
         }
