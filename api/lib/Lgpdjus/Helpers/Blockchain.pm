@@ -91,14 +91,26 @@ sub add_to_blockchain {
                 );
                 slog_info('Digest is %s, media_upload_id %s', $digest, $media_upload->id);
 
-                my $register = $c->ua->post(
-                    'https://time.decred.org:49152/v1/timestamp/',
-                    json => {
-                        id      => 'lgpdjus',
-                        digests => [$digest]
+                my $register;
+                for (1 .. 10) {
+                    $register = $c->ua->post(
+                        'https://time.decred.org:49152/v1/timestamp/',
+                        json => {
+                            id      => 'lgpdjus',
+                            digests => [$digest]
+                        }
+                    )->result;
+                    if ($register->code == 200) {
+                        slog_info('decred response %s', $register->to_string);
+                        last;
                     }
-                )->result;
-                slog_info('decred response %s', $register->to_string);
+                    else {
+                        slog_info('decred response %s, trying again...', $register->to_string);
+                        sleep 1;
+                    }
+                }
+                die(sprintf 'decred response %s, cannot continue with add_to_blockchain', $register->to_string)
+                  unless $register->code == 200;
 
                 my $record = $c->schema->resultset('BlockchainRecord')->create(
                     {
@@ -149,14 +161,26 @@ sub verify_blockchain {
     my $record = $c->schema->resultset('BlockchainRecord')->search({id => $blockchain_record_id})->next
       or die "record $blockchain_record_id not found BlockchainRecord";
 
-    my $verify = $c->ua->post(
-        'https://time.decred.org:49152/v1/verify/',
-        json => {
-            id      => 'lgpdjus',
-            digests => [$record->digest]
+    my $verify;
+
+    for (1 .. 10) {
+        $verify = $c->ua->post(
+            'https://time.decred.org:49152/v1/verify/',
+            json => {
+                id      => 'lgpdjus',
+                digests => [$record->digest]
+            }
+        )->result;
+        if ($verify->code == 200) {
+            slog_info('decred response %s', $verify->to_string);
+            last;
         }
-    )->result;
-    slog_info('decred response %s', $verify->to_string);
+        else {
+            slog_info('decred response %s, trying again...', $verify->to_string);
+            sleep 5;
+        }
+    }
+    slog_info('decred response %s, cannot verify now!', $verify->to_string) unless $verify->code == 200;
 
     my $json  = $verify->json;
     my $chain = $json->{digests}[0]{chaininformation};
