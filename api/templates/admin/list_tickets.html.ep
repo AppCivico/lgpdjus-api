@@ -11,10 +11,10 @@
             <div class="collapse" id="collapseHelp">
                 <div class="card card-body">
                     <h5>Situações</h5>
-                    <p><b>Pendente</b>: são as solicitações aguardando uma resposta do DPO.<br />
+                    <p><b>Pendente</b>: são as solicitações aguardando uma resposta do encarregado de dados.<br />
                         <b>Finalizado</b>: são as solicitações já foram respondidas. Você pode reabrir para enviar novas
                         respostas ou pedir mais dados.<br />
-                        <b>Aguardando informação adicional</b>: são as solicitações o operador do DPO pediu informações
+                        <b>Aguardando informação adicional</b>: são as solicitações o operador do encarregado de dados pediu informações
                         adicionais para o solicitante. Quando o solicitante responder, a nova situação será
                         "Pendente".
                     </p>

@@ -1,7 +1,7 @@
 <div class="border-bottom margin-bottom">
     <h1 class="h2">Lista de notificações</h1>
     <div class="start-help">
-        Nesta tela você pode visualizar todas as notifiacações enviadas pelos DPO para os solicitantes. As notificações enviadas ficam disponíveis para o solicitante através do aplicativo.
+        Nesta tela você pode visualizar todas as notifiacações enviadas pelos encarregado de dados para os solicitantes. As notificações enviadas ficam disponíveis para o solicitante através do aplicativo.
     </div>
 </div>
 <p><%= stash('total_count') %> resultados</p>
