@@ -26,7 +26,7 @@ sub apply_rps {
 sub web_sobre {
     my $c = shift;
 
-    $c->stash(texto    => $c->schema->resultset('Configuraco')->get_column('texto_faq_index')->next());
+    $c->stash(texto    => $c->schema->resultset('Configuraco')->get_column('texto_sobre')->next());
     $c->stash(template => 'webfaq/texto');
 
     return $c->render(html => {});
