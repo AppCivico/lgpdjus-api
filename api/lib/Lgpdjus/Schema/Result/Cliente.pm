@@ -34,42 +34,12 @@ __PACKAGE__->add_columns(
     is_nullable => 0,
     size => 200,
   },
-  "dt_nasc",
-  { data_type => "date", is_nullable => 0 },
   "email",
   {
     data_type => "varchar",
     default_value => \"null",
     is_nullable => 0,
     size => 200,
-  },
-  "cep",
-  {
-    data_type => "varchar",
-    default_value => \"null",
-    is_nullable => 0,
-    size => 8,
-  },
-  "cep_cidade",
-  {
-    data_type => "varchar",
-    default_value => \"null",
-    is_nullable => 1,
-    size => 200,
-  },
-  "cep_estado",
-  {
-    data_type => "varchar",
-    default_value => \"null",
-    is_nullable => 1,
-    size => 200,
-  },
-  "genero",
-  {
-    data_type => "varchar",
-    default_value => \"null",
-    is_nullable => 0,
-    size => 100,
   },
   "nome_completo",
   {
@@ -203,8 +173,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 19:06:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:nMlSEFKpbyevv+hFN0wA5w
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-12 19:33:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LnG0/QRnj0QPmTDsVbhO2Q
 
 use Carp qw/confess/;
 use Lgpdjus::Utils qw/is_uuid_v4 format_cpf/;
@@ -365,12 +335,7 @@ sub as_hashref {
           status
           created_on
           cpf
-          dt_nasc
           email
-          cep
-          cep_cidade
-          cep_estado
-          genero
           nome_completo
           login_status
           login_status_last_blocked_at

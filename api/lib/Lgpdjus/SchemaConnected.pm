@@ -72,6 +72,8 @@ sub get_schema {
     $ENV{MEDIA_HASH_SALT} ||= $ENV{JWT_SECRET_KEY} . '.media';
     $ENV{NEWS_HASH_SALT}  ||= $ENV{JWT_SECRET_KEY} . '.news';
 
+    $ENV{DELETE_LOG_SALT} ||= $ENV{JWT_SECRET_KEY} . '.deletelog';
+
     die 'missing PUBLIC_API_URL' unless $ENV{PUBLIC_API_URL};
     $ENV{PUBLIC_API_URL} .= '/'  unless $ENV{PUBLIC_API_URL} =~ /\/$/;
 

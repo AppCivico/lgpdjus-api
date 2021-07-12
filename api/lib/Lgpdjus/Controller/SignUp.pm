@@ -27,16 +27,13 @@ sub post {
 
     $c->validate_request_params(
         nome_completo => {max_length => 200, required => 1, type => Nome, min_length => 5},
-        dt_nasc       => {required   => 1,   type     => DateStr},
         cpf           => {required   => 1,   type     => CPF},
-        cep           => {required   => 1,   type     => CEP},
 
         app_version => {max_length => 800, required => 1, type => 'Str', min_length => 1},
     );
     if (!$dry) {
         $c->validate_request_params(
             email   => {max_length => 200, required => 1, type => EmailAddress},
-            genero  => {required   => 1,   type     => Genero},
             apelido => {max_length => 40,  required => 1, type => 'Str', min_length => 2},
             senha   => {max_length => 200, required => 1, type => 'Str'},
         );
@@ -45,9 +42,7 @@ sub post {
     }
 
     $params->{cpf} =~ s/[^\d]//ga;
-    $params->{cep} =~ s/[^\d]//ga;
 
-    my $cep   = delete $params->{cep};
     my $cpf   = delete $params->{cpf};
     my $email = $dry ? '' : lc(delete $params->{email});
 
@@ -102,15 +97,10 @@ sub post {
     my $row = $c->schema->resultset('Cliente')->create(
         {
             email         => $email,
-            nome_completo => $params->{nome_completo},    # deixa do jeito que o usuario digitou
-
-            dt_nasc => $params->{dt_nasc},
-            cpf     => $cpf,
-            cep     => $cep,
-
-            senha_sha256 => sha256_hex(encode_utf8($params->{senha})),
-
-            (map { $_ => $params->{$_} || '' } qw/genero apelido/),
+            nome_completo => $params->{nome_completo},                    # deixa do jeito que o usuario digitou
+            cpf           => $cpf,
+            senha_sha256  => sha256_hex(encode_utf8($params->{senha})),
+            (map { $_ => $params->{$_} || '' } qw/apelido/),
             status     => 'active',
             created_on => \'NOW()',
         }

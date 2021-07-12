@@ -25,7 +25,7 @@ sub delete_user {
     my $user = $schema->resultset('Cliente')->find($user_id);
     goto OK if !$user;
 
-    my $email_md5 = md5_hex($user->email);
+    my $email_md5 = md5_hex($ENV{DELETE_LOG_SALT} . $user->email);
     $logger->info("deleting user email md5=$email_md5");
 
     my $emails_rs = $schema->resultset('EmaildbQueue')->search({to => $user->email});
@@ -64,16 +64,13 @@ sub delete_user {
                 {
                     data => to_json(
                         {
-                            cpf_hashed             => md5_hex($user->cpf),
+                            cpf_md5                => md5_hex($ENV{DELETE_LOG_SALT} . $user->cpf),
                             old_perform_delete_at  => $user->get_column('perform_delete_at'),
                             deleted_scheduled_meta => (
                                 $user->deleted_scheduled_meta
                                 ? from_json($user->deleted_scheduled_meta)
                                 : undef
                             ),
-                            cep_hash     => md5_hex($user->cep),
-                            dt_nasc_hash => md5_hex($user->dt_nasc->datetime),
-
                             media_upload_deleted => [@ids],
                             media_upload_bytes   => $sum_deleted_bytes,
                         }

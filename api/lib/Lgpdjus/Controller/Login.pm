@@ -26,16 +26,6 @@ sub post {
     my $email      = lc(delete $params->{email});
     my $senha_crua = delete $params->{senha};
 
-    eval { check_password_or_die($senha_crua) };
-    if (length($senha_crua) < 8 || $@) {
-        die {
-            error   => 'wrongpassword_tooweak',
-            message => 'Sua senha é fraca. Por favor, clique no botão "Esqueci minha senha" para resetar.',
-            field   => 'password',
-            reason  => 'invalid'
-        };
-    }
-
     my $senha     = sha256_hex(encode_utf8($senha_crua));
     my $senha_md5 = md5_hex(encode_utf8($senha_crua));
 

@@ -11,12 +11,6 @@
 <dd><%= $cliente->email() %></dd>
 <dt>CPF</dt>
 <dd><%= $cliente->cpf() %></dd>
-<dt>Data de nascimento</dt>
-<dd><%= $cliente->dt_nasc()->dmy('/') %></dd>
-<dt>Gênero</dt>
-<dd><%= $cliente->genero() %></dd>
-<dt>CEP</dt>
-<dd><%= $cliente->cep() %></dd>
 <dt>Como deseja ser chamado</dt>
 <dd><%= $cliente->apelido() %></dd>
 </dl>

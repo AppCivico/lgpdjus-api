@@ -64,7 +64,10 @@ sub me_find {
     return $c->render(
         json => {
             user_profile => {
-                (map { $_ => $user->{$_} } (qw/email apelido cep dt_nasc nome_completo genero cpf nome_social/)),
+
+                #(map { $_ => $user->{$_} || '' } (qw/email apelido cep dt_nasc nome_completo genero cpf nome_social/)),
+
+                (map { $_ => $user->{$_} || '' } (qw/email apelido nome_completo cpf/)),
                 account_verified             => $user->{account_verified}             ? 1 : 0,
                 account_verification_pending => $user->{account_verification_pending} ? 1 : 0,
 

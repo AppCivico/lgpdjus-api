@@ -40,4 +40,8 @@ alter table public.quiz_config add column button_style varchar default 'primary'
 
 alter table directus_users add column lgpdjus_items_per_page int not null default 20;
 
+alter table clientes drop column dt_nasc, drop column genero, drop column cep, drop column cep_cidade, drop column cep_estado;
+
+
+
 COMMIT;

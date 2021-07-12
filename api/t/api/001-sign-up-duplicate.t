@@ -33,9 +33,6 @@ do {
             cpf           => $bad_random_cpf,
             email         => $random_email,
             senha         => '1A`S345678A*',
-            cep           => '03640000',
-            genero        => 'Feminino',
-            dt_nasc       => '1994-10-10',
             @other_fields,
         },
     )->status_is(400, 'a1')->json_is('/error', 'form_error')->json_is('/field', 'cpf')->json_is('/reason', 'invalid');
@@ -45,8 +42,6 @@ do {
         form => {
             nome_completo => 'test name',
             cpf           => $random_cpf,
-            cep           => '03640000',
-            dt_nasc       => '1994-01-31',
             @other_fields,
             dry => 1,
 
@@ -60,9 +55,6 @@ do {
             cpf           => $random_cpf,
             email         => $random_email,
             senha         => '3As344578a ',
-            cep           => '03640000',
-            genero        => 'Feminino',
-            dt_nasc       => '1994-01-31',
             @other_fields,
 
         },
@@ -75,9 +67,6 @@ do {
             cpf           => $random_cpf,
             email         => $random_email,
             senha         => '3As344578a',
-            cep           => '03640000',
-            genero        => 'Feminino',
-            dt_nasc       => '1994-01-31',
             @other_fields,
 
         },
@@ -90,9 +79,6 @@ do {
             cpf           => $random_cpf,
             email         => $random_email,
             senha         => '65658895',
-            cep           => '03640000',
-            genero        => 'Feminino',
-            dt_nasc       => '1994-01-31',
             @other_fields,
 
         },
@@ -104,9 +90,6 @@ do {
             cpf           => $random_cpf,
             email         => $random_email,
             senha         => 'oiuytrew',
-            cep           => '03640000',
-            genero        => 'Feminino',
-            dt_nasc       => '1994-01-31',
             @other_fields,
 
         },
@@ -118,9 +101,6 @@ do {
             cpf           => $random_cpf,
             email         => $random_email,
             senha         => 'iuy123*',
-            cep           => '03640000',
-            genero        => 'Feminino',
-            dt_nasc       => '1994-01-31',
             @other_fields,
 
         },
@@ -144,10 +124,7 @@ do {
             cpf           => $random_cpf,
             email         => $random_email,
             senha         => '1A`S345678A*',
-            cep           => '03640000',
-            dt_nasc       => '1994-01-31',
             @other_fields,
-            genero => 'NaoInformado',
         },
     )->status_is(200)->tx->res->json;
 
@@ -180,7 +157,6 @@ do {
     )->status_is(200)->tx->res->json;
 
     is $cadastro->{user_profile}{nome_completo}, 'test name';
-    is $cadastro->{user_profile}{genero},        'NaoInformado';
 
     is $user_obj->clientes_preferences->count, 0, 'no clientes_preferences';
     $t->get_ok('/me/preferences', {'x-api-key' => $res->{session}})->status_is(200);
@@ -235,7 +211,7 @@ subtest_buffered 'Login' => sub {
             senha       => '1AS34567',
             app_version => 'Versao Ios ou Android, Modelo Celular, Versao do App',
         }
-    )->status_is(400)->json_is('/error', 'wrongpassword_tooweak');
+    )->status_is(400)->json_is('/error', 'wrongpassword');
 
     my $res = $t->post_ok(
         '/login',
