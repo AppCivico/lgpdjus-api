@@ -108,9 +108,10 @@ __PACKAGE__->add_columns(
   },
   "button_style",
   {
-    data_type   => "text",
-    is_nullable => 1,
-    original    => { data_type => "varchar" },
+    data_type     => "text",
+    default_value => "primary",
+    is_nullable   => 1,
+    original      => { data_type => "varchar" },
   },
 );
 __PACKAGE__->set_primary_key("id");
@@ -127,8 +128,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-05 22:33:16
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:2lJ1QIoQ+vuQVtfyKVr4ng
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-12 18:50:27
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yFqd8ozxvqI1XdWMXtCUEg
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

@@ -21,5 +21,9 @@
         <div class="col-md-6"><label class="labels">Confirme a Nova senha</label><input name="password_confirm"  minlength=6 type="password" class="form-control" placeholder="Confirme a nova senha" value=""></div>
     </div>
 
+    <div class="row mt-6">
+        <div class="col-md-12"><label class="labels">Resultados por página</label><input name="lgpdjus_items_per_page" type="number" max=100000 min=10  class="form-control" placeholder="Resultados por página" value="<%= $admin->lgpdjus_items_per_page %>"></div>
+    </div>
+
     <div class="mt-5 text-center"><button class="btn btn-primary profile-button" type="submit">Salvar configurações</button></div>
 </form>

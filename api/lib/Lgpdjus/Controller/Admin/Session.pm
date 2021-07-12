@@ -124,8 +124,9 @@ sub admin_check_authorization {
     $c->log->info(sprintf 'Logged as %s, %s', $admin->id, $admin->name_or_email());
 
     $c->stash(
-        logged_as_admin => 1,
-        admin_user      => $admin,
+        logged_as_admin        => 1,
+        admin_user             => $admin,
+        lgpdjus_items_per_page => $admin->lgpdjus_items_per_page,
     );
 
     return 1;

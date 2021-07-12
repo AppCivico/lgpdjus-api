@@ -22,8 +22,8 @@ sub a_blockchain_list_get {
         cliente_id => {required => 0, type => 'Int'},
         protocol   => {required => 0, type => 'Int', empty_is_valid => 1},
     );
-    my $rows = $valid->{rows} || 10;
-    $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
+    my $rows = $valid->{rows} || $c->stash('lgpdjus_items_per_page') || die 'missing lgpdjus_items_per_page';
+    $rows = 10 if !is_test() && ($rows > 100_000 || $rows < 10);
 
     my $offset       = 0;
     my $current_page = 1;

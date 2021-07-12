@@ -62,13 +62,15 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "last_page",
   { data_type => "varchar", is_nullable => 1, size => 255 },
+  "lgpdjus_items_per_page",
+  { data_type => "integer", default_value => 20, is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("directus_users_email_unique", ["email"]);
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-04-13 16:07:32
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:T6DBZAEBOAqZU8eoX8zqzA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-12 18:51:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:XPUcTJqtzIO8Czguf9h9vw
 
 use feature 'state';
 use Crypt::Passphrase::Argon2;

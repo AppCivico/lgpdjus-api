@@ -37,6 +37,8 @@ sub a_myacc_save_post {
         current_password => {required => 0, type => 'Str', empty_is_valid => 1},
         password         => {required => 0, type => 'Str', empty_is_valid => 1},
         password_confirm => {required => 0, type => 'Str', empty_is_valid => 1},
+
+        lgpdjus_items_per_page => {required => 0, type => 'Int'},
     );
 
     if ($valid->{password} && !$valid->{current_password}) {
@@ -63,6 +65,13 @@ sub a_myacc_save_post {
         }
 
         $c->stash('admin_user')->set_password($valid->{password});
+    }
+
+    if (   $valid->{lgpdjus_items_per_page}
+        && $valid->{lgpdjus_items_per_page} > 10
+        && $valid->{lgpdjus_items_per_page} <= 100_000)
+    {
+        $c->stash('admin_user')->update({lgpdjus_items_per_page => $valid->{lgpdjus_items_per_page}});
     }
 
 

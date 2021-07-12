@@ -28,8 +28,8 @@ sub au_search {
 
     my $dirty  = 0;
     my $search = $valid->{search};
-    my $rows   = $valid->{rows} || 10;
-    $rows = 10 if !is_test() && ($rows > 100 || $rows < 2);
+    my $rows = $valid->{rows} || $c->stash('lgpdjus_items_per_page') || die 'missing lgpdjus_items_per_page';
+    $rows = 10 if !is_test() && ($rows > 100_000 || $rows < 10);
     my $current_page = 1;
 
     my $render_detail = $valid->{cliente_id} && $c->accept_html();

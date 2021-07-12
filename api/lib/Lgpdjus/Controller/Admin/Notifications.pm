@@ -220,8 +220,8 @@ sub unft_list {
         rows      => {required => 0, type => 'Int'},
         next_page => {required => 0, type => 'Str'},
     );
-    my $rows = $valid->{rows} || 10;
-    $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
+    my $rows = $valid->{rows} || $c->stash('lgpdjus_items_per_page') || die 'missing lgpdjus_items_per_page';
+    $rows = 10 if !is_test() && ($rows > 100_000 || $rows < 10);
 
     my $current_page = 1;
     my $total_count;

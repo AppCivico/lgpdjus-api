@@ -178,8 +178,8 @@ sub a_tickets_list_get {
         filter_type => {required => 0, type => 'Int'},
         cliente_id  => {required => 0, type => 'Int'},
     );
-    my $rows = $valid->{rows} || 10;
-    $rows = 10 if !is_test() && ($rows > 100 || $rows < 10);
+    my $rows = $valid->{rows} || $c->stash('lgpdjus_items_per_page') || die 'missing lgpdjus_items_per_page';
+    $rows = 10 if !is_test() && ($rows > 100_000 || $rows < 10);
 
     my $total_count;
     my $current_page = 1;
