@@ -218,6 +218,13 @@ sub a_tickets_list_get {
         pending => {'me.status' => 'pending'},
         done    => {'me.status' => 'done'},
         waiting => {'me.status' => 'wait-additional-info'},
+        pastdue => {
+            'me.status'   => 'pending',
+            'me.due_date' =>
+
+              # converte para para o dia atual meia noite, depois volta para o timestamp em utc
+              {'<=' => \ "timezone('America/Sao_paulo', timezone('America/Sao_paulo', now())::date::timestamp)"}
+        },
     };
     my $filter = $filters->{$valid->{filter}};
 
@@ -265,10 +272,11 @@ sub a_tickets_list_get {
             filter      => $valid->{filter},
             filter_type => $valid->{filter_type},
             filter_opts => [
-                {id => 'pending', label => 'Exibir todas solicitações pendentes'},
-                {id => 'all',     label => 'Exibir todas solicitações'},
-                {id => 'done',    label => 'Exibir todas solicitações finalizadas'},
-                {id => 'waiting', label => 'Exibir todas solicitações aguardando informações'},
+                {id => 'pending', label => 'Solicitações pendentes'},
+                {id => 'done',    label => 'Solicitações finalizadas'},
+                {id => 'waiting', label => 'Solicitações aguardando informações'},
+                {id => 'pastdue', label => 'Solicitações com prazo vencido'},
+                {id => 'all',     label => 'Todas as solicitações'},
 
             ],
             filter_type_opts => [
