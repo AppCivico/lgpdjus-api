@@ -177,6 +177,7 @@ sub a_tickets_list_get {
         filter      => {required => 0, type => 'Str'},
         filter_type => {required => 0, type => 'Int'},
         cliente_id  => {required => 0, type => 'Int'},
+        order_by    => {required => 0, type => 'Str'},
     );
     my $rows = $valid->{rows} || $c->stash('lgpdjus_items_per_page') || die 'missing lgpdjus_items_per_page';
     $rows = 10 if !is_test() && ($rows > 100_000 || $rows < 10);
@@ -193,6 +194,21 @@ sub a_tickets_list_get {
         $current_page = $tmp->{page};
     }
 
+    $valid->{order_by} ||= 'default';
+    my $order_bys = {
+        default  => \'me.id DESC',
+        protocol => \'me.protocol ASC',
+        duedesc  => \'me.due_date DESC',
+        dueasc   => \'me.due_date ASC',
+    };
+    my $order_bys_labels = {
+        default     => 'Padrão (protocolo descedente)',
+        protocolasc => 'Protocolo crescente',
+        duedesc     => 'Prazo mais recente primeiro',
+        dueasc      => 'Prazo mais antigo primeiro',
+    };
+    my $order_by = exists $order_bys_labels->{$valid->{order_by}} ? $valid->{order_by} : 'default';
+
     my $rs = $c->schema->resultset('Ticket')->search(
         {
             ($ENV{ADMIN_FILTER_CLIENTE_ID} ? ('me.cliente_id' => $ENV{ADMIN_FILTER_CLIENTE_ID})                   : ()),
@@ -200,7 +216,7 @@ sub a_tickets_list_get {
             ($valid->{filter_type} && $valid->{filter_type} != -1 ? ('questionnaire.id' => $valid->{filter_type}) : ()),
         },
         {
-            order_by   => \'me.id DESC',
+            order_by   => $order_bys->{$order_by},
             join       => ['questionnaire', 'cliente'],
             '+columns' => [
                 {
@@ -290,6 +306,9 @@ sub a_tickets_list_get {
                     }
                 )
             ],
+            order_bys_opts =>
+              [map { +{id => $_, label => $order_bys_labels->{$_}} } qw/default protocolasc duedesc dueasc/],
+            order_by            => $order_by,
             rows                => \@rows,
             has_more            => $has_more,
             next_page           => $has_more ? $next_page : undef,
