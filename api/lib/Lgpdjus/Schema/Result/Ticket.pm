@@ -194,7 +194,8 @@ sub html_detail {
         status_human       => $self->status_human(),
         status             => $self->status(),
         prazo              => $self->due_date_dmy(),
-        created_at_dmy_hms => substr($self->created_at_dmy_hms(), 0, 12),
+        created_at_dmy_hms => $self->created_at_dmy_hms(),
+        created_at_dmy     => substr($self->created_at_dmy_hms(), 0, 10),
         is_admin           => $opts{admin},
         is_pdf             => $is_pdf,
     };

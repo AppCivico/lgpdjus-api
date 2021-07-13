@@ -56,15 +56,17 @@
     <div style="display: table-row">
         <div style="width: 60%; display: table-cell;">
             <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;">
-                Criada em <%= $created_at_dmy_hms %>
+                Criada em <%= $created_at_dmy %>
                     <br>
                     <%= $tipo %>
             </p>
         </div>
         <div style="display: table-cell; padding-left: 10px; text-align: right; ">
             <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+                % if ($status eq 'pending'){
                 Prazo: <%= $prazo %>
                 <br>
+                %}
                 Status: <%= $status_human %>
             </p>
         </div>
