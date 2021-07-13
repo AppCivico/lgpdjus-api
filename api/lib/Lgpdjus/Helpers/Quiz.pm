@@ -796,6 +796,16 @@ sub process_quiz_session {
                         last;
                     }
                 }
+                elsif ($msg->{_change_questionnaire}) {
+                    $c->ensure_questionnaires_loaded();
+                    foreach my $q ($c->stash('questionnaires')->@*) {
+                        next unless $q->{id} == $msg->{_change_questionnaire};
+                        $stash     = &_init_questionnaire_stash($q, $c);
+                        $responses = {start_time => time()};
+                        $have_new_responses++;
+                        last;
+                    }
+                }
                 else {
                     $responses->{$code}             = $val;
                     $responses->{$code . '_action'} = $msg->{action};
