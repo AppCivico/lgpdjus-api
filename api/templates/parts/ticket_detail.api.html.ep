@@ -67,7 +67,7 @@
                 Prazo: <%= $prazo %>
                 <br>
                 %}
-                Status: <%= $status_human %>
+                Situação: <%= $status_human %>
             </p>
         </div>
     </div>
