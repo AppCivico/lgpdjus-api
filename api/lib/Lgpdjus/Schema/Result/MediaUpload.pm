@@ -83,7 +83,16 @@ sub media_generate_download_url {
     my $ip       = $c->remote_addr();
     my $media_id = $self->id;
     my $hash     = substr(md5_hex($ENV{MEDIA_HASH_SALT} . $self->cliente_id . $quality . $ip), 0, 12);
-    return $ENV{PUBLIC_API_URL} . "media-download/?m=$media_id&q=$quality&h=$hash";
+
+    my $tmp_api_key = $c->encode_jwt(
+        {
+            ses => $c->stash('jwt_session_id'),    # bind to the same session
+            typ => 'usr',
+            exp => time() + 3600                   # exp in 1 hour
+        }
+    );
+
+    return $ENV{PUBLIC_API_URL} . "media-download/?m=$media_id&q=$quality&h=$hash&api_key=$tmp_api_key";
 }
 
 sub media_generate_download_url_admin {
