@@ -783,10 +783,11 @@ sub process_quiz_session {
             }
             elsif ($msg->{type} eq 'button') {
 
-                log_info("msg type button");
+                log_info("msg type button: " . to_json($msg));
 
                 # reiniciar o fluxo
                 if ($msg->{_reset}) {
+                    log_info("reseting...");
                     $c->ensure_questionnaires_loaded();
                     foreach my $q ($c->stash('questionnaires')->@*) {
                         next unless $q->{id} == $session->{questionnaire_id};
@@ -797,6 +798,7 @@ sub process_quiz_session {
                     }
                 }
                 elsif ($msg->{_change_questionnaire}) {
+                    log_info("_change_questionnaire...");
                     $c->ensure_questionnaires_loaded();
                     foreach my $q ($c->stash('questionnaires')->@*) {
                         next unless $q->{id} == $msg->{_change_questionnaire};
