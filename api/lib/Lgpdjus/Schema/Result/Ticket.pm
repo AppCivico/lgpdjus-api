@@ -196,6 +196,7 @@ sub html_detail {
         prazo              => $self->due_date_dmy(),
         created_at_dmy_hms => $self->created_at_dmy_hms(),
         is_admin           => $opts{admin},
+        is_pdf             => $is_pdf,
     };
 
     my $user_obj = $self->cliente;
@@ -231,7 +232,7 @@ sub html_detail {
     local $c->stash->{layout} = undef;
     my $detail = $c->render_to_string('parts/ticket_detail.api', format => 'html', %$vars);
 
-    $detail .= ''; # convert to string!
+    $detail .= '';    # convert to string!
 
     return $detail;
 }
