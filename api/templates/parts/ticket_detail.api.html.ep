@@ -49,7 +49,7 @@
 % }else{
 <p class="alert alert-warning">Não existiram perguntas no questionário.</p>
 %}
-% } else { # conteudo para o app
+% } else { # conteúdo para o app
 <p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Histórico da solicitação</p>
 <div style="width: 100%; display: table;">
     <div style="display: table-row">

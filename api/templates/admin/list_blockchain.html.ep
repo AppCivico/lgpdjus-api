@@ -17,29 +17,22 @@
                         nos dados enviados pelo solicitante.</p>
                     <h5>Hash SHA-256</h5>
                     Hash é um algoritmo matemático para a criptografia, na qual ocorre uma transformação do dado (como
-                    um
-                    arquivo) em um conjunto alfanumérico com comprimento fixo de caracteres.
-                    Este conjunto de caracteres pode representar a singularidade de arquivo, e ao mesmo tempo não conter
-                    nenhuma informação
-                    do arquivo.
-                    A criptografia hash é utilizada para resumir dados, verificar integridade de arquivos e garantir a
-                    segurança
-                    de senhas dentro de um servidor.
+                    um arquivo) em um conjunto alfanumérico com comprimento fixo de caracteres. Este conjunto de
+                    caracteres pode representar a singularidade do arquivo, e ao mesmo tempo não conter nenhuma
+                    informação do arquivo. A criptografia hash é utilizada para resumir dados, verificar integridade de
+                    arquivos e garantir a segurança de senhas dentro de um servidor.
                     <h5>Blockchain e dcrtime</h5>
                     <p>A blockchain escolhida para registro é a blockchain da decred, que fornece gratuitamente o
                         serviço
                         chamado <a href="https://docs.decred.org/advanced/dcrtime/">dcrtime</a> para uso público.
                         O uso gratuito só é possível pois o hash de diversos arquivos são acumulados na off-chain da
-                        dcrtime e
-                        então um novo hash com todos os hashes enviados é calculado e este sim é enviado para a
-                        blockchain. O processo de atualização com a blockchain leva em torno de 1 hora, e apenas após
-                        este
-                        periodo é que o arquivo é considerado registrado. </p>
+                        dcrtime e então um novo hash com todos os hashes enviados é calculado e este sim é enviado para
+                        a blockchain. O processo de atualização com a blockchain leva em torno de 1 hora, e apenas após
+                        este período é que o arquivo é considerado registrado.</p>
                     <p>Após o registro do hash no sistema do dcrtime, o mesmo hash não poderá ser registrado novamente,
-                        criando
-                        um carimbo do horário ele foi registrado a primeira vez. Isso signfica que não há criar um novo
-                        arquivo
-                        (pois a hash seria diferente), tampouco enviar um arquivo com um horário no passado.</p>
+                        criando um carimbo do horário onde ele foi registrado a primeira vez. Isso significa que não há
+                        criar um novo arquivo (pois a hash seria diferente), tampouco enviar um arquivo com um horário
+                        no passado.</p>
                     <h5>Situação</h5>
                     <ul>
                         <li>Registrado: O hash do arquivo já está incomporado na blockchain da decred.</li>
@@ -70,7 +63,8 @@
         </div>
         <div class="form-group col-md-5">
             <label for="filter2">Protocolo</label>
-            <input id="filter2" name="protocol" min="21000000000" max="999999999999" type="number" class="form-control" value="<%= stash('filter_protocol') || '' %>" />
+            <input id="filter2" name="protocol" min="21000000000" max="999999999999" type="number" class="form-control"
+                value="<%= stash('filter_protocol') || '' %>" />
         </div>
         <div class="form-group col-md-2">
             <button type="submit" class="btn btn-primary">Aplicar</button>
