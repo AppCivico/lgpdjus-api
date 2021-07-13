@@ -798,10 +798,11 @@ sub process_quiz_session {
                     }
                 }
                 elsif ($msg->{_change_questionnaire}) {
-                    log_info("_change_questionnaire...");
+                    log_info("_change_questionnaire..." . $msg->{_change_questionnaire});
                     $c->ensure_questionnaires_loaded();
                     foreach my $q ($c->stash('questionnaires')->@*) {
                         next unless $q->{id} == $msg->{_change_questionnaire};
+                        log_info("-> _init_questionnaire_stash: " . $q->{id});
                         $stash     = &_init_questionnaire_stash($q, $c);
                         $responses = {start_time => time()};
                         $have_new_responses++;
