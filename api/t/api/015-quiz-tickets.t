@@ -403,7 +403,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    like $first_msg->{content}, qr/não é um CPF válido/, 'not valid cpf was sent';
+    like $first_msg->{content}, qr/confira o CPF informado./, 'not valid cpf was sent';
     is $input_msg->{type},      'CPF',                   'is a CPF';
 
     # envia um cpf inválido
@@ -420,7 +420,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    like $first_msg->{content}, qr/não é um CPF válido/, 'not valid cpf was sent';
+    like $first_msg->{content}, qr/confira o CPF informado./, 'not valid cpf was sent';
     is $input_msg->{type},      'CPF',                   'is a CPF';
 
     # envia um CPF válido
@@ -453,7 +453,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    like $first_msg->{content}, qr/não é uma data de nascimento válida/, 'not valid birthday';
+    like $first_msg->{content}, qr/confira a data informada/, 'not valid birthday';
 
     is $input_msg->{type}, 'birthday', 'is a birthday';
 
@@ -470,7 +470,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     $first_msg = $json->{quiz_session}{current_msgs}[0];
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
-    like $first_msg->{content}, qr/não é uma data de nascimento válida/, 'not valid birthday';
+    like $first_msg->{content}, qr/confira a data informada/, 'not valid birthday';
 
     my $today = DateTime->now(time_zone => 'America/Sao_Paulo');
 
