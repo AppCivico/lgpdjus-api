@@ -485,6 +485,27 @@ subtest_buffered 'group de questoes boolean' => sub {
             $field_ref => $today->ymd(),
         }
     )->status_is(200)->json_has('/quiz_session')->tx->res->json;
+
+    $first_msg = $json->{quiz_session}{current_msgs}[0];
+    $input_msg = $json->{quiz_session}{current_msgs}[-1];
+
+    is $input_msg->{type},         'button',          'is a button';
+    is $input_msg->{content},      'texto continuar', '..';
+    is $input_msg->{label},        'continuar',       'botao tem label';
+    is $input_msg->{button_style}, 'primary',         'has button_style';
+    is $input_msg->{action},       'none',            'action is none';
+
+    # responde o botao continuar
+    $field_ref = $input_msg->{ref};
+    trace_popall;
+    $json = $t->post_ok(
+        '/me/quiz',
+        {'x-api-key' => $session},
+        form => {
+            session_id => $cadastro->{quiz_session}{session_id},
+            $field_ref => 1,
+        }
+    )->status_is(200)->json_has('/quiz_session')->tx->res->json;
     ok $ticket_id = trace_grep('generate_ticket:new'), 'got a ticket';
 
     $first_msg = $json->{quiz_session}{current_msgs}[0];
@@ -519,7 +540,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     }
 
     like $load_as_image_response, qr/media-download\/\?m=$media->{id}/, 'media id';
-    is scalar @$prev_msgs, 13, '13 prev questions';
+    is scalar @$prev_msgs, 14, '14 prev questions';
 
     ok my $session_id = $json->{quiz_session}{session_id}, 'has session id';
 
@@ -599,11 +620,10 @@ subtest_buffered 'list do ticket' => sub {
     $t->get_ok(
         '/me/tickets/' . $wait->id,
         {'x-api-key' => $session}
-      )->status_is(200)->json_like('/body', qr/Categoria da/, 'body ok')    #
-      ->json_has('/id',          'has id')                                  #
-      ->json_has('/meta/header', 'has header')                              #
-      ->json_like('/responses/0/body', qr/necessária/, 'has response body') #
-      ->json_has('/responses/0/id', 'has response id')                      #
+      )->status_is(200)->json_has('/id', 'has id')                    #
+      ->json_has('/meta/header', 'has header')                                 #
+      ->json_like('/responses/0/body', qr/necessária/, 'has response body')    #
+      ->json_has('/responses/0/id', 'has response id')                         #
       ->json_is('/responses/0/meta/can_reply', 1, 'has response can_reply');
 
     my $response_id = &last_tx_json()->{responses}[0]{id};
@@ -625,7 +645,7 @@ subtest_buffered 'list do ticket' => sub {
       )->status_is(200)->json_is('/responses/0/meta/can_reply', 0, 'cannot reply anymore')    #
       ->json_like('/responses/0/body', qr/fooba&gt;r/, 'response ok')                         #
       ->json_like('/responses/0/body', qr/<img src/,   'response has image')                  #
-      ->json_like('/body',             qr/Pendente/,   'situação Pendente');
+      ->json_like('/body',             qr/Em andamento/,   'situação Pendente');
     $wait->discard_changes;
     is $wait->status, 'pending', 'new status is pending';
 

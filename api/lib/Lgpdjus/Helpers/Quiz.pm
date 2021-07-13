@@ -1013,17 +1013,33 @@ sub _init_questionnaire_stash {
         elsif ($qc->{type} eq 'botao_fim') {
 
             push @questions, {
-                type           => 'button',
-                content        => $qc->{question},
-                action         => 'none',
-                ref            => 'BT' . $qc->{id},
-                lens_direction => $qc->{camera_lens_direction} || 'back',
-                label          => $qc->{button_label}          || 'Enviar',
-                button_style   => $qc->{button_style}          || 'primary',
-                _relevance     => $relevance,
-                _code          => $qc->{code},
-                _progress_bar  => $qc->{progress_bar},
-                _end_chat      => 1,
+                type          => 'button',
+                content       => $qc->{question},
+                action        => 'none',
+                ref           => 'BT' . $qc->{id},
+                label         => $qc->{button_label} || 'Enviar',
+                button_style  => $qc->{button_style} || 'primary',
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
+                _end_chat     => 1,
+            };
+
+        }
+        elsif ($qc->{type} eq 'botao_continue' || $qc->{type} eq 'botao_change_questionnaire') {
+
+            push @questions, {
+                type          => 'button',
+                content       => $qc->{question},
+                action        => 'none',
+                ref           => 'BC' . $qc->{id},
+                label         => $qc->{button_label} || 'Enviar',
+                button_style  => $qc->{button_style} || 'primary',
+                _relevance    => $relevance,
+                _code         => $qc->{code},
+                _progress_bar => $qc->{progress_bar},
+
+                _change_questionnaire => $qc->{button_change_questionnaire},
             };
 
         }

@@ -90,6 +90,12 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 __PACKAGE__->has_many(
+  "quiz_config_button_change_questionnaires",
+  "Lgpdjus::Schema::Result::QuizConfig",
+  { "foreign.button_change_questionnaire" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+__PACKAGE__->has_many(
   "quiz_configs",
   "Lgpdjus::Schema::Result::QuizConfig",
   { "foreign.questionnaire_id" => "self.id" },
@@ -103,8 +109,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 19:06:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5LxLp1dsanu5EafUmdzchQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-13 15:33:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:51ZtRrPjJsqAOY25mnyRcg
 
 sub as_hashref {
     my $self = shift;

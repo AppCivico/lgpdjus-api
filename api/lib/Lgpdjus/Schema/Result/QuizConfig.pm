@@ -31,10 +31,9 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "type",
   {
-    data_type => "varchar",
-    default_value => \"null",
+    data_type   => "text",
     is_nullable => 0,
-    size => 100,
+    original    => { data_type => "varchar" },
   },
   "code",
   {
@@ -113,8 +112,21 @@ __PACKAGE__->add_columns(
     is_nullable   => 1,
     original      => { data_type => "varchar" },
   },
+  "button_change_questionnaire",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->belongs_to(
+  "button_change_questionnaire",
+  "Lgpdjus::Schema::Result::Questionnaire",
+  { id => "button_change_questionnaire" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "NO ACTION",
+    on_update     => "NO ACTION",
+  },
+);
 __PACKAGE__->belongs_to(
   "questionnaire",
   "Lgpdjus::Schema::Result::Questionnaire",
@@ -128,8 +140,8 @@ __PACKAGE__->belongs_to(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-12 18:50:27
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yFqd8ozxvqI1XdWMXtCUEg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-13 15:33:38
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0Njj0fYa7oGK4Sjug22j2Q
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

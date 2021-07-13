@@ -42,6 +42,7 @@ alter table directus_users add column lgpdjus_items_per_page int not null defaul
 
 alter table clientes drop column dt_nasc, drop column genero, drop column cep, drop column cep_cidade, drop column cep_estado;
 
+alter table public.quiz_config add column button_change_questionnaire int references questionnaires(id);
 
 
 COMMIT;
