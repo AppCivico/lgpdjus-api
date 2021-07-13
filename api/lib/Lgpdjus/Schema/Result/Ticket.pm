@@ -191,7 +191,7 @@ sub html_detail {
 
     my $vars = {
         tipo               => $tipo,
-        status_human       => $self->status_human(),
+        status_human       => $self->status_human($opts{admin} ? 0 : 1),
         status             => $self->status(),
         prazo              => $self->due_date_dmy(),
         created_at_dmy_hms => $self->created_at_dmy_hms(),
@@ -299,9 +299,9 @@ sub html_ticket_responses {
 }
 
 sub status_human {
-    my ($self) = shift;
+    my ($self, $is_user) = shift;
     my $map = {
-        'pending'              => 'Pendente',
+        'pending'              => $is_user ? 'Em andamento' : 'Pendente',
         'done'                 => 'Finalizado',
         'wait-additional-info' => 'Aguardando informação adicional',
     };
