@@ -61,7 +61,7 @@
                     <%= $tipo %>
             </p>
         </div>
-        <div style="display: table-cell; text-align: right; ">
+        <div style="display: table-cell; text-align: right; border: 1px solid red">
             <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;">
                 % if ($status eq 'pending'){
                 Prazo: <%= $prazo %>
