@@ -803,7 +803,9 @@ sub process_quiz_session {
                     foreach my $q ($c->stash('questionnaires')->@*) {
                         next unless $q->{id} == $msg->{_change_questionnaire};
                         log_info("-> _init_questionnaire_stash: " . $q->{id});
-                        $stash     = &_init_questionnaire_stash($q, $c);
+                        $stash = &_init_questionnaire_stash($q, $c);
+                        use DDP;
+                        p $stash;
                         $responses = {start_time => time()};
                         $have_new_responses++;
                         last;
@@ -865,6 +867,7 @@ sub process_quiz_session {
 
         $stash->{current_msgs} = $current_msgs = \@kept;
         $session->{responses}  = $responses;
+        $session->{stash}      = $stash;
 
         # salva as respostas (vai ser chamado no load_quiz_session)
         $opts{update_db} = 1;
