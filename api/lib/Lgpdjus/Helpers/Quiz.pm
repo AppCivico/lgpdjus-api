@@ -161,7 +161,6 @@ sub create_quiz_session {
         slog_error('Running _init_questionnaire_stash FAILED: %s', $err);
         die $@ if is_test();
 
-        #use DDP; p $@;
         $stash = &_get_error_questionnaire_stash($err, $c);
     }
 
@@ -783,7 +782,7 @@ sub process_quiz_session {
             }
             elsif ($msg->{type} eq 'button') {
 
-                log_info("msg type button: " . to_json($msg));
+                log_info("msg type button");
 
                 # reiniciar o fluxo
                 if ($msg->{_reset}) {
@@ -798,14 +797,11 @@ sub process_quiz_session {
                     }
                 }
                 elsif ($msg->{_change_questionnaire}) {
-                    log_info("_change_questionnaire..." . $msg->{_change_questionnaire});
+                    log_info("change questionnaire to" . $msg->{_change_questionnaire});
                     $c->ensure_questionnaires_loaded();
                     foreach my $q ($c->stash('questionnaires')->@*) {
                         next unless $q->{id} == $msg->{_change_questionnaire};
-                        log_info("-> _init_questionnaire_stash: " . $q->{id});
-                        $stash = &_init_questionnaire_stash($q, $c);
-                        use DDP;
-                        p $stash;
+                        $stash     = &_init_questionnaire_stash($q, $c);
                         $responses = {start_time => time()};
                         $have_new_responses++;
                         last;
@@ -867,7 +863,7 @@ sub process_quiz_session {
 
         $stash->{current_msgs} = $current_msgs = \@kept;
         $session->{responses}  = $responses;
-        $session->{stash}      = $stash;
+        $session->{stash}      = $stash;  # geralmente é a mesma, mas quando tem reset ou troca, a referencia é uma nova
 
         # salva as respostas (vai ser chamado no load_quiz_session)
         $opts{update_db} = 1;
@@ -905,6 +901,8 @@ sub _init_questionnaire_stash {
     my $c             = shift;
 
     die "AnError\n" if exists $ENV{DIE_ON_QUIZ};
+
+    log_info("-> _init_questionnaire_stash: " . $questionnaire->{id});
 
     my @questions;
     foreach my $qc ($questionnaire->{quiz_config}->@*) {
