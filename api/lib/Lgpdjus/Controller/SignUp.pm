@@ -122,12 +122,6 @@ sub post {
         }
     );
 
-    $c->minion->enqueue(
-        'cliente_update_cep',
-        [$directus_id] => {
-            attempts => 5,
-        }
-    );
     $ENV{LAST_PDF_JOB_ID} = $c->minion->enqueue(
         'generate_pdf_and_blockchain',
         [
