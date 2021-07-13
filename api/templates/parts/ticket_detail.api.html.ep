@@ -54,7 +54,7 @@
 
 <div style="width: 100%; display: table;">
     <div style="display: table-row">
-        <div style="width: 60%; display: table-cell;">
+        <div style="width: 50%; display: table-cell;">
             <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;">
                 Criada em <%= $created_at_dmy %>
                     <br>
