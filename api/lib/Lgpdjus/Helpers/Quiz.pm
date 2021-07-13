@@ -688,7 +688,8 @@ sub process_quiz_session {
                     my $onlydigit = $val;
                     $onlydigit =~ s/[^0-9]//g;
                     if ($onlydigit ne $val || !test_cpf($onlydigit) || $onlydigit =~ /^(\d)\1+$/) {
-                        push @preprend_msg, &_new_displaytext_error(sprintf('%s não é um CPF válido!', $val));
+                        push @preprend_msg,
+                          &_new_displaytext_error(sprintf('%s não é um CPF válido!', format_cpf($onlydigit)));
                         goto CONTINUE;
                     }
 
@@ -698,14 +699,14 @@ sub process_quiz_session {
                 elsif ($msg->{_text_validation} && $msg->{_text_validation} eq 'birthday') {
                     my ($year, $mon, $day) = $val =~ /^(\d{4})-(\d{2})-(\d{2})$/;
 
+                    # formata pro Brasil
+                    $val = "$day/$mon/$year";
+
                     if (!is_valid_birthday($year, $mon, $day)) {
                         push @preprend_msg,
                           &_new_displaytext_error(sprintf('%s não é uma data de nascimento válida!', $val));
                         goto CONTINUE;
                     }
-
-                    # formata pro Brasil
-                    $val = "$day/$mon/$year";
                 }
 
                 $responses->{$code} = $val;
