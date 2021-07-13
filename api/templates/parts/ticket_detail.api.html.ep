@@ -55,23 +55,24 @@
 <div style="width: 100%; display: table;">
     <div style="display: table-row">
         <div style="width: 50%; display: table-cell;">
-            <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;"></p>Criada em <%=
-                $created_at_dmy_hms %>
-                </p>
+            <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+                Criada em <%= $created_at_dmy_hms %>
+            </p>
         </div>
         <div style="display: table-cell; padding-left: 10px;">
-            <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;"></p>Prazo: <%= $prazo %>
-                </p>
+            <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+                Prazo: <%= $prazo %>
+            </p>
         </div>
     </div>
     <div style="display: table-row">
         <div style="width: 50%; display: table-cell;">
-            <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;"></p>
-            <%= $tipo %>
-                </p>
+            <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+                <%= $tipo %>
+            </p>
         </div>
         <div style="display: table-cell; padding-left: 10px;">
-            <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+            <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
                 Status: <%= $status_human %>
             </p>
         </div>
@@ -84,11 +85,11 @@
 <div class="ticket-data-wrap">
     <dl>
         % for my $quiz (@{$quiz}) {
-        <p style="color: #3C3C3BBF; font-weight: 700; line-height: 17pt; font-size: 14pt;">
+        <p style="color: #3C3C3B; font-weight: 700; line-height: 17pt; font-size: 14pt;">
             <%== $quiz->{question} %>
         </p>
         % if (defined $quiz->{response}){
-        <p style="color: #3C3C3BBF; font-weight: 400; font-style: italic; line-height: 17pt;  font-size: 14pt;">
+        <p style="color: #3C3C3B; font-weight: 400; font-style: italic; line-height: 17pt;  font-size: 14pt;">
             % if ($quiz->{type} eq 'photo_attachment'){
             <img style="max-width: 80%; max-height: 200px;" src="<%= $quiz->{response} %>" />
             %}else{
@@ -100,7 +101,7 @@
     </dl>
 </div>
 % }else{
-<p style="color: #3C3C3BBF; font-weight: 400; font-style: italic; line-height: 17pt;  font-size: 14pt;">Não existiram
+<p style="color: #3C3C3B; font-weight: 400; font-style: italic; line-height: 17pt;  font-size: 14pt;">Não existiram
     perguntas no questionário.
 </p>
 %}
