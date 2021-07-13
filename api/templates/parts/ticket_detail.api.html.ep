@@ -77,7 +77,7 @@
 <div class="ticket-data-wrap">
     <dl>
         % for my $quiz (@{$quiz}) {
-        <p style="color: #3C3C3B; font-weight: 700; line-height: 17pt; font-size: 14pt;">
+        <p style="color: #3C3C3BBF; font-weight: 700; line-height: 17pt; font-size: 14pt;">
             <%== $quiz->{question} %>
         </p>
         % if (defined $quiz->{response}){
