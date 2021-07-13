@@ -57,29 +57,21 @@
         <div style="width: 50%; display: table-cell;">
             <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
                 Criada em <%= $created_at_dmy_hms %>
-            </p>
-        </div>
-        <div style="display: table-cell; padding-left: 10px;">
-            <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
-                Prazo: <%= $prazo %>
-            </p>
-        </div>
-    </div>
-    <div style="display: table-row">
-        <div style="width: 50%; display: table-cell;">
-            <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+                <br>
                 <%= $tipo %>
             </p>
         </div>
         <div style="display: table-cell; padding-left: 10px;">
             <p style="color: #3C3C3B; font-weight: 400; line-height: 14pt; font-size: 12pt;">
+                Prazo: <%= $prazo %>
+                <br>
                 Status: <%= $status_human %>
             </p>
         </div>
     </div>
 </div>
 
-<hr>
+<div style="display: block; background-color: #3C3C3B; height: 1px; width: 100%">&nbsp;</div>
 % if ($quiz){
 <p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Detalhes da solicitação</p>
 <div class="ticket-data-wrap">
