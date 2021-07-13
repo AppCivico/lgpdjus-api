@@ -230,7 +230,8 @@ sub html_detail {
 
     local $c->stash->{layout} = undef;
     my $detail = $c->render_to_string('parts/ticket_detail.api', format => 'html', %$vars);
-    #$detail .= '';
+
+    $detail .= ''; # convert to string!
 
     return $detail;
 }
