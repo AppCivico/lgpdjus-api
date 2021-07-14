@@ -140,6 +140,19 @@ sub start_quiz_post {
             status => 400,
         );
     }
+    elsif ($ENV{TICKET_VERIFY_ACCOUNT_NEEDED}
+        && $questionnaire->{code} ne 'verify_account'
+        && !$user_obj->account_verified
+        && !$user_obj->account_verification_pending)
+    {
+        return $c->render(
+            json => {
+                error   => 'must_verify_account',
+                message => 'Para fazer esta solicitação, é necessário enviar iniciar a validação da usa conta!'
+            },
+            status => 400,
+        );
+    }
 
     my $quiz_session = $c->user_get_quiz_session(user_obj => $user_obj);
 
