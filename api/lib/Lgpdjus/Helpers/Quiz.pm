@@ -449,7 +449,8 @@ sub load_quiz_session {
                     $stash->{is_finished}
                     ? (finished_at => DateTime->now->datetime(' '))
                     : ()
-                )
+                ),
+                questionnaire_id => $session->{questionnaire_id},
             }
         );
     }
@@ -800,8 +801,9 @@ sub process_quiz_session {
                     $c->ensure_questionnaires_loaded();
                     foreach my $q ($c->stash('questionnaires')->@*) {
                         next unless $q->{id} == $msg->{_change_questionnaire};
-                        $stash     = &_init_questionnaire_stash($q, $c);
-                        $responses = {start_time => time()};
+                        $stash                       = &_init_questionnaire_stash($q, $c);
+                        $responses                   = {start_time => time()};
+                        $session->{questionnaire_id} = $q->{id};
                         $have_new_responses++;
                         last;
                     }
@@ -811,7 +813,6 @@ sub process_quiz_session {
                     $responses->{$code . '_action'} = $msg->{action};
                     $msg->{display_response}        = $msg->{label};
                     $have_new_responses++;
-
 
                     if ($stash->{is_eof} || $msg->{_end_chat}) {
                         $stash->{is_finished} = 1;
