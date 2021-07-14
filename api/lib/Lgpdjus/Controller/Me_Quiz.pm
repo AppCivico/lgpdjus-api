@@ -148,7 +148,7 @@ sub start_quiz_post {
         return $c->render(
             json => {
                 error   => 'must_verify_account',
-                message => 'Para fazer esta solicitação, é necessário enviar iniciar a validação da usa conta!'
+                message => 'Para começar esta solicitação, é necessário primeiro validar sua conta!'
             },
             status => 400,
         );
