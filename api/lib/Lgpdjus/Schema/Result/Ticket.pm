@@ -137,9 +137,7 @@ sub html_preview {
     my $tipo = $self->questionnaire->category_full;
 
     my $preview = '';
-    $preview
-      .= sprintf
-      '<div style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">%s</div>',
+    $preview .= sprintf '<div style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">%s</div>',
       $self->questionnaire->category_full;
     $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Protocolo: %s</div>', $self->protocol;
     $preview .= sprintf '<div style="color: #646464; font-size: 12pt"> Data de abertura: %s</div>',
@@ -579,6 +577,7 @@ sub action_close {
                     {
                         updated_at => \'now()',
                         status     => 'done',
+                        closed_at  => \'now()',
                     }
                 );
                 $self->_generate_pdf(

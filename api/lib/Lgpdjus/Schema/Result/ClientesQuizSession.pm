@@ -117,6 +117,7 @@ sub generate_ticket {
                         ],
                         created_on => \'now()',
                         updated_at => \'now()',
+                        started_at => \'now()',
                     }
                 );
                 $ticket->_generate_pdf(

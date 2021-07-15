@@ -44,5 +44,15 @@ alter table clientes drop column dt_nasc, drop column genero, drop column cep, d
 
 alter table public.quiz_config add column button_change_questionnaire int references questionnaires(id);
 
+alter table quiz_config alter questionnaire_id set not null;
+
+alter table tickets add column started_at timestamp without time zone;
+alter table tickets add column closed_at timestamp without time zone;
+update tickets set started_at=created_on;
+update tickets set closed_at = _x from (select ticket_id, max(created_on) as _x from tickets_responses where type in ('verify_yes','verify_no','response')
+group by 1) x
+where id = ticket_id;
+alter table tickets alter started_at set not null;
+
 
 COMMIT;
