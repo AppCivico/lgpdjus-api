@@ -9,6 +9,7 @@ my $t = test_instance;
 my $json;
 use Lgpdjus::Minion::Tasks::AddBlockchain;
 
+$ENV{TICKET_LIST_AUTO_CENTER} = 0;
 my ($session, $user_id) = get_user_session('43866555490');
 my $cliente = get_schema->resultset('Cliente')->find($user_id);
 on_scope_exit { user_cleanup(user_id => $cliente->id); };
@@ -404,7 +405,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
     like $first_msg->{content}, qr/confira o CPF informado./, 'not valid cpf was sent';
-    is $input_msg->{type},      'CPF',                   'is a CPF';
+    is $input_msg->{type},      'CPF',                        'is a CPF';
 
     # envia um cpf inválido
     $field_ref = $input_msg->{ref};
@@ -421,7 +422,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     $input_msg = $json->{quiz_session}{current_msgs}[-1];
 
     like $first_msg->{content}, qr/confira o CPF informado./, 'not valid cpf was sent';
-    is $input_msg->{type},      'CPF',                   'is a CPF';
+    is $input_msg->{type},      'CPF',                        'is a CPF';
 
     # envia um CPF válido
     $field_ref = $input_msg->{ref};
@@ -643,9 +644,9 @@ subtest_buffered 'list do ticket' => sub {
             content     => 'fooba>r',
         },
       )->status_is(200)->json_is('/responses/0/meta/can_reply', 0, 'cannot reply anymore')    #
-      ->json_like('/responses/0/body', qr/fooba&gt;r/, 'response ok')                         #
-      ->json_like('/responses/0/body', qr/<img src/,   'response has image')                  #
-      ->json_like('/body',             qr/Em andamento/,   'situação Pendente');
+      ->json_like('/responses/0/body', qr/fooba&gt;r/,   'response ok')                       #
+      ->json_like('/responses/0/body', qr/<img src/,     'response has image')                #
+      ->json_like('/body',             qr/Em andamento/, 'situação Pendente');
     $wait->discard_changes;
     is $wait->status, 'pending', 'new status is pending';
 

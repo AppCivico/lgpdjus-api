@@ -329,6 +329,7 @@ sub create_fake_ticket {
             due_date         => \["now() + (?::text || ' days')::interval",    1],
             created_on       => \["now() - (?::text || ' minutes')::interval", $interval],
             updated_at       => \["now() - (?::text || ' minutes')::interval", $interval],
+            started_at       => \'now()',
         }
     );
 
