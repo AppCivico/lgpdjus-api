@@ -244,10 +244,24 @@ sub _format_questionnaire {
         $href = $ENV{QUESTIONNAIRE_ICON_BASE_URL} . '/' . $href;
     }
 
-    sub add_style {
+    sub add_style_1 {
         my $t = shift;
         if ($ENV{TICKET_LIST_AUTO_CENTER}) {
-            return '<div style="margin: 0px; text-align: center;">' . $t . '</div>';
+            return
+              '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 400; line-height: 19pt; color: #3C3C3B">'
+              . $t
+              . '</div>';
+        }
+        return $t;
+    }
+
+    sub add_style_2 {
+        my $t = shift;
+        if ($ENV{TICKET_LIST_AUTO_CENTER}) {
+            return
+              '<div style="margin: 0px; text-align: center; font-size: 18pt; font-weight: 400; line-height: 22pt; color: #D64933">'
+              . $t
+              . '</div>';
         }
         return $t;
     }
@@ -261,9 +275,9 @@ sub _format_questionnaire {
 
         appbar_header       => $r->{label} || '',
         confirmation_screen => {
-            title      => add_style($r->{title} || 'Clique em iniciar.'),
-            body       => add_style($r->{body}  || 'Clique em iniciar.'),
-            legal_info => $r->{legal_info} ? add_style($r->{legal_info}) : '',
+            title      => add_style_2($r->{title} || 'Clique em iniciar.'),
+            body       => add_style_1($r->{body}  || 'Clique em iniciar.'),
+            legal_info => $r->{legal_info} ? add_style_1($r->{legal_info}) : '',
             button     => $r->{start_button} || 'Iniciar',
         }
     };
