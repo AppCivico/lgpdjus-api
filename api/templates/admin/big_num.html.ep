@@ -21,7 +21,7 @@
 
 
 <form class="form-inline p-sm-2">
-  <label class="mr-sm-2" for="input_base_url">Relatório</label>
+  <label class="mr-sm-2" for="input_base_url">Relatórios</label>
   <select class="custom-select mr-sm-2" id="input_base_url">
    % for my $r (@{$reports}) {
     <option value="<%= $r->{url} %>"><%= $r->{name} %></option>
@@ -35,37 +35,3 @@
     class="metabase_iframe"
     allowtransparency
 ></iframe>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-
-
-% if ( stash('results') ) {
-<div class="row">
-    % for my $r (@{stash('results') || []}) {
-    <div class="col-xxl-3 col-lg-6">
-        <div class="card <%== $r->{background_class}%> <%== $r->{text_class}%> mb-4">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="mr-3">
-                        <div class="text-white-75 text-lg"><%== $r->{label} %></div>
-                        <div class="text-slg font-weight-bold"><%== $r->{number} %></div>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between text-sm">
-                <%== $r->{comment} || '' %>
-            </div>
-        </div>
-
-    </div>
-
-    % }
-
-</div>
-
-
-% }

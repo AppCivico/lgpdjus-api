@@ -14,25 +14,9 @@ sub abignum_get {
         template => 'admin/big_num',
     );
 
-    my $rs = $c->schema->resultset('AdminBigNumber')->search(
-        {
-            status => 'published',
-        },
-        {
-            order_by     => 'sort',
-            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
-        }
-    );
-    my @results;
-
-    while (my $r = $rs->next) {
-        my ($column1) = $c->schema->storage->dbh->selectrow_array($r->{sql});
-
-        $r->{number} = $column1;
-        push @results, $r;
-    }
-
     my @rows = (
+        {name => 'Visão Geral',         resource => {dashboard => 3}, params => {}},
+        {name => 'Resumo solicitações', resource => {dashboard => 2}, params => {}},
         {name => 'Resumo solicitantes', resource => {dashboard => 1}, params => {}},
     );
     my $metabase_secret = $ENV{METABASE_SECRET} || 'secret';
@@ -59,14 +43,11 @@ sub abignum_get {
     return $c->respond_to_if_web(
         json => {
             json => {
-                results => \@results,
                 reports => \@ret,
             }
         },
         html => {
-            results => \@results,
             reports => \@ret,
-
         },
     );
 }
