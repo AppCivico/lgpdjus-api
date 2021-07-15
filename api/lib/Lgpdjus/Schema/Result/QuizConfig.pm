@@ -58,7 +58,7 @@ __PACKAGE__->add_columns(
     size => 200,
   },
   "questionnaire_id",
-  { data_type => "bigint", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "bigint", is_foreign_key => 1, is_nullable => 0 },
   "yesno_yes_label",
   {
     data_type => "varchar",
@@ -131,17 +131,12 @@ __PACKAGE__->belongs_to(
   "questionnaire",
   "Lgpdjus::Schema::Result::Questionnaire",
   { id => "questionnaire_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "SET NULL",
-    on_update     => "NO ACTION",
-  },
+  { is_deferrable => 0, on_delete => "SET NULL", on_update => "NO ACTION" },
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-13 15:33:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0Njj0fYa7oGK4Sjug22j2Q
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-15 20:43:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:F/x+ImfgkZy5HUWtx9Kyjw
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod
