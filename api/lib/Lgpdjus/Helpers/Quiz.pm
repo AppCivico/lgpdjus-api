@@ -244,6 +244,14 @@ sub _format_questionnaire {
         $href = $ENV{QUESTIONNAIRE_ICON_BASE_URL} . '/' . $href;
     }
 
+    sub add_style {
+        my $t = shift;
+        if ($ENV{TICKET_LIST_AUTO_CENTER}) {
+            return '<div style="margin: 0px; text-align: center;">' . $t . '</div>';
+        }
+        return $t;
+    }
+
     return {
         type   => 'questionnaire',
         header => $r->{category_short},
@@ -253,9 +261,9 @@ sub _format_questionnaire {
 
         appbar_header       => $r->{label} || '',
         confirmation_screen => {
-            title      => $r->{title}        || 'Clique em iniciar.',
-            body       => $r->{body}         || 'Clique em iniciar.',
-            legal_info => $r->{legal_info}   || '',
+            title      => add_style($r->{title} || 'Clique em iniciar.'),
+            body       => add_style($r->{body}  || 'Clique em iniciar.'),
+            legal_info => $r->{legal_info} ? add_style($r->{legal_info}) : '',
             button     => $r->{start_button} || 'Iniciar',
         }
     };
@@ -863,7 +871,7 @@ sub process_quiz_session {
 
         $stash->{current_msgs} = $current_msgs = \@kept;
         $session->{responses}  = $responses;
-        $session->{stash}      = $stash;  # geralmente é a mesma, mas quando tem reset ou troca, a referencia é uma nova
+        $session->{stash} = $stash;    # geralmente é a mesma, mas quando tem reset ou troca, a referencia é uma nova
 
         # salva as respostas (vai ser chamado no load_quiz_session)
         $opts{update_db} = 1;
