@@ -248,7 +248,7 @@ sub _format_questionnaire {
         my $t = shift;
         if ($ENV{TICKET_LIST_AUTO_CENTER}) {
             return
-              '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 400; line-height: 19pt; color: #3C3C3B">'
+              '<div style="margin: 0px; text-align: center; font-size: 12pt; font-weight: 400; line-height: 14pt; color: #3C3C3B">'
               . $t
               . '</div>';
         }
@@ -259,7 +259,7 @@ sub _format_questionnaire {
         my $t = shift;
         if ($ENV{TICKET_LIST_AUTO_CENTER}) {
             return
-              '<div style="margin: 0px; text-align: center; font-size: 18pt; font-weight: 400; line-height: 22pt; color: #D64933">'
+              '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 400; line-height: 18pt; color: #D64933">'
               . $t
               . '</div>';
         }
