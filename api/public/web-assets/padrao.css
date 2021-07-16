@@ -96,11 +96,11 @@ div.card-header h5 {
     background-attachment: fixed;
 }
 
-.divgray {
+.termos {
     padding: 2em;
 }
 
-.divgray {
+.termos {
     color: #3C3C3BBF;
 }
 
@@ -110,4 +110,5 @@ div.card-header h5 {
 .divgray h4,
 .divgray h5 {
     color: #A6CE39;
+    font-size: 0.8em;
 }
