@@ -451,20 +451,20 @@ Depois de criar e editar o arquivo (fica na pasta deploy_db/deploy/) você poder
                                                                            # valores possiveis são "dev-with-x" ou "http"
                                                                            # caso usar "dev-with-x" configurar o WKHTMLTOPDF_BIN para o path do wkhtmltopdf
     WKHTMLTOPDF_HTTP            | http://172.17.0.1:64596                  # endereço do servido do wkhtmltopdf
+    METABASE_SECRET             | random                                   # Chave do JWT do metabase
+    TICKET_LIST_AUTO_CENTER     | 0 ou 1                                   # 1 para centralizar os textos da lista do quiz
 
 
 # Crontab
 
 Temos algumas ações que precisam rodar periodicamente no sistema, são eles:
 
-- Indexação de conteúdo (RSS)
-- Iniciar jobs longos (apagar conta)
+- Adicionar na fila os jobs longos (ex: apagar conta)
 
 Para executar tais ações, basta fazer uma chamada HTTP usando o secret do MAINTENANCE_SECRET
 
 Os endpoints são os seguintes:
 
-- http://172.17.0.1:64598/maintenance/tick-rss?secret=MAINTENANCE_SECRET
 - http://172.17.0.1:64598/maintenance/housekeeping?secret=MAINTENANCE_SECRET
 
 Pode-se configurar para o crontab executar de 1 em 1 minuto, pois a api faz o controle de quantos jobs executar em cada request.
