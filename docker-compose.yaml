@@ -20,7 +20,7 @@ services:
       POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
   directus:
     container_name: lgpdjus_directus
-    image: directus/directus:v9.0.0-rc.85
+    image: directus/directus:9.0.0-rc.85
     restart: unless-stopped
     network_mode: "bridge"
     depends_on:
