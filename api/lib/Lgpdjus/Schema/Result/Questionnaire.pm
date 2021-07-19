@@ -81,6 +81,8 @@ __PACKAGE__->add_columns(
   { data_type => "varchar", is_nullable => 1, size => 35 },
   "legal_info",
   { data_type => "varchar", is_nullable => 1, size => 340 },
+  "requires_account_verification",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many(
@@ -109,8 +111,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-13 15:33:38
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:51ZtRrPjJsqAOY25mnyRcg
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 10:18:51
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sZSfmB2Ku39IWO3/ZCnrnQ
 
 sub as_hashref {
     my $self = shift;

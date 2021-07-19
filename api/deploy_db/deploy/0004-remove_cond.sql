@@ -54,5 +54,6 @@ group by 1) x
 where id = ticket_id;
 alter table tickets alter started_at set not null;
 
+alter table questionnaires add column requires_account_verification boolean not null default false;
 
 COMMIT;

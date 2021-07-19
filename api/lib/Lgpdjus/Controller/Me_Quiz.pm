@@ -143,12 +143,13 @@ sub start_quiz_post {
     elsif ($ENV{TICKET_VERIFY_ACCOUNT_NEEDED}
         && $questionnaire->{code} ne 'verify_account'
         && !$user_obj->account_verified
-        && !$user_obj->account_verification_pending)
+        && !$user_obj->account_verification_pending
+        && $questionnaire->{requires_account_verification})
     {
         return $c->render(
             json => {
                 error   => 'must_verify_account',
-                message => 'Para começar esta solicitação, é necessário primeiro validar sua conta!'
+                message => 'Para iniciar este pedido, você deve primeiro validar sua conta!'
             },
             status => 400,
         );
