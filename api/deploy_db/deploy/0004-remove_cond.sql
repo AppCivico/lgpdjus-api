@@ -95,6 +95,6 @@ delete from public.directus_relations where one_collection in (
 'noticias_aberturas',
 'noticias',
 'tags');
-
+alter table  questionnaires alter column title type varchar;
 
 COMMIT;
