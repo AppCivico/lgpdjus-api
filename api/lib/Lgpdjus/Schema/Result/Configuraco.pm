@@ -39,12 +39,26 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { data_type => "varchar" },
   },
+  "texto_blockchain_ultima_pagina",
+  {
+    data_type     => "text",
+    default_value => "ultima pagina",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
+  "texto_blockchain_penultima_pagina",
+  {
+    data_type     => "text",
+    default_value => "penultima pagina",
+    is_nullable   => 0,
+    original      => { data_type => "varchar" },
+  },
 );
 __PACKAGE__->set_primary_key("id");
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-05 22:28:03
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:JdSjW6DY1nHkvVmC5XOt6Q
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 14:50:09
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0IAgAAI+jW0TCMRnDXflbQ
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

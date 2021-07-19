@@ -22,7 +22,7 @@ __PACKAGE__->add_columns(
   "s3_path",
   { data_type => "text", is_nullable => 0 },
   "cliente_id",
-  { data_type => "bigint", is_foreign_key => 1, is_nullable => 1 },
+  { data_type => "bigint", is_foreign_key => 1, is_nullable => 0 },
   "intention",
   { data_type => "varchar", is_nullable => 0, size => 200 },
   "created_at",
@@ -45,12 +45,7 @@ __PACKAGE__->belongs_to(
   "cliente",
   "Lgpdjus::Schema::Result::Cliente",
   { id => "cliente_id" },
-  {
-    is_deferrable => 0,
-    join_type     => "LEFT",
-    on_delete     => "SET NULL",
-    on_update     => "CASCADE",
-  },
+  { is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 __PACKAGE__->has_many(
   "tickets_cliente_pdf_media_uploads",
@@ -66,8 +61,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-08 11:05:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Na7Had//fP+p+4gV0BmcPQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 14:53:34
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+F106pY5IVhp5mGe7wZafA
 
 
 use Mojo::Util qw(url_escape);
