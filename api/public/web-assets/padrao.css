@@ -92,6 +92,33 @@ div.card-header h5 {
 
 .body-gradient {
     background: rgb(255,252,248);
-    background: linear-gradient(180deg, rgba(255,0,255,1) 0%, rgba(252,255,245,1) 17%, rgba(255,0,0,1) 100%);
+    background: linear-gradient(180deg, rgba(255,252,248,1) 0%, rgba(252,255,245,1) 35%, rgba(255,252,248,1) 100%);
     background-attachment: fixed;
+}
+
+.divgray {
+    padding: 2em;
+    color: #3C3C3B;
+    color: #3C3C3BBF;
+}
+
+.divgray h1,
+.divgray h2,
+.divgray h3,
+.divgray h4,
+.divgray h5 {
+    color: #A6CE39;
+}
+.divgray h1{
+    font-size: 20pt;
+}
+.divgray h2{
+    font-size: 18pt;
+}
+.divgray h3{
+    font-size: 16pt;
+}
+.divgray h4{
+    font-size: 16pt;
+    font-weight: 700;
 }
