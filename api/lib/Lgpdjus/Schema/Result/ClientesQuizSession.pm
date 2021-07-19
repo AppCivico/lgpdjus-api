@@ -79,6 +79,7 @@ use Encode qw/encode_utf8/;
 use JSON;
 use Lgpdjus::Utils qw/tt_render/;
 use Lgpdjus::Logger;
+use Mojo::DOM;
 
 sub generate_ticket {
     my ($self, $c) = @_;
@@ -195,9 +196,11 @@ sub build_questionnaire_questions_reply {
 
     my $stash = from_json($self->stash);
     foreach my $message (@{$stash->{prev_msgs}}) {
+        my $content = tt_render($message->{content}, $vars);
+        # se o conteudo tiver "html" entao será removido tudo e extraido apenas o textos dos elementos
 
         push @quiz, {
-            content => tt_render($message->{content}, $vars),
+            content => $content =~ /\</ ? Mojo::DOM->new($content)->all_text : $content,
             type    => $message->{type},
             (exists $message->{_code}      ? (code => $message->{_code})      : ()),
             (exists $message->{__sub}{ref} ? (code => $message->{__sub}{ref}) : ()),    # TROCA o valor quando
