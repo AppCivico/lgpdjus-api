@@ -24,13 +24,6 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "active",
   { data_type => "boolean", is_nullable => 0 },
-  "end_screen",
-  {
-    data_type => "varchar",
-    default_value => "home",
-    is_nullable => 0,
-    size => 200,
-  },
   "code",
   {
     data_type => "varchar",
@@ -111,8 +104,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 10:18:51
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:sZSfmB2Ku39IWO3/ZCnrnQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 11:39:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1sDcqCG+EckheBRh5x3OzQ
 
 sub as_hashref {
     my $self = shift;
@@ -123,7 +116,6 @@ sub as_hashref {
           created_on
           modified_on
           active
-          end_screen
           code
           icon_href
           label
@@ -133,6 +125,7 @@ sub as_hashref {
           sort
           category_full
           category_short
+          requires_account_verification
           /,
     };
 }

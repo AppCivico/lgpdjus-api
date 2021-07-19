@@ -555,7 +555,7 @@ subtest_buffered 'group de questoes boolean' => sub {
             $field_ref => 1,
         }
     )->status_is(200)->json_is('/quiz_session/finished', 1)
-      ->json_is('/quiz_session/end_screen', "freetext=$choose_rand")->tx->res->json;
+      ->json_is('/quiz_session/end_screen', "home")->tx->res->json;
 
     my $session   = get_schema->resultset('ClientesQuizSession')->find($session_id);
     my $responses = from_json($session->responses);
