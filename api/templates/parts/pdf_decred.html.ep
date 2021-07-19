@@ -1,7 +1,7 @@
 % my $config = $c->schema->resultset('Configuraco')->next;
 <div class="break-before">
-    <%= $config->texto_blockchain_penultima_pagina() | raw %>
+    <%== $config->texto_blockchain_penultima_pagina() %>
 </div>
 <div class="break-before">
-    <%= $config->texto_blockchain_ultima_pagina() | raw %>
+    <%== $config->texto_blockchain_ultima_pagina() %>
 </div>
