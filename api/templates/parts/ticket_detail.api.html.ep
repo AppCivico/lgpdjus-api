@@ -26,7 +26,7 @@
     <dl>
         % for my $quiz (@{$quiz}) {
         <dt class="agentMessageWrap">
-            <%== $quiz->{question} %>
+            <%= $quiz->{question} %>
         </dt>
         % if (defined $quiz->{response}){
         <dd>
@@ -79,7 +79,7 @@
     <dl>
         % for my $quiz (@{$quiz}) {
         <p style="color: #3C3C3BBF; font-weight: 700; line-height: 17pt; font-size: 14pt; margin: 0;">
-            <%== $quiz->{question} %>
+            <%= $quiz->{question} %>
         </p>
         % if (defined $quiz->{response}){
         % if ($quiz->{type} eq 'photo_attachment'){
