@@ -148,12 +148,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 __PACKAGE__->has_many(
-  "noticias_aberturas",
-  "Lgpdjus::Schema::Result::NoticiasAbertura",
-  { "foreign.cliente_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
-__PACKAGE__->has_many(
   "notification_logs",
   "Lgpdjus::Schema::Result::NotificationLog",
   { "foreign.cliente_id" => "self.id" },
@@ -173,8 +167,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-12 19:33:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:LnG0/QRnj0QPmTDsVbhO2Q
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 13:46:52
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iqt1jvSlAOathv6eo4LLgw
 
 use Carp qw/confess/;
 use Lgpdjus::Utils qw/is_uuid_v4 format_cpf/;
@@ -191,7 +185,7 @@ sub _build_access_modules {
     my $self = shift;
 
     my @modules;
-    push @modules, qw/tickets noticias/;
+    push @modules, qw/tickets/;
     return {map { ($_ => {}) } @modules};
 }
 
@@ -224,10 +218,10 @@ sub cep_formmated {
 }
 
 sub update_activity {
-    my ($self, $is_timeline) = @_;
+    my ($self) = @_;
 
     return if $ENV{SUPPRESS_USER_ACTIVITY};
-    my $key = "ua" . ($is_timeline ? 't:' : ':') . $self->id;
+    my $key = 'ua:' . $self->id;
 
     my $kv = Lgpdjus::KeyValueStorage->instance;
 
@@ -244,13 +238,6 @@ sub update_activity {
     if ($activity) {
         $activity->update(
             {
-                (
-                    $is_timeline
-                    ? (
-                        last_tm_activity => \'now()',
-                      )
-                    : ()
-                ),
                 last_activity => \'now()',
             }
         );
@@ -260,7 +247,6 @@ sub update_activity {
             'clientes_app_activity',
             {
                 last_activity    => \'now()',
-                last_tm_activity => \'now()',
             }
         );
     }

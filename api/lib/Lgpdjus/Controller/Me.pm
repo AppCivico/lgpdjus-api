@@ -28,7 +28,7 @@ sub check_and_load {
     $c->stash('user'     => {$user->get_columns});    # nao pode ser o inflacted
                                                       # MANTER ATUALIZADO EMBAIXO EM "ATUALIZAR AQUI"
 
-    $user->update_activity($c->req->url->path->to_string =~ /timeline/);
+    $user->update_activity();
 
     return 1;
 }

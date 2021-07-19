@@ -4,13 +4,10 @@ use Lgpdjus::SchemaConnected;
 use Lgpdjus::Controller;
 
 use Lgpdjus::Helpers::Quiz;
-
-use Lgpdjus::Helpers::Timeline;
 use Lgpdjus::Helpers::Tickets;
 use Lgpdjus::Helpers::Blockchain;
 use Lgpdjus::Helpers::PdfExporter;
 use Lgpdjus::Helpers::Html2Pdf;
-use Lgpdjus::Helpers::RSS;
 use Lgpdjus::KeyValueStorage;
 use Lgpdjus::Helpers::CitizenEmail;
 use Lgpdjus::Helpers::Notifications;
@@ -22,10 +19,8 @@ sub setup {
     my $c = shift;
 
     Lgpdjus::Helpers::Quiz::setup($c);
-    Lgpdjus::Helpers::Timeline::setup($c);
     Lgpdjus::Helpers::Tickets::setup($c);
     Lgpdjus::Helpers::Blockchain::setup($c);
-    Lgpdjus::Helpers::RSS::setup($c);
     Lgpdjus::Helpers::Html2Pdf::setup($c);
     Lgpdjus::Helpers::CitizenEmail::setup($c);
     Lgpdjus::Helpers::PdfExporter::setup($c);

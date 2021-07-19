@@ -55,7 +55,6 @@ sub list_tickets {
     my $is_first_page = $opts{next_page} ? 0 : 1;
 
     my $next_page = {
-        tags => $opts{tags},
         iss  => 'next_page',
     };
     my $has_more = 0;

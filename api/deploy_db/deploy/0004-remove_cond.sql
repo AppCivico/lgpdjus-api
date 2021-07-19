@@ -56,6 +56,45 @@ alter table tickets alter started_at set not null;
 
 alter table questionnaires add column requires_account_verification boolean not null default false;
 delete from directus_fields where field= 'end_screen' and collection='questionnaires';
+delete from directus_fields where field= 'last_tm_activity' and collection='clientes_app_activity';
+
 alter table questionnaires drop column end_screen;
+alter table clientes_app_activity drop column last_tm_activity;
+
+drop table admin_big_numbers;
+drop table faq_tela_sobre;
+drop table faq_tela_sobre_categoria;
+drop table tag_indexing_config;
+drop table rss_feeds_tags;
+drop table noticias2tags;
+drop table rss_feeds cascade;
+drop table noticias_aberturas;
+drop table noticias;
+drop table tags;
+
+delete from directus_fields where collection in (
+'admin_big_numbers',
+'faq_tela_sobre',
+'faq_tela_sobre_categoria',
+'tag_indexing_config',
+'rss_feeds_tags',
+'noticias2tags',
+'rss_feeds',
+'noticias_aberturas',
+'noticias',
+'tags');
+
+delete from public.directus_relations where one_collection in (
+'admin_big_numbers',
+'faq_tela_sobre',
+'faq_tela_sobre_categoria',
+'tag_indexing_config',
+'rss_feeds_tags',
+'noticias2tags',
+'rss_feeds',
+'noticias_aberturas',
+'noticias',
+'tags');
+
 
 COMMIT;

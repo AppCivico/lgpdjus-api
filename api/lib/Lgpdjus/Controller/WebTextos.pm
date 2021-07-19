@@ -1,4 +1,4 @@
-package Lgpdjus::Controller::WebFAQ;
+package Lgpdjus::Controller::WebTextos;
 use Mojo::Base 'Lgpdjus::Controller';
 use Lgpdjus::Utils qw/is_test/;
 use DateTime;

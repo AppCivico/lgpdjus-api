@@ -15,9 +15,6 @@ sub register {
     $r->post('reset-password/request-new')->to(controller => 'ResetPassword', action => 'request_new');
     $r->post('reset-password/write-new')->to(controller => 'ResetPassword', action => 'write_new');
 
-    # GET /filter-tags
-    $r->get('filter-tags')->to(controller => 'Tags', action => 'filter_tags');
-
     # GET /news-redirect
     $r->get('news-redirect')->to(controller => 'News', action => 'redirect');
 
@@ -25,7 +22,7 @@ sub register {
     $r->get('get-proxy')->to(controller => 'MediaDownload', action => 'public_get_proxy');
 
     # GET /web/
-    my $web = $r->under('web')->to(controller => 'WebFAQ', action => 'apply_rps');
+    my $web = $r->under('web')->to(controller => 'WebTextos', action => 'apply_rps');
 
     # GET /web/sobre
     $web->get('sobre')->to(action => 'web_sobre');
@@ -36,17 +33,14 @@ sub register {
     # GET /web/politica-privacidade
     $web->get('politica-privacidade')->to(action => 'web_politica_privacidade');
 
-    my $faq_detail = $r->under('web/faq/:faq_id')->to(controller => 'WebFAQ', action => 'apply_rps');
-    $faq_detail->get()->to(action => 'webfaq_detail');
-
     # /available-tickets-timeline/
     $r->under('available-tickets-timeline')->get()
-      ->to(controller => 'Timeline', action => 'public_available_tickets_timeline_get');
+      ->to(controller => 'Tickets', action => 'public_available_tickets_timeline_get');
 
 
     # GET /sobrelgpd
-    $r->get('sobrelgpd')->to(controller=>'SobreLGPD', action => 'sobrelgpd_index_get');
-    $r->get('sobrelgpd/:sobrelgpd_id')->to(controller=>'SobreLGPD', action => 'sobrelgpd_detail_get');
+    $r->get('sobrelgpd')->to(controller => 'SobreLGPD', action => 'sobrelgpd_index_get');
+    $r->get('sobrelgpd/:sobrelgpd_id')->to(controller => 'SobreLGPD', action => 'sobrelgpd_detail_get');
 
     # "public" - used for pdf generator from html
     my $internal_media_download
@@ -89,15 +83,7 @@ sub register {
 
 
     # INTERNAL ENDPOINTS
-    # GET /maintenance/tick-rss
     my $maintenance = $r->under('maintenance')->to(controller => 'Maintenance', action => 'check_authorization');
-    $maintenance->get('tick-rss')->to(controller => 'TickRSS', action => 'tick');
-
-    # GET /maintenance/tags-clear-cache
-    $maintenance->get('tags-clear-cache')->to(controller => 'Tags', action => 'clear_cache');
-
-    # GET /maintenance/reindex-all-news
-    $maintenance->get('reindex-all-news')->to(controller => 'News', action => 'rebuild_index');
 
     # GET /maintenance/housekeeping
     $maintenance->get('housekeeping')->to(controller => 'Maintenance', action => 'housekeeping');
@@ -143,19 +129,15 @@ sub register {
     my $me_media = $me->under('media')->to(controller => 'Me_Media', action => 'assert_user_perms');
     $me_media->post()->to(action => 'mm_upload_post');
 
-    # /news-timeline/
-    my $timeline1 = $authenticated->under('news-timeline')->to(controller => 'Timeline', action => 'assert_user_perms');
-    $timeline1->get()->to(action => 'news_timeline_get');
-
     # /tickets-timeline/
     my $timeline2
-      = $authenticated->under('tickets-timeline')->to(controller => 'Timeline', action => 'assert_user_perms');
+      = $authenticated->under('tickets-timeline')->to(controller => 'Tickets', action => 'assert_user_perms');
     $timeline2->get()->to(action => 'tickets_timeline_get');
 
     # /me/tickets/
     # GET /me/tickets/:ticket_id
     my $me_tickets_object
-      = $me->under('/tickets/:ticket_id')->to(controller => 'Timeline', action => 'ticket_load_object');
+      = $me->under('/tickets/:ticket_id')->to(controller => 'Tickets', action => 'ticket_load_object');
     $me_tickets_object->get()->to(action => 'ticket_detail_get');
     $me_tickets_object->post('reply')->to(action => 'ticket_reply_post');
 
