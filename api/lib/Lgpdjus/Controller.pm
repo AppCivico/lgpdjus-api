@@ -211,6 +211,7 @@ sub validate_request_params {
         my $label = exists $me->{label} ? $me->{label} : do {
             my $copy = $key;
             $copy =~ s/_/ /g;
+            $copy;
         };
 
         my %def_message = (message => $campos_nao_foram_preenchidos . ' (' . $label . ')');
