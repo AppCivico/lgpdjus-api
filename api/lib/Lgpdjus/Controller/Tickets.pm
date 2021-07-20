@@ -65,7 +65,7 @@ sub ticket_load_object {
 sub ticket_detail_get {
     my $c = shift;
 
-    my $res = $c->get_ticket_detail(ticket => $c->stash('ticket'));
+    my $res = $c->get_ticket_detail(ticket => $c->stash('ticket'), is_app => 1);
 
     return $c->render(
         json   => $res,

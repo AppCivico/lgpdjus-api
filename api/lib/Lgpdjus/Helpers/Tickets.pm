@@ -37,7 +37,7 @@ sub get_ticket_detail {
     my ($c, %opts) = @_;
     my $ticket = $opts{ticket} or confess 'missing ticket';
 
-    return &_format_ticket_detail($ticket, c => $c);
+    return &_format_ticket_detail($ticket, c => $c, is_app => $opts{is_app});
 }
 
 sub list_tickets {
@@ -55,7 +55,7 @@ sub list_tickets {
     my $is_first_page = $opts{next_page} ? 0 : 1;
 
     my $next_page = {
-        iss  => 'next_page',
+        iss => 'next_page',
     };
     my $has_more = 0;
 
@@ -234,13 +234,34 @@ sub _format_ticket_detail {
             body => $_->tr_detail_body($opts{c}),
             meta => {
                 can_reply => $_->tr_can_reply(),
-            }
+            },
+            _type => $_->type()
         }
     } $r->tickets_responses->search(undef, {order_by => 'created_on'})->all;
+    my $detail = $r->html_detail(c => $opts{c});
+
+    ## CODIGO TEMPORARIO!!
+    if ($opts{is_app}) {
+
+        my $str = '';
+        foreach my $r (@responses) {
+            next if $r->{_type} eq 'request-additional-info';
+
+            $str .= $r->{body};
+        }
+
+        if ($str) {
+            $detail
+              .= '<p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Histórico de ações</p>'
+              . $str;
+
+        }
+    }
+
 
     return {
         id        => $r->id(),
-        body      => $r->html_detail(c => $opts{c}),
+        body      => $detail,
         responses => \@responses,
         meta      => {
             header => 'Solicitação ' . $r->protocol,
