@@ -12,6 +12,7 @@ Deploy em Produção/Homologação:
 - Servidor SMTP para envio de e-mails
 - S3 (compatível), pode ser AWS s3, backblaze b2 ou subir um MinIO https://min.io/
 - Recomendado 4 GB de RAM e 25GB de disco livres para as imagens dos containers.
+- Metabase para relatórios (opcional)
 
 <img src="https://raw.githubusercontent.com/AppCivico/lgpdjus-api/main/misc/LGPDJus-Containers.svg" alt="Deps">
 
@@ -66,7 +67,7 @@ redis:
 
 > Esta versão do nginx adiciona o suporte ao Lua, que pode ser usado para ter logs mais completos, ajudando no debug.
 
-# Configurando postgres
+# Configurando PostgreSQL
 
 > Este é apenas um exemplo, pode ser usado um host externo como RDS por exemplo
 
@@ -74,7 +75,7 @@ Depois de instalado, verifique se o pg encontra-se rodando usando o comando `ser
 
 Neste exemplo, vamos deixar o banco rodando no mesmo servidor, porém, o arquivo de configuração de exemplo docker-compose está configurado
 para conversar com a bridge do docker, geralmente configurada como 172.17.0.1
-Precisamos alterar o postgres para fazer o listen nessa interface ou configurar o firewall para fazer o encaminhamento.
+Precisamos alterar o PostgreSQL para fazer o listen nessa interface ou configurar o firewall para fazer o encaminhamento.
 
 Altere o `listen_addresses` para o valor de 'localhost,172.17.0.1'
 Aproveite para ajustar os valores de random_page_cost e cpu_tuple_cost.
@@ -114,6 +115,7 @@ Agora, vamos criar o banco:
 Alterar o bind para `bind 127.0.0.1 172.17.0.1` em /etc/redis/redis.conf
 
 O mesmo conceito sobre aguardar a interface docker0 se aplica aqui.
+
 
 ## Configurando Firewall
 
@@ -303,6 +305,26 @@ obs: nesse caso, usamos `/etc/nginx/ssl/nginx.crt` que precisa ser gerado, para 
     # mkdir /etc/nginx/ssl
     # openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt
 
+
+# Configurando metabase
+
+Assim como a API, o metabase precisa ser acessado por uma interface web para gerenciamento.
+
+O Metabase pode ser executado de várias formas, a mais simples é com docker, salvando os dados dele em outro banco PostgreSQL:
+
+    docker run -d -p 172.17.0.1:4757:3000 \
+        -e "MB_DB_TYPE=postgres" \
+        -e "MB_DB_DBNAME=lgdpjus_metabase" \
+        -e "MB_DB_PORT=5432" \
+        -e "MB_DB_USER=postgres" \
+        -e "MB_DB_PASS=postgres" \
+        -e "MB_DB_HOST=172.17.0.1" \
+        --restart unless-stopped \
+        --name lgpdjus_metabase metabase/metabase:v0.39.1
+
+Depois só configurar o nginx para fazer o proxy do vhost para 172.17.0.1:4757
+
+Para maiores detalhes, consulte https://www.metabase.com/docs/latest/operations-guide/running-metabase-on-docker.html
 
 # Configurando o envio de e-mails:
 
