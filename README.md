@@ -4,7 +4,7 @@ Deploy em Produção/Homologação:
 
 # requisitos do sistema
 
-- PostgreSQL 11 ou superior (testado na versão 12 e 13)
+- PostgreSQL 12 ou superior (testado na versão 12 e 13)
 - docker community edition 19 or maior (testado na 19.03.12)
 - docker-compose 1.21 ou superior
 - Nginx ou outro proxy reverso para finalização do HTTPS
@@ -12,6 +12,8 @@ Deploy em Produção/Homologação:
 - Servidor SMTP para envio de e-mails
 - S3 (compatível), pode ser AWS s3, backblaze b2 ou subir um MinIO https://min.io/
 - Recomendado 4 GB de RAM e 25GB de disco livres para as imagens dos containers.
+
+<img src="https://raw.githubusercontent.com/AppCivico/lgpdjus-api/main/misc/LGPDJus-Containers.svg" alt="Deps">
 
 
 # Instalação dos requisitos:
