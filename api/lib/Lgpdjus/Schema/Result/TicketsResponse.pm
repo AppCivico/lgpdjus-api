@@ -80,7 +80,7 @@ sub tr_detail_body {
 
     my $dt = $self->created_on->set_time_zone('America/Sao_Paulo');
 
-    $content .= '<div style="border: 1px solid #eee; padding: 10px; font-size: 1.5em">';
+    $content .= '<div style="border: 1px solid #eee; padding: 10px; font-size: 1.2em">';
     if ($self->type eq 'request-additional-info') {
         $content .= sprintf '<h2>Informação adicional necessária:</h2><p>%s</p>', xml_escape($self->reply_content);
         if ($self->cliente_reply) {
