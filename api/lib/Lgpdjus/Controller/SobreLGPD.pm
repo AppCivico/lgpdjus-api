@@ -3,6 +3,40 @@ use Mojo::Base 'Lgpdjus::Controller';
 use Lgpdjus::Utils qw/is_test/;
 use JSON;
 
+
+sub _add_style_1 {
+    my $t = shift;
+    if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
+        return
+          '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 400; line-height: 19pt; color: #3C3C3B">'
+          . $t
+          . '</div>';
+    }
+    return $t;
+}
+
+sub _add_style_2 {
+    my $t = shift;
+    if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
+        return
+          '<div style="margin: 0px; text-align: center; font-size: 14pt; font-weight: 400; line-height: 17pt; color: #3C3C3BBF">'
+          . $t
+          . '</div>';
+    }
+    return $t;
+}
+
+sub _add_style_3 {
+    my $t = shift;
+    if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
+        return
+          '<div style="margin: 0px; text-align: center; font-size: 12pt; font-weight: 400; line-height: 14pt; color: #CE7E39">'
+          . $t
+          . '</div>';
+    }
+    return $t;
+}
+
 sub apply_rps {
     my $c = shift;
 
@@ -77,6 +111,9 @@ sub sobrelgpd_detail_get {
     $sobrelgpd->{perguntas} = from_json($sobrelgpd->{perguntas});
     $sobrelgpd->{$_} ||= '' for qw/introducao_linha_1 introducao_linha_2 rodape/;
 
+    $pergunta->{introducao_linha_1} = _add_style_1($pergunta->{introducao_linha_1});
+    $pergunta->{introducao_linha_2} = _add_style_2($pergunta->{introducao_linha_2});
+    $pergunta->{rodape}             = _add_style_3($pergunta->{rodape});
     foreach my $pergunta (@{$sobrelgpd->{perguntas}}) {
         $pergunta->{pergunta} ||= '';
         $pergunta->{resposta} ||= '';

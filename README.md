@@ -452,8 +452,8 @@ Depois de criar e editar o arquivo (fica na pasta deploy_db/deploy/) você poder
                                                                            # caso usar "dev-with-x" configurar o WKHTMLTOPDF_BIN para o path do wkhtmltopdf
     WKHTMLTOPDF_HTTP            | http://172.17.0.1:64596                  # endereço do servido do wkhtmltopdf
     METABASE_SECRET             | random                                   # Chave do JWT do metabase
-    TICKET_LIST_AUTO_CENTER     | 0 ou 1                                   # 1 para centralizar os textos da lista do quiz
-
+    TICKET_LIST_AUTO_CENTER     | 0 ou 1                                   # 1 para formatar os textos da lista do quiz
+    SOBRELGDP_LIST_AUTO_CENTER  | 0 ou 1                                   # 1 para formatar os textos da lista do sobrelgpd
 
 # Crontab
 
