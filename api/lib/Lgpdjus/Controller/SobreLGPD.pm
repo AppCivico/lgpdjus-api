@@ -8,7 +8,7 @@ sub _add_style_1 {
     my $t = shift;
     if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
         return
-          '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 700; line-height: 19pt; color: #3C3C3B">'
+          '<div style="margin: 0px; text-align: center; font-size: 14pt; font-weight: 700; line-height: 17pt; color: #3C3C3B">'
           . $t
           . '</div>';
     }

@@ -51,26 +51,17 @@
 %}
 % } else { # conteúdo para o app
 <p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Histórico da solicitação</p>
-<div style="width: 100%; display: table;">
-    <div style="display: table-row">
-        <div style="display: table-cell;">
-            <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt; margin: 0;">
-                Criada em <%= $created_at_dmy %>
-                    <br>
-                    <%= $tipo %>
-            </p>
-        </div>
-        <div style="display: table-cell; text-align: right; ">
-            <p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt; margin: 0; ">
-                % if ($status eq 'pending'){
-                Prazo: <%= $prazo %>
-                    <br>
-                    %}
-                    Situação: <%= $status_human %>
-            </p>
-        </div>
-    </div>
-</div>
+
+<p style="color: #3C3C3BBF; font-weight: 400; line-height: 14pt; font-size: 12pt; margin: 0;">
+    <span style="font-weight: 700"><%= $tipo %></span> <br>
+    Criado em: <%= $created_at_dmy %><br>
+    Situação: <%= $status_human %>
+    % if ($status eq 'pending'){
+    <br>
+        Prazo: <%= $prazo %>
+    %}
+</p>
+
 
 <div style="display: block; background-color: #3C3C3BBF; margin-top: 5px; height: 1px; width: 100%">&nbsp;</div>
 % if ($quiz){
