@@ -110,10 +110,10 @@ sub sobrelgpd_detail_get {
     $c->reply_not_found() unless $sobrelgpd;
     $sobrelgpd->{perguntas} = from_json($sobrelgpd->{perguntas});
     $sobrelgpd->{$_} ||= '' for qw/introducao_linha_1 introducao_linha_2 rodape/;
+    $sobrelgpd->{introducao_linha_1} = _add_style_1($sobrelgpd->{introducao_linha_1});
+    $sobrelgpd->{introducao_linha_2} = _add_style_2($sobrelgpd->{introducao_linha_2});
+    $sobrelgpd->{rodape}             = _add_style_3($sobrelgpd->{rodape});
 
-    $pergunta->{introducao_linha_1} = _add_style_1($pergunta->{introducao_linha_1});
-    $pergunta->{introducao_linha_2} = _add_style_2($pergunta->{introducao_linha_2});
-    $pergunta->{rodape}             = _add_style_3($pergunta->{rodape});
     foreach my $pergunta (@{$sobrelgpd->{perguntas}}) {
         $pergunta->{pergunta} ||= '';
         $pergunta->{resposta} ||= '';
