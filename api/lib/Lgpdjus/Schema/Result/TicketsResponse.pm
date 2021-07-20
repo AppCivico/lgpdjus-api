@@ -80,9 +80,7 @@ sub tr_detail_body {
 
     my $dt = $self->created_on->set_time_zone('America/Sao_Paulo');
 
-    $content .= sprintf '<div style="text-align: right; display: block;">%s</div>', $dt->dmy('/') . ' ' . $dt->hms;
-
-    $content .= '<div>';
+    $content .= '<div style="border: 1px solid #eee">';
     if ($self->type eq 'request-additional-info') {
         $content .= sprintf '<h2>Informação adicional necessária:</h2><p>%s</p>', xml_escape($self->reply_content);
         if ($self->cliente_reply) {
@@ -90,21 +88,21 @@ sub tr_detail_body {
         }
     }
     elsif ($self->type eq 'response') {
-        $content .= sprintf '<h2>Resposta da solicitação:</h2><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<strong>Resposta da solicitação:</strong><p>%s</p>', xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'verify_yes') {
-        $content .= sprintf '<h2>Resposta da solicitação - Conta verificada:</h2><p>%s</p>',
+        $content .= sprintf '<strong>Resposta da solicitação - Conta verificada:</strong><p>%s</p>',
           xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'verify_no') {
-        $content .= sprintf '<h2>Resposta da solicitação - Conta não verificada:</h2><p>%s</p>',
+        $content .= sprintf '<strong>Resposta da solicitação - Conta não verificada:</strong><p>%s</p>',
           xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'reopen') {
-        $content .= sprintf '<h2>Solicitação reaberta:</h2><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<strong>Solicitação reaberta:</strong><p>%s</p>', xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'due_change') {
-        $content .= sprintf '<h2>Mudança de prazo:</h2><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<strong>Mudança de prazo:</strong><p>%s</p>', xml_escape($self->reply_content);
     }
 
     my $media = from_json($self->cliente_attachments);
@@ -119,6 +117,8 @@ sub tr_detail_body {
             $content .= sprintf '<p>arquivo %s não encontrado</p>', $media_id;
         }
     }
+    $content .= sprintf '<div style="text-align: right; display: block;">Horário: %s</div>', $dt->dmy('/') . ' ' . $dt->hms;
+
     $content .= '</div>';
 
     return $content;
