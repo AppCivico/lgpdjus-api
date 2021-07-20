@@ -8,7 +8,7 @@ sub _add_style_1 {
     my $t = shift;
     if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
         return
-          '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 400; line-height: 19pt; color: #3C3C3B">'
+          '<div style="margin: 0px; text-align: center; font-size: 16pt; font-weight: 700; line-height: 19pt; color: #3C3C3B">'
           . $t
           . '</div>';
     }
@@ -19,7 +19,7 @@ sub _add_style_2 {
     my $t = shift;
     if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
         return
-          '<div style="margin: 0px; text-align: center; font-size: 14pt; font-weight: 400; line-height: 17pt; color: #3C3C3BBF">'
+          '<div style="margin: 0px; text-align: center; font-size: 14pt; font-weight: 300; line-height: 17pt; color: #3C3C3BBF">'
           . $t
           . '</div>';
     }
@@ -30,7 +30,7 @@ sub _add_style_3 {
     my $t = shift;
     if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
         return
-          '<div style="margin: 0px; text-align: center; font-size: 12pt; font-weight: 400; line-height: 14pt; color: #CE7E39">'
+          '<div style="margin: 0px; text-align: center; font-size: 12pt; font-weight: 300; line-height: 14pt; color: #CE7E39">'
           . $t
           . '</div>';
     }
@@ -41,7 +41,7 @@ sub _add_style_4 {
     my $t = shift;
     if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
         return
-          '<div style="margin: 0px; text-align: left; font-size: 14pt; font-weight: 400; line-height: 17pt; color: #3C3C3BBF">'
+          '<div style="margin: 0px; text-align: left; font-size: 14pt; font-weight: 300; line-height: 17pt; color: #3C3C3BBF">'
           . $t
           . '</div>';
     }
