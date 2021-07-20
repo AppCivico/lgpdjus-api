@@ -16,7 +16,7 @@ use POSIX ();
 use utf8;
 use vars qw(@ISA @EXPORT);
 use JSON;
-
+use Mojo::Util qw/xml_escape/;
 use DateTime::Format::Pg;
 
 state $text_xslate = Text::Xslate->new(
@@ -96,8 +96,16 @@ state $text_xslate = Text::Xslate->new(
 
   is_valid_birthday
   format_cpf
+  ticket_xml_escape
 );
 
+
+sub ticket_xml_escape {
+    my $text = shift;
+    $text = xml_escape($text);
+    $text =~ s/\r?\n/<br>/g;
+    return $text;
+}
 
 sub is_test {
     if ($ENV{HARNESS_ACTIVE} || $0 =~ m{forkprove}) {

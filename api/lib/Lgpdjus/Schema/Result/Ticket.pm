@@ -259,12 +259,12 @@ sub html_ticket_responses {
                         {
                             user_name     => \'coalesce("user".first_name,"user".email)',
                             response_type => \q!case
-                                when "me".type = 'reopen' then 'reabriu solicitação'
-                                when "me".type = 'response' then 'concluiu solicitação'
-                                when "me".type = 'due_change' then 'mudou o prazo'
-                                when "me".type = 'verify_yes' then 'aprovou verificação da conta'
-                                when "me".type = 'verify_no' then 'reprovou verificação da conta'
-                                else 'pediu informação adicional'
+                                when "me".type = 'reopen' then 'Reabertura de solicitação'
+                                when "me".type = 'response' then 'Conclusão de solicitação'
+                                when "me".type = 'due_change' then 'Alteração de prazo'
+                                when "me".type = 'verify_yes' then 'Verificação da conta aprovada'
+                                when "me".type = 'verify_no' then 'Verificação da conta reprovada'
+                                else 'Pedido de informação adicional'
                             end!,
                         }
                     ],

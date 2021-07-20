@@ -64,7 +64,7 @@ __PACKAGE__->belongs_to(
 # ALTER TABLE tickets_responses ADD FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE ON UPDATE cascade;
 # ALTER TABLE tickets_responses ADD FOREIGN KEY (user_id) REFERENCES directus_users(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-use Mojo::Util qw/xml_escape/;
+use Lgpdjus::Util qw/ticket_xml_escape/;
 use JSON;
 
 __PACKAGE__->belongs_to(
@@ -82,27 +82,29 @@ sub tr_detail_body {
 
     $content .= '<div style="border: 1px solid #eee; padding: 10px; font-size: 1.2em">';
     if ($self->type eq 'request-additional-info') {
-        $content .= sprintf '<h2>Informação adicional necessária:</h2><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<h2>Informação adicional necessária:</h2><p>%s</p>',
+          ticket_xml_escape($self->reply_content);
         if ($self->cliente_reply) {
-            $content .= sprintf '<p>%s</p>', xml_escape($self->cliente_reply);
+            $content .= sprintf '<p>%s</p>', ticket_xml_escape($self->cliente_reply);
         }
     }
     elsif ($self->type eq 'response') {
-        $content .= sprintf '<strong>Resposta da solicitação:</strong><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<strong>Resposta da solicitação:</strong><p>%s</p>',
+          ticket_xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'verify_yes') {
         $content .= sprintf '<strong>Resposta da solicitação - Conta verificada:</strong><p>%s</p>',
-          xml_escape($self->reply_content);
+          ticket_xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'verify_no') {
         $content .= sprintf '<strong>Resposta da solicitação - Conta não verificada:</strong><p>%s</p>',
-          xml_escape($self->reply_content);
+          ticket_xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'reopen') {
-        $content .= sprintf '<strong>Solicitação reaberta:</strong><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<strong>Solicitação reaberta:</strong><p>%s</p>', ticket_xml_escape($self->reply_content);
     }
     elsif ($self->type eq 'due_change') {
-        $content .= sprintf '<strong>Mudança de prazo:</strong><p>%s</p>', xml_escape($self->reply_content);
+        $content .= sprintf '<strong>Mudança de prazo:</strong><p>%s</p>', ticket_xml_escape($self->reply_content);
     }
 
     my $media = from_json($self->cliente_attachments);
@@ -111,13 +113,14 @@ sub tr_detail_body {
 
         if ($media) {
             my $src = $media->media_generate_download_url($c);
-            $content .= sprintf '<img src="%s" />', xml_escape($src);
+            $content .= sprintf '<img src="%s" />', ticket_xml_escape($src);
         }
         else {
             $content .= sprintf '<p>arquivo %s não encontrado</p>', $media_id;
         }
     }
-    $content .= sprintf '<div style="text-align: right; display: block;">Horário: %s</div>', $dt->dmy('/') . ' ' . $dt->hms;
+    $content .= sprintf '<div style="text-align: right; display: block;">Horário: %s</div>',
+      $dt->dmy('/') . ' ' . $dt->hms;
 
     $content .= '</div>';
 
