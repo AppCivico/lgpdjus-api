@@ -64,7 +64,7 @@ __PACKAGE__->belongs_to(
 # ALTER TABLE tickets_responses ADD FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE ON UPDATE cascade;
 # ALTER TABLE tickets_responses ADD FOREIGN KEY (user_id) REFERENCES directus_users(id) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-use Lgpdjus::Util qw/ticket_xml_escape/;
+use Lgpdjus::Utils qw/ticket_xml_escape/;
 use JSON;
 
 __PACKAGE__->belongs_to(
