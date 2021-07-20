@@ -7,7 +7,7 @@ use Scalar::Util qw(blessed);
 use Lgpdjus::KeyValueStorage;
 my $kv = Lgpdjus::KeyValueStorage->instance;
 
-my $campos_nao_foram_preenchidos = 'Campos não foram preenchidos corretamente';
+my $campos_nao_foram_preenchidos = 'Verifique o campo';
 
 sub apply_request_per_second_limit {
     my $c       = shift;
@@ -208,8 +208,12 @@ sub validate_request_params {
             $tested->{$key} = undef;
             next;
         }
+        my $label = exists $me->{label} ? $me->{label} : do {
+            my $copy = $key;
+            $copy =~ s/_/ /g;
+        };
 
-        my %def_message = (message => $campos_nao_foram_preenchidos . ' (' . $key . ')');
+        my %def_message = (message => $campos_nao_foram_preenchidos . ' (' . $label . ')');
         if (defined($val) && (exists $me->{min_length} || exists $me->{max_length})) {
             my $len     = length $val;
             my $min_len = $me->{min_length};
@@ -252,7 +256,12 @@ sub validate_request_params {
         $tested->{$key} = $val;
         next unless $val;
 
-        my $cons = Moose::Util::TypeConstraints::find_or_parse_type_constraint($type);
+        state $cache;
+        my $cache_key = ref $type ? $type->name : $type;
+        my $cons      = $cache->{$cache_key};
+        if (!$cons) {
+            $cons = $cache->{$cache_key} = Moose::Util::TypeConstraints::find_or_parse_type_constraint($type);
+        }
 
         if (!defined $cons) {
             die {message => "Unknown type constraint '$type'", status => 500,};
@@ -265,6 +274,5 @@ sub validate_request_params {
 
     return $tested;
 }
-
 
 1;
