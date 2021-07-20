@@ -13,7 +13,7 @@
 
         <p>
             <%= $pg_timestamp2human->($response->{created_on}) %>
-                <%= $response->{user_name} %> <%= $response->{response_type} %>:
+                <%= $response->{response_type} %>:
         </p>
         <p class="dpo_ask">
             <%= $response->{reply_content} %>
