@@ -83,6 +83,13 @@ sub setup {
         },
     );
 
+    $c->helper(
+        'nl2br' => sub {
+            my ($c, $text) = @_;
+            $text =~ s/(\r\n|\n\r|\n|\r)/<br\/>$1/g;
+            return $text;
+        }
+    );
 
     $c->helper('reply.exception' => sub { Lgpdjus::Controller::reply_exception(@_) });
     $c->helper('reply.not_found' => sub { Lgpdjus::Controller::reply_not_found(@_) });

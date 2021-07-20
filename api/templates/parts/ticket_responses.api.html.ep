@@ -27,7 +27,7 @@
         </p>
 
         <p class="cliente_reply">
-            <%= $response->{cliente_reply} %>
+            <%= $c->nl2br($response->{cliente_reply}) %>
 
                 % if ($response->{img_href}) {
                 <br>
