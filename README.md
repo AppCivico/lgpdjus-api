@@ -421,7 +421,7 @@ DBIC_TRACE=1 mostra as queries que foram executadas por dentro do ORM
 
 # Criando novas migrações de banco
 
-> instruçẽos dadas aqui consideram que você está trabalhando na pasta "api" (e nao no root do repo)
+> instruções dadas aqui consideram que você está trabalhando na pasta "api" (e nao no root do repo)
 
 Usamos um padrão para criar um novo arquivo sqitch:
 
@@ -429,7 +429,7 @@ Usamos um padrão para criar um novo arquivo sqitch:
 - Não usamos revert nem verify
 
 O problema de usar o revert, é que nem toda alteração tem revert, e, quando você faz deploy de mais de uma alteração ao mesmo tempo, e uma desta falha, o sqitch roda todos os reverts (que se não existir, irá ficar em branco), dando um trabalho extra para voltar o banco em um estado estável.
-Quando não existe arquivo, ele simplismente não executa o revert, e você pode arrumar o arquivo de deploy que deu errado e executar novamente `sqitch deploy` que ele irá apenas executar os arquivos ainda não executados (ou executados com erro).
+Quando não existe arquivo, ele simplesmente não executa o revert, e você pode arrumar o arquivo de deploy que deu errado e executar novamente `sqitch deploy` que ele irá apenas executar os arquivos ainda não executados (ou executados com erro).
 
 Para ajudar, uso essas funções no meu .bashrc para criar novos sqitch.
 
@@ -475,6 +475,7 @@ Depois de criar e editar o arquivo (fica na pasta deploy_db/deploy/) você poder
                                                                            # valores possiveis são "dev-with-x" ou "http"
                                                                            # caso usar "dev-with-x" configurar o WKHTMLTOPDF_BIN para o path do wkhtmltopdf
     WKHTMLTOPDF_HTTP            | http://172.17.0.1:64596                  # endereço do servido do wkhtmltopdf
+    METABASE_BASE_URL           | https://lgpdjus-metabase.sample.com/     # URL base do metabase para geração do embed dashboard
     METABASE_SECRET             | random                                   # Chave do JWT do metabase
     TICKET_LIST_AUTO_CENTER     | 0 ou 1                                   # 1 para formatar os textos da lista do quiz
     SOBRELGDP_LIST_AUTO_CENTER  | 0 ou 1                                   # 1 para formatar os textos da lista do sobrelgpd
