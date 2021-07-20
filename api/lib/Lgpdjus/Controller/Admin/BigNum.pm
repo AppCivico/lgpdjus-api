@@ -14,6 +14,15 @@ sub abignum_get {
         template => 'admin/big_num',
     );
 
+    if (!$ENV{METABASE_BASE_URL}) {
+        my $message = 'Faltando configurar METABASE_BASE_URL';
+        $c->flash_to_redis({message => $message});
+
+        return $c->respond_to_if_web(
+            json => {json => {message => $message}}, html => {},
+        );
+    }
+
     my @rows = (
         {name => 'Visão Geral',         resource => {dashboard => 3}, params => {}},
         {name => 'Resumo solicitações', resource => {dashboard => 2}, params => {}},
@@ -30,7 +39,7 @@ sub abignum_get {
             key     => $metabase_secret,
             payload => $payload
         );
-        my $url = Mojo::URL->new('https://lgpdjus-metabase.appcivico.com/');
+        my $url = Mojo::URL->new($ENV{METABASE_BASE_URL});
         $url->path('/embed/dashboard/' . $jwt);
         $url->fragment('bordered=false&titled=false');
 

@@ -19,7 +19,6 @@
 
 % my $reports = stash('reports');
 
-
 <form class="form-inline p-sm-2">
   <label class="mr-sm-2" for="input_base_url">Relatórios</label>
   <select class="custom-select mr-sm-2" id="input_base_url">
