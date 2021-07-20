@@ -37,6 +37,17 @@ sub _add_style_3 {
     return $t;
 }
 
+sub _add_style_4 {
+    my $t = shift;
+    if ($ENV{SOBRELGDP_LIST_AUTO_CENTER}) {
+        return
+          '<div style="margin: 0px; text-align: left; font-size: 14pt; font-weight: 400; line-height: 17pt; color: #3C3C3BBF">'
+          . $t
+          . '</div>';
+    }
+    return $t;
+}
+
 sub apply_rps {
     my $c = shift;
 
@@ -117,6 +128,7 @@ sub sobrelgpd_detail_get {
     foreach my $pergunta (@{$sobrelgpd->{perguntas}}) {
         $pergunta->{pergunta} ||= '';
         $pergunta->{resposta} ||= '';
+        $pergunta->{resposta} = _add_style_4($pergunta->{resposta});
     }
 
     return $c->render(
