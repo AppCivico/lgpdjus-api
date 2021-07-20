@@ -85,9 +85,26 @@ sub tr_detail_body {
     $content .= '<div>';
     if ($self->type eq 'request-additional-info') {
         $content .= sprintf '<h2>Informação adicional necessária:</h2><p>%s</p>', xml_escape($self->reply_content);
+        if ($self->cliente_reply) {
+            $content .= sprintf '<p>%s</p>', xml_escape($self->cliente_reply);
+        }
     }
-    if ($self->cliente_reply) {
-        $content .= sprintf '<p>%s</p>', xml_escape($self->cliente_reply);
+    elsif ($self->type eq 'response') {
+        $content .= sprintf '<h2>Resposta da solicitação:</h2><p>%s</p>', xml_escape($self->reply_content);
+    }
+    elsif ($self->type eq 'verify_yes') {
+        $content .= sprintf '<h2>Resposta da solicitação - Conta verificada:</h2><p>%s</p>',
+          xml_escape($self->reply_content);
+    }
+    elsif ($self->type eq 'verify_no') {
+        $content .= sprintf '<h2>Resposta da solicitação - Conta não verificada:</h2><p>%s</p>',
+          xml_escape($self->reply_content);
+    }
+    elsif ($self->type eq 'reopen') {
+        $content .= sprintf '<h2>Solicitação reaberta:</h2><p>%s</p>', xml_escape($self->reply_content);
+    }
+    elsif ($self->type eq 'due_change') {
+        $content .= sprintf '<h2>Mudança de prazo:</h2><p>%s</p>', xml_escape($self->reply_content);
     }
 
     my $media = from_json($self->cliente_attachments);
