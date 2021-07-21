@@ -3,6 +3,26 @@
 
 BEGIN;
 
+CREATE OR REPLACE FUNCTION public.f_tgr_quiz_config_after_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+
+    IF (TG_OP = 'UPDATE') THEN
+
+        update questionnaires
+         set modified_on = now()
+         where id = NEW.questionnaire_id OR  id = OLD.questionnaire_id;
+     ELSIF (TG_OP = 'INSERT') THEN
+        update questionnaires
+         set modified_on = now()
+         where id = NEW.questionnaire_id;
+     END IF;
+
+    RETURN NEW;
+END;
+$$;
+
 delete from public.quiz_config;
 delete from public.questionnaires;
 
