@@ -80,9 +80,9 @@ sub tr_detail_body {
 
     my $dt = $self->created_on->set_time_zone('America/Sao_Paulo');
 
-    $content .= '<div style="border: 1px solid #eee; padding: 10px; font-size: 1.2em">';
+    $content .= '<div style="border: 1px solid #eee; padding: 10px; color: #3C3C3BBF; font-weight: 300; line-height: 17pt; font-size: 14pt; margin: 0;">';
     if ($self->type eq 'request-additional-info') {
-        $content .= sprintf '<h2>Informação adicional necessária:</h2><p>%s</p>',
+        $content .= sprintf '<strong>Informação adicional necessária:</strong><p>%s</p>',
           ticket_xml_escape($self->reply_content);
         if ($self->cliente_reply) {
             $content .= sprintf '<p>%s</p>', ticket_xml_escape($self->cliente_reply);

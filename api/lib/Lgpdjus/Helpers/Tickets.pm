@@ -244,7 +244,7 @@ sub _format_ticket_detail {
     if ($opts{is_app}) {
 
         my $str = '';
-        foreach my $r (@responses) {
+        foreach my $r (reverse @responses) {
             next if $r->{_type} eq 'request-additional-info';
 
             $str .= $r->{body};
