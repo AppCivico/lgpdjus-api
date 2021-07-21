@@ -501,6 +501,7 @@ sub action_verify_cliente {
 sub action_change_due {
     my ($self, $c, %opts) = @_;
     my $due_date   = $opts{due_date}         // confess 'missing due_date';
+    my $message    = $opts{message}          // confess 'missing message';
     my $admin_user = $c->stash('admin_user') // confess 'missing stash.admin_user';
 
     $c->reply_invalid_param('Data inválida') unless $due_date =~ /^\d{4}-\d{2}-\d{2}$/;
@@ -526,7 +527,6 @@ sub action_change_due {
                     $c->reply_invalid_param('Novo prazo não pode igual.');
                 }
 
-                my $message = 'Prazo anterior: ' . $old_due . '. Novo prazo: ' . $self->due_date_dmy();
                 $self->tickets_responses->create(
                     {
                         user_id       => $admin_user->id(),

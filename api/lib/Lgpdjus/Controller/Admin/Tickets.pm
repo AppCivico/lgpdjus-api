@@ -52,9 +52,10 @@ sub a_tickets_detail_get_post {
             'Pedir informação adicional', 'btn-light', 'Descreva qual informação adicional é necessária',
             'Precio que me envie novamente a foto do...', 'Enviar pedido'
         ],
-        close =>
-          ['Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'],
-        change_due => ['Mudar prazo', 'btn-light', 'Escolha o novo prazo', '(placeholder)', 'Mudar prazo'],
+        close => [
+            'Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'
+        ],
+        change_due => ['Mudar prazo', 'btn-light', 'Justificativa', 'Escreva a justificativa', 'Mudar prazo'],
         verify     => [
             'Analisar e verificar conta', 'btn-primary', 'Comentário',
             'Descreva o resultado ou motivo da negação', 'Verificar conta'
@@ -96,8 +97,15 @@ sub a_tickets_detail_get_post {
             {
                 $c->flash_to_redis({success_message => 'Solicitação concluída com sucesso!'});
             }
-            elsif ($valid->{selected_action} eq 'change_due'
-                && $ticket->action_change_due($c, due_date => $form->{response_content}))
+            elsif (
+                $valid->{selected_action} eq 'change_due'
+                && (
+                    $param2 = $c->validate_request_params(
+                        due_date => {required => 1, type => 'Str', max_length => 10},
+                    )
+                )
+                && $ticket->action_change_due($c, due_date => $param2->{due_date}, message => $form->{response_content})
+              )
             {
                 $c->flash_to_redis({success_message => 'Alteração do prazo efetuado com sucesso!'});
             }

@@ -132,19 +132,23 @@
                 % }
 
                 <div class="form-group">
+                    % if ($selected_action eq 'change_due') {
+                    <label for="due_date_ymd">
+                        Escolha o novo prazo
+                    </label>
+                    <div class="form-group">
+                        <input type="date" class="form-control"
+                            value="<%= $params->{due_date} || $ticket->due_date_ymd() %>"
+                            name="due_date" id="due_date_ymd" />
+                    </div>
+                    % }
                     <label for="response_content">
                         <%= $action_text_label %>
                     </label>
                     <div class="form-group">
-                        % if ($selected_action eq 'change_due') {
-                        <input type="date" class="form-control"
-                            value="<%= $params->{response_content} || $ticket->due_date_ymd() %>"
-                            name="response_content" id="response_content" />
-                        % }else{
                         <textarea rows=3 max-length=10000 class="form-control"
                             placeholder="<%= $action_text_placeholder %>" name="response_content"
                             id="response_content"><%= $params->{response_content} || '' %></textarea>
-                        % }
                     </div>
 
                     <button type="submit" class="btn btn-primary">
