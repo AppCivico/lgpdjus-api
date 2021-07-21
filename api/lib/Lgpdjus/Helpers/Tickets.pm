@@ -252,9 +252,8 @@ sub _format_ticket_detail {
 
         if ($str) {
             $detail
-              .= '<p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Histórico de ações</p>'
-              . $str;
-
+              = '<p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Histórico de ações</p>'
+              . $str . $detail;
         }
     }
 
