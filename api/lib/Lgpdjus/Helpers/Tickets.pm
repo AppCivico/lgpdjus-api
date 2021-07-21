@@ -230,9 +230,10 @@ sub _format_ticket_detail {
 
     my @responses = map {
         +{
-            id   => $_->id(),
+            id      => $_->id(),
             body => $_->tr_detail_body($opts{c}),
-            meta => {
+            detail  => $_->tr_detail_hash($opts{c}),
+            meta    => {
                 can_reply => $_->tr_can_reply(),
             },
             _type => $_->type()
@@ -253,7 +254,8 @@ sub _format_ticket_detail {
         if ($str) {
             $detail
               = '<p style="color: #398FCE; font-weight: 700; font-size: 16pt; line-height: 19pt;">Histórico de ações</p>'
-              . $str . $detail;
+              . $str
+              . $detail;
         }
     }
 

@@ -74,37 +74,63 @@ __PACKAGE__->belongs_to(
     {is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT",},
 );
 
+sub tr_detail_hash {
+    my ($self, $c) = @_;
+
+    return {
+        requested_information_text => $self->cliente_reply,
+    } if $self->type eq 'request-additional-info';
+
+    return {};
+}
+
 sub tr_detail_body {
     my ($self, $c) = @_;
     my $content = '';
 
     my $dt = $self->created_on->set_time_zone('America/Sao_Paulo');
 
-    $content .= '<div style="border: 1px solid #eee; padding: 10px; color: #3C3C3BBF; font-weight: 300; line-height: 17pt; font-size: 14pt; margin: 0;">';
+    sub _header {
+        my $text = shift;
+
+        return '<div style="color: #398FCE; font-weight: 700; line-height: 16pt; font-size: 14pt; ">' . $text
+          . '</div>';
+    }
+
+    sub _text {
+        my $text = shift;
+
+        return
+          '<p style="color: #3C3C3B; font-weight: 300; line-height: 14pt; font-size: 12pt; ">'
+          . ticket_xml_escape($text) . '</p>';
+    }
+
+    $content
+      .= '<div style="border: 1px solid #eee; padding: 10px; color: #3C3C3BBF; font-weight: 300; line-height: 17pt; font-size: 14pt; margin: 0;">';
+
+    $content .= sprintf '<div style="font-size: 12pt; line-height: 14pt; color: #646464">Horário: %s</div>',
+      $dt->dmy('/') . ' ' . $dt->hms;
+
     if ($self->type eq 'request-additional-info') {
-        $content .= sprintf '<strong>Informação adicional necessária:</strong><p>%s</p>',
-          ticket_xml_escape($self->reply_content);
+        $content .= _header('Informação adicional necessária:') . _text($self->reply_content);
         if ($self->cliente_reply) {
-            $content .= sprintf '<p>%s</p>', ticket_xml_escape($self->cliente_reply);
+            $content .= _text('Resposta: ' . $self->cliente_reply);
         }
     }
     elsif ($self->type eq 'response') {
-        $content .= sprintf '<strong>Resposta da solicitação:</strong><p>%s</p>',
-          ticket_xml_escape($self->reply_content);
+        $content .= _header('Resposta da solicitação:') . _text($self->reply_content);
     }
     elsif ($self->type eq 'verify_yes') {
-        $content .= sprintf '<strong>Resposta da solicitação - Conta verificada:</strong><p>%s</p>',
-          ticket_xml_escape($self->reply_content);
+        $content .= _header('Resposta da solicitação - Conta verificada:') . _text($self->reply_content);
     }
     elsif ($self->type eq 'verify_no') {
-        $content .= sprintf '<strong>Resposta da solicitação - Conta não verificada:</strong><p>%s</p>',
-          ticket_xml_escape($self->reply_content);
+        $content .= _header('Resposta da solicitação - Conta não verificada:') . _text($self->reply_content);
     }
     elsif ($self->type eq 'reopen') {
-        $content .= sprintf '<strong>Solicitação reaberta:</strong><p>%s</p>', ticket_xml_escape($self->reply_content);
+        $content .= _header('Solicitação reaberta:') . _text($self->reply_content);
     }
     elsif ($self->type eq 'due_change') {
-        $content .= sprintf '<strong>Mudança de prazo:</strong><p>%s</p>', ticket_xml_escape($self->reply_content);
+        $content .= _header('Mudança de prazo:') . _text($self->reply_content);
     }
 
     my $media = from_json($self->cliente_attachments);
@@ -116,11 +142,9 @@ sub tr_detail_body {
             $content .= sprintf '<img src="%s" />', ticket_xml_escape($src);
         }
         else {
-            $content .= sprintf '<p>arquivo %s não encontrado</p>', $media_id;
+            $content .= '<p>Anexo apagado do servidor.</p>';
         }
     }
-    $content .= sprintf '<div style="text-align: right; display: block;">Horário: %s</div>',
-      $dt->dmy('/') . ' ' . $dt->hms;
 
     $content .= '</div>';
 
