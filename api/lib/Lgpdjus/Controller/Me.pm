@@ -199,13 +199,13 @@ sub me_delete {
         sub {
             $user_obj->update(
                 {
-                    status                 => 'deleted_scheduled',
+                    status                 => 'account_disabled',
                     deleted_scheduled_meta => to_json(
                         {
                             epoch       => time(),
                             app_version => $valid->{app_version},
                             ip          => $remote_ip,
-                            delete      => 1,
+                            disabled    => 1,
                             (
                                 $user_obj->deleted_scheduled_meta()
                                 ? (previous => from_json($user_obj->deleted_scheduled_meta() || '{}'))
@@ -213,28 +213,8 @@ sub me_delete {
                             ),
                         }
                     ),
-                    perform_delete_at => \"NOW() + '30 DAY'"
                 }
             );
-
-            my $email_db = $c->schema->resultset('EmaildbQueue')->create(
-                {
-                    config_id => 1,
-                    template  => 'account_deletion.html',
-                    to        => $user_obj->email,
-                    subject   => 'LGPDjus - Remoção de conta',
-                    variables => to_json(
-                        {
-                            nome_completo => $user_obj->nome_completo,
-                            remote_ip     => $remote_ip,
-                            app_version   => $valid->{app_version},
-                            email         => $user_obj->email,
-                            cpf           => $user_obj->cpf,
-                        }
-                    ),
-                }
-            );
-            die 'missing id' unless $email_db;
 
             # apaga todas as sessions ativas (pode ter mais de uma dependendo da configuracao)
             $user_obj->clientes_active_sessions->delete;
@@ -254,7 +234,7 @@ sub me_reactivate {
     my $user_obj = $c->schema->resultset('Cliente')->search(
         {
             'id'           => $c->stash('user_id'),
-            'status'       => 'deleted_scheduled',
+            'status'       => 'account_disabled',
             'login_status' => 'OK',
         },
     )->next;

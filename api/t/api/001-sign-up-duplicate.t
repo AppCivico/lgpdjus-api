@@ -435,10 +435,9 @@ subtest_buffered 'Reset de senha' => sub {
             app_version => 'Versao Ios ou Android, Modelo Celular, Versao do App',
         }
     )->status_is(204);
-    is $user_obj->discard_changes->status, 'deleted_scheduled', 'in deletion';
-    ok $user_obj->perform_delete_at, 'perform_delete_at is not null';
+    is $user_obj->discard_changes->status, 'account_disabled', 'disabled account';
+    is $user_obj->perform_delete_at, undef, 'perform_delete_at is null still';
 
-    is $email_rs->search({template => 'account_deletion.html'})->count, 1, 'ok';
     $t->get_ok('/me', {'x-api-key' => $session})->status_is(403);
 
 
@@ -449,10 +448,10 @@ subtest_buffered 'Reset de senha' => sub {
             senha       => 'abc1A`S345678',
             app_version => 'Versao Ios ou Android, Modelo Celular, Versao do App',
         }
-    )->status_is(200)->json_has('/session')->json_is('/deleted_scheduled', '1');
+    )->status_is(200)->json_has('/session')->json_is('/account_disabled', '1');
     $session = last_tx_json()->{session};
-    is $user_obj->discard_changes->status, 'deleted_scheduled', 'still in deletion';
-    ok $user_obj->perform_delete_at, 'perform_delete_at still not null';
+    is $user_obj->discard_changes->status, 'account_disabled', 'still disabled';
+    is $user_obj->perform_delete_at, undef, 'perform_delete_at still null';
     $t->get_ok('/me', {'x-api-key' => $session})->status_is(404);
 
     $t->post_ok(
@@ -466,9 +465,6 @@ subtest_buffered 'Reset de senha' => sub {
 
     is $user_obj->discard_changes->status, 'active', 'is active';
     is $user_obj->perform_delete_at, undef, 'perform_delete_at is null';
-
-    is $email_rs->search({template => 'account_reactivate.html'})->count, 1, 'ok';
-
 
     my $user_obj = get_schema->resultset('Cliente')->find($cliente_id);
     $user_obj->update(

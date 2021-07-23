@@ -40,7 +40,7 @@ sub post {
     # procura pelo email
     my $schema    = $c->schema;
     my $found_obj = $c->schema->resultset('Cliente')->search(
-        {email => $email, status => {in => ['deleted_scheduled', 'active', 'banned']}},
+        {email => $email, status => {in => ['account_disabled', 'active', 'banned']}},
     )->next;
     my $found         = $found_obj ? {$found_obj->get_columns()} : undef;
     my $error_code    = 'notfound';
@@ -121,13 +121,13 @@ sub post {
     };
 
   LOGON:
-    my $directus_id       = $found->{id};
-    my $deleted_scheduled = 0;
+    my $directus_id      = $found->{id};
+    my $account_disabled = 0;
 
     # acertou a senha, mas esta suspenso
     if ($found->{status} ne 'active') {
-        if ($found->{status} eq 'deleted_scheduled') {
-            $deleted_scheduled++;
+        if ($found->{status} eq 'account_disabled') {
+            $account_disabled++;
         }
         else {
             die {
@@ -169,9 +169,9 @@ sub post {
     $c->render(
         json => {
             (
-                $deleted_scheduled
+                $account_disabled
                 ? (
-                    deleted_scheduled => 1,
+                    account_disabled => 1,
                   )
                 : ()
             ),
