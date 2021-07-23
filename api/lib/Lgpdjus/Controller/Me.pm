@@ -137,14 +137,13 @@ sub me_update {
     &me_find($c);
 }
 
-sub me_delete_text {
+sub me_disable_text {
     my $c = shift;
 
     return $c->render(
         json => {
-            text =>
-              "<p>O seu perfil será desativado por 30 dias, após este período seus dados serão completamente excluídos.<br/></p>"
-              . "<p>Caso entre novamente no aplicativo antes deste período, você ainda poderá reativar o perfil.<p>"
+            text => "<p>Ao continuar, o sua conta será desativada.</p>"
+              . "<p>Caso faça o login novamente no aplicativo, você ainda poderá reativar a sua conta.<p>"
         },
         status => 200,
     );

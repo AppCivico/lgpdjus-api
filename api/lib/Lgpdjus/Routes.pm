@@ -104,8 +104,8 @@ sub register {
     $me->put()->to(action => 'me_update');
     $me->delete()->to(action => 'me_delete');
 
-    # GET /me/delete-text
-    $me->get('delete-text')->to(controller => 'Me', action => 'me_delete_text');
+    # GET /me/account-disable-text
+    $me->get('account-disable-text')->to(controller => 'Me', action => 'me_disable_text');
 
     # GET /me/unread-notif-count // notifications
     $me->get('unread-notif-count')->to(controller => 'Me', action => 'me_unread_notif_count');
