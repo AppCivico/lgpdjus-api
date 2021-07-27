@@ -80,7 +80,7 @@ sub cliente_send_email {
         my $ntf_title   = tt_render($email_config->{notification_title},   $variables);
         my $ntf_content = tt_render($email_config->{notification_content}, $variables);
 
-        &_new_notification($c, $cliente, $ntf_title, $ntf_content);
+        &_new_notification($c, $cliente, $ntf_title, $ntf_content, $ticket_id);
     }
 
     return 1;
@@ -88,7 +88,7 @@ sub cliente_send_email {
 
 
 sub _new_notification {
-    my ($c, $cliente, $title, $content) = @_;
+    my ($c, $cliente, $title, $content, $ticket_id) = @_;
 
     my $schema = $c->schema;    # mysql
     my $logger = $c->log;
@@ -97,7 +97,7 @@ sub _new_notification {
         is_test    => is_test() ? 1 : 0,
         title      => $title,
         content    => $content,
-        meta       => to_json({cliente_id => $cliente->id}),
+        meta       => to_json({cliente_id => $cliente->id, (defined $ticket_id ? (ticket_id => $ticket_id) : ())}),
         created_at => \'now()',
         icon       => 1,
     };
