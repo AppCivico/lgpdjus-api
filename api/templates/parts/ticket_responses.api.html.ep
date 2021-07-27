@@ -29,21 +29,18 @@
         <p class="cliente_reply">
             <%= $c->nl2br($response->{cliente_reply}) %>
 
-                % if ($response->{img_href}) {
-                <br>
-                % if ($response->{img_href_hd}) {
-                <a title="Clique para ampliar" href="<%= $response->{img_href_hd} %>" target="_blank">
-                    <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
-                </a>
-                %}else{
-                    % if ($response->{img_href}){
-                        <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
-                    % }else{
-                        Imagem apagada.
-                    %}
-                %}
-
+        % if ($response->{img_href}) {
+            <br>
+            % if ($response->{img_href_hd}) {
+            <a title="Clique para ampliar" href="<%= $response->{img_href_hd} %>" target="_blank">
+                <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
+            </a>
+            %}else{
+                <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
+            %}
         </p>
+        % }else{
+            Imagem removida.
         %}
 
         %} else {

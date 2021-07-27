@@ -28,21 +28,24 @@
         <dt class="agentMessageWrap">
             <%= $quiz->{question} %>
         </dt>
-        % if (defined $quiz->{response}){
         <dd>
             % if ($quiz->{type} eq 'photo_attachment'){
-            % if ($is_admin){ # apenas no admin colocar o link
-            <a title="Clique para ampliar" href="<%= $quiz->{response_hd} %>" target="_blank">
-                <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
-            </a>
-            %}else{
-            <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
-            %}
+                % if (!$quiz->{response}){
+                    Imagem removida.
+                % }else{
+                    % if ($is_admin){ # apenas no admin colocar o link
+                    <a title="Clique para ampliar" href="<%= $quiz->{response_hd} %>" target="_blank">
+                        <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
+                    </a>
+                    %}else{
+                    <img style="max-width: 80%;" src="<%= $quiz->{response} %>" />
+                    %}
+                   %}
             %}else{
             • <%= $quiz->{response} %>
                 %}
         </dd>
-        % } # defined
+
         % } # foreach
     </dl>
 </div>
