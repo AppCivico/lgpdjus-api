@@ -330,10 +330,11 @@ sub obtain_lock {
 sub _generate_pdf {
     my ($self, $c, $helper, $helper_opts) = @_;
 
-    $ENV{LAST_PDF_JOB_ID} = $c->minion->enqueue(
+    my $job_id = $ENV{LAST_PDF_JOB_ID} = $c->minion->enqueue(
         'generate_pdf_and_blockchain',
-        ['ticket', $self->id, $helper, $helper_opts] => {attempts => 5, delay => 1}
+        ['ticket', $self->id, $helper, $helper_opts] => {attempts => 50, delay => 1}
     );
+    return $job_id;
 }
 
 sub action_reopen {
@@ -481,7 +482,7 @@ sub action_verify_cliente {
                         status     => 'done',
                     }
                 );
-                $self->_generate_pdf(
+                my $pdf_job_id = $self->_generate_pdf(
                     $c, 'cliente_send_email',
                     {
                         template        => 'ticket_' . $type,
@@ -489,6 +490,13 @@ sub action_verify_cliente {
                             message          => $message,
                             admin_first_name => $admin_user->first_name(),
                         },
+                    }
+                );
+                $ENV{LAST_DEL_ATTCH_JOB_ID} = $c->minion->enqueue(
+                    'ticket_remove_attachments',
+                    [$self->id] => {
+                        attempts => 50,
+                        parents  => [$pdf_job_id]
                     }
                 );
             }

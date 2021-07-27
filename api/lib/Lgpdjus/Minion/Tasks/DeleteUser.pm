@@ -18,7 +18,6 @@ sub delete_user {
 
     log_trace("minion:delete_user", $user_id);
     my $schema = $job->app->schema;    # pg
-    my $schema = $job->app->schema;    # mysql
 
     my $logger = $job->app->log;
 

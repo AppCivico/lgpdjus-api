@@ -8,6 +8,7 @@ use Lgpdjus::Test;
 my $t = test_instance;
 my $json;
 use Lgpdjus::Minion::Tasks::AddBlockchain;
+use Lgpdjus::Minion::Tasks::DeleteTicketAttachment;
 
 $ENV{TICKET_LIST_AUTO_CENTER} = 0;
 my ($session, $user_id) = get_user_session('43866555490');
@@ -163,9 +164,9 @@ subtest_buffered 'Testar envio de campo boolean com valor invalido + interpolati
     like $first_msg->{content}, qr/$field_ref.+deve ser Y ou N/, "$field_ref nao pode ser X";
     is $first_msg->{style},     'error',                         'type is error';
 
-    is $before_input_msg->{content}, 'appendix 1',             'has appendix before message';
-    is $second_msg->{content},       'intro1',                 'question intro is working';
-    is $third_msg->{content},        'HELLOQuiz UserName!',    'question intro interpolation is working';
+    is $before_input_msg->{content}, 'appendix 1',          'has appendix before message';
+    is $second_msg->{content},       'intro1',              'question intro is working';
+    is $third_msg->{content},        'HELLOQuiz UserName!', 'question intro interpolation is working';
     is $input_msg->{content},        'yesno question☺️⚠️👍👭🤗🤳', 'yesno question question is present';
 };
 subtest_buffered 'Testar receber appendix e intro agrupados' => sub {
@@ -315,7 +316,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $input_msg->{content}, 'multiple choices options', 'mc has content';
     is $input_msg->{options}[0]{display}, 'opção a', 'mc has options.0.display';
     is $input_msg->{options}[2]{display}, 'opção c', 'mc has options.2.display';
-    is $input_msg->{options}[1]{index},   1,         'mc has options.1.index';
+    is $input_msg->{options}[1]{index},   1,           'mc has options.1.index';
 
     # respondendo a multipĺe choices
     $field_ref = $json->{quiz_session}{current_msgs}[-1]{ref};
@@ -335,7 +336,7 @@ subtest_buffered 'group de questoes boolean' => sub {
     is $input_msg->{content}, 'only choice options', 'oc has content';
     is $input_msg->{options}[0]{display}, 'opção 1', 'oc has options.0.display';
     is $input_msg->{options}[2]{display}, 'opção 3', 'oc has options.2.display';
-    is $input_msg->{options}[1]{index},   1,         'oc has options.1.index';
+    is $input_msg->{options}[1]{index},   1,           'oc has options.1.index';
 
     # respondendo a only choice
     $field_ref = $json->{quiz_session}{current_msgs}[-1]{ref};
@@ -554,19 +555,19 @@ subtest_buffered 'group de questoes boolean' => sub {
             session_id => $cadastro->{quiz_session}{session_id},
             $field_ref => 1,
         }
-    )->status_is(200)->json_is('/quiz_session/finished', 1)
-      ->json_is('/quiz_session/end_screen', "home")->tx->res->json;
+    )->status_is(200)->json_is('/quiz_session/finished', 1)->json_is('/quiz_session/end_screen', "home")
+      ->tx->res->json;
 
     my $session   = get_schema->resultset('ClientesQuizSession')->find($session_id);
     my $responses = from_json($session->responses);
-    is $responses->{yesno_customlabel}, 'yes',              'yes value for custom label/value';
-    is $responses->{btn_fim_action},    'none',             'no action btn_fim_action';
-    is $responses->{yesno1},            'Y',                'Y for yesno1';
-    is $responses->{groupq_1},          'N',                'N for groupq_1';
+    is $responses->{yesno_customlabel}, 'yes',                  'yes value for custom label/value';
+    is $responses->{btn_fim_action},    'none',                 'no action btn_fim_action';
+    is $responses->{yesno1},            'Y',                    'Y for yesno1';
+    is $responses->{groupq_1},          'N',                    'N for groupq_1';
     is $responses->{mc},                'opção a, opção c', 'use human label for mc';
-    is $responses->{mc_json},           '["a","c"]',        'a and c for mc';
-    is $responses->{oc},                '3',                '3 for oc';
-    is $responses->{test_cpf},          '665.677.860-78',   'cpf is formatted';
+    is $responses->{mc_json},           '["a","c"]',            'a and c for mc';
+    is $responses->{oc},                '3',                    '3 for oc';
+    is $responses->{test_cpf},          '665.677.860-78',       'cpf is formatted';
     is $responses->{test_birthday},     $today->dmy('/'), 'birthday is formatted';
     is $responses->{oc},                '3', '3 for oc';
 };
@@ -622,9 +623,9 @@ subtest_buffered 'list do ticket' => sub {
         '/me/tickets/' . $wait->id,
         {'x-api-key' => $session}
       )->status_is(200)->json_has('/id', 'has id')                    #
-      ->json_has('/meta/header', 'has header')                                 #
+      ->json_has('/meta/header', 'has header')                                  #
       ->json_like('/responses/0/body', qr/necessária/, 'has response body')    #
-      ->json_has('/responses/0/id', 'has response id')                         #
+      ->json_has('/responses/0/id', 'has response id')                          #
       ->json_is('/responses/0/meta/can_reply', 1, 'has response can_reply');
 
     my $response_id = &last_tx_json()->{responses}[0]{id};
@@ -830,7 +831,15 @@ subtest_buffered 'list do ticket' => sub {
         ok $cliente->verified_account_at,   'has verified_account_at';
         ok $cliente->verified_account_info, 'has verified_account_info';
 
+        ok $ENV{LAST_DEL_ATTCH_JOB_ID}, 'job LAST_DEL_ATTCH_JOB_ID was created';
 
+        ok(
+            Lgpdjus::Minion::Tasks::DeleteTicketAttachment::ticket_remove_attachments(
+                $job,
+                test_get_minion_args_job($ENV{LAST_DEL_ATTCH_JOB_ID})
+            ),
+            'delete attachemnts'
+        );
     };
 };
 
