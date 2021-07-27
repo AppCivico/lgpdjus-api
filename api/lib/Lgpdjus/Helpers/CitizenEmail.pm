@@ -97,7 +97,8 @@ sub _new_notification {
         is_test    => is_test() ? 1 : 0,
         title      => $title,
         content    => $content,
-        meta       => to_json({cliente_id => $cliente->id, (defined $ticket_id ? (ticket_id => $ticket_id) : ())}),
+        cliente_id => $cliente->id,
+        meta       => to_json({(defined $ticket_id ? (ticket_id => $ticket_id) : ())}),
         created_at => \'now()',
         icon       => 1,
     };

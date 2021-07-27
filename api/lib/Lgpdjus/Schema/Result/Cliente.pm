@@ -154,6 +154,12 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 __PACKAGE__->has_many(
+  "notification_messages",
+  "Lgpdjus::Schema::Result::NotificationMessage",
+  { "foreign.cliente_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+__PACKAGE__->has_many(
   "tickets",
   "Lgpdjus::Schema::Result::Ticket",
   { "foreign.cliente_id" => "self.id" },
@@ -167,8 +173,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 13:46:52
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:iqt1jvSlAOathv6eo4LLgw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-27 17:47:08
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9ZOzfOerLTIaaJFjVhlP/A
 
 use Carp qw/confess/;
 use Lgpdjus::Utils qw/is_uuid_v4 format_cpf/;

@@ -6,3 +6,4 @@
 0003-notification [0002-is_on_blockchain] 2021-05-26T19:32:30Z renato,,, <renato@renato-MS-7A34> # notification
 0004-remove_cond [0003-notification] 2021-06-08T13:53:05Z renato,,, <renato@renato-MS-7A34> # remove_cond
 0005-update-data-tests [0004-remove_cond] 2021-07-19T17:24:39Z renato,,, <renato@renato-MS-7A34> # update data for tests
+0006-notification_message [0005-update-data-tests] 2021-07-27T20:46:48Z renato,,, <renato@renato-MS-7A34> # notification_message

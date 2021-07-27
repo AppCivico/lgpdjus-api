@@ -32,8 +32,21 @@ __PACKAGE__->add_columns(
   { data_type => "bigint", is_nullable => 1 },
   "created_by_admin_user_id",
   { data_type => "uuid", is_foreign_key => 1, is_nullable => 1, size => 16 },
+  "cliente_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
+__PACKAGE__->belongs_to(
+  "cliente",
+  "Lgpdjus::Schema::Result::Cliente",
+  { id => "cliente_id" },
+  {
+    is_deferrable => 0,
+    join_type     => "LEFT",
+    on_delete     => "CASCADE",
+    on_update     => "CASCADE",
+  },
+);
 __PACKAGE__->has_many(
   "notification_logs",
   "Lgpdjus::Schema::Result::NotificationLog",
@@ -42,8 +55,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-06-16 16:30:59
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:CWH3O57Y3FXVrdNjowQn1g
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-27 17:48:19
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8RuK8/oOd9UnVXTNDmc3Ug
 
 use JSON;
 
