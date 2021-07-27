@@ -80,7 +80,7 @@
             % if ($quiz->{response}){
                 <img style="max-width: 80%; max-height: 200px;" src="<%= $quiz->{response} %>" />
             %} else {
-                Imagem apagada.
+                Imagem removida.
             %}
         %}else{
         <span
