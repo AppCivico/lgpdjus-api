@@ -42,6 +42,7 @@ state $text_xslate = Text::Xslate->new(
             if ($extra_member) {
                 push @items, $extra_member;
             }
+            @items = grep {$_} @items;
             if ($skip_member) {
                 @items = grep { $_ ne $skip_member } @items;
             }
