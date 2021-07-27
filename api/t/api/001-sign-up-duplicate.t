@@ -424,7 +424,7 @@ subtest_buffered 'Reset de senha' => sub {
     is $user_obj->status, 'active', 'status active';
     my $session = last_tx_json()->{session};
     $t->get_ok(
-        '/me/delete-text',
+        '/me/account-disable-text',
         {'x-api-key' => $session},
     )->status_is(200)->json_has('/text', 'tem texto');
     $t->delete_ok(
