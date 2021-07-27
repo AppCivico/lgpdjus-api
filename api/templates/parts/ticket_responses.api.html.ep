@@ -36,8 +36,13 @@
                     <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
                 </a>
                 %}else{
-                <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
+                    % if ($response->{img_href}){
+                        <img style="max-width: 80%;" src="<%= $response->{img_href} %>" />
+                    % }else{
+                        Imagem apagada.
+                    %}
                 %}
+
         </p>
         %}
 

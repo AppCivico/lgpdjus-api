@@ -74,7 +74,11 @@
         </p>
         % if (defined $quiz->{response}){
         % if ($quiz->{type} eq 'photo_attachment'){
-        <img style="max-width: 80%; max-height: 200px;" src="<%= $quiz->{response} %>" />
+            % if ($quiz->{response}){
+                <img style="max-width: 80%; max-height: 200px;" src="<%= $quiz->{response} %>" />
+            %} else {
+                Imagem apagada.
+            %}
         %}else{
         <span
             style="color: #3C3C3BBF; font-weight: 400; font-style: italic; line-height: 17pt; font-size: 14pt; margin: 0;">

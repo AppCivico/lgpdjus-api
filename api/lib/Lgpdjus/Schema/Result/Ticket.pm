@@ -293,8 +293,6 @@ sub html_ticket_responses {
         else {
             $response->{img_href} = $media && $media->media_generate_download_url($c);
         }
-
-
     }
 
     return $c->render_to_string('parts/ticket_responses.api', format => 'html', %$vars);
