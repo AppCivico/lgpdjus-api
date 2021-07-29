@@ -4,12 +4,16 @@ services:
     container_name: lgpdjus_api
     image: its/lgpdjus_api
     restart: unless-stopped
-    network_mode: "bridge"
+    networks:
+      - html2pdf
+      - database
+      - cache
+      - external_network
     ports:
       - "172.17.0.1:${LGPDJUS_API_PORT}:8080"
     volumes:
-        - ../lgpdjus-data/:/data/
-        - ./api/:/src/
+      - ../data/lgpdjus-data/:/data/
+      - ./api/:/src/
     environment:
       REDIS_SERVER: "${REDIS_SERVER}"
       REDIS_NS: "${REDIS_NS}"
@@ -18,13 +22,39 @@ services:
       POSTGRESQL_DBNAME: "${POSTGRESQL_DBNAME}"
       POSTGRESQL_USER: "${POSTGRESQL_USER}"
       POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
+    depends_on:
+        - lgpdjus_db_pg
+        - redis
+        - minio
+
+  lgpdjus_emaildb:
+    container_name: lgpdjus_emaildb
+    image: eokoe/emaildb
+    restart: unless-stopped
+    networks:
+        - database
+    volumes:
+        - ../data/emaildb-data/:/data/
+        - /home/ubuntu/email-db-service/:/src/
+        # update to your path of eokoe/email-db-service
+    depends_on:
+        - lgpdjus_db_pg
+    environment:
+      VARIABLES_JSON_IS_UTF8: 1
+      EMAILDB_DB_HOST: "${POSTGRESQL_HOST}"
+      EMAILDB_DB_PORT: "${POSTGRESQL_PORT}"
+      EMAILDB_DB_USER: "${POSTGRESQL_USER}"
+      EMAILDB_DB_PASS: "${POSTGRESQL_PASSWORD}"
+      EMAILDB_DB_NAME: "${POSTGRESQL_DBNAME}"
+
   directus:
     container_name: lgpdjus_directus
-    image: directus/directus:9.0.0-rc.85
+    image: directus/directus:9.0.0-rc.87
     restart: unless-stopped
-    network_mode: "bridge"
+    networks:
+        - database
     depends_on:
-      - lgpdjus_api
+      - lgpdjus_db_pg
     ports:
       - "172.17.0.1:${LGPDJUS_DIRECTUS_PORT}:8055"
     environment:
@@ -39,7 +69,7 @@ services:
       DB_USER: "${POSTGRESQL_USER}"
       DB_PASSWORD: "${POSTGRESQL_PASSWORD}"
 
-      EMAIL_FROM: 'directus@appcivico.com'
+      EMAIL_FROM: "${EMAIL_SMTP_FROM}"
       EMAIL_TRANSPORT: 'smtp'
       EMAIL_SMTP_HOST: "${EMAIL_SMTP_HOST}"
       EMAIL_SMTP_PORT: "${EMAIL_SMTP_PORT}"
@@ -50,6 +80,122 @@ services:
     container_name: lgpdjus_html2pdf
     image: oberonamsterdam/wkhtmltopdf:latest
     restart: unless-stopped
-    network_mode: "bridge"
+    networks:
+      - html2pdf
+
+  lgpdjus_db_pg:
+    container_name: lgpdjus_db_pg
+    image: postgres:13.3
+    volumes:
+      - ../data/lgpdjus_pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}"
+      POSTGRES_USER: "${POSTGRESQL_USER}"
+      POSTGRES_DB: "${POSTGRESQL_DBNAME}"
+    networks:
+      - database
+    logging:
+      driver: "json-file"
+      options:
+        max-file: '100'
+        max-size: 1m
+    restart: unless-stopped
+
+  metabase_db_pg:
+    container_name: metabase_db_pg
+    image: postgres:13.3
+    volumes:
+      - ../data/metabase_pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}_metabase"
+      POSTGRES_USER: "${POSTGRESQL_USER}_metabase"
+      POSTGRES_DB: "${POSTGRESQL_DBNAME}_metabase"
+    networks:
+      - database_metabase
+    logging:
+      driver: "json-file"
+      options:
+        max-file: '100'
+        max-size: 1m
+    restart: unless-stopped
+
+  metabase:
+    container_name: metabase
+    image: metabase/metabase:v0.39.1
+    restart: unless-stopped
+    networks:
+        - database_metabase
+        - database
+        - external_network
+    depends_on:
+        - metabase_db_pg
     ports:
-      - "172.17.0.1:${LGPDJUS_WKHTMLTOPDF_PORT}:80"
+        - "172.17.0.1:${LGPDJUS_METABASE_PORT}:3000"
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_HOST: metabase_db_pg
+      MB_DB_PORT: 5432
+      MB_DB_USER: "${POSTGRESQL_USER}_metabase"
+      MB_DB_PASS: "${POSTGRESQL_PASSWORD}_metabase"
+      MB_DB_DBNAME: "${POSTGRESQL_DBNAME}_metabase"
+    logging:
+      driver: "json-file"
+      options:
+        max-file: '100'
+        max-size: 1m
+
+  redis:
+    image: docker.io/bitnami/redis:6.2
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    networks:
+      - cache
+    expose:
+      - "6379"
+    volumes:
+      - ../data/redis_data:/bitnami/redis/data
+    logging:
+      driver: "json-file"
+      options:
+        max-file: '100'
+        max-size: 1m
+
+  minio:
+    image: minio/minio:RELEASE.2021-07-27T02-40-15Z
+    hostname: minio1
+    command: server --console-address ":9001" /data1
+    environment:
+      MINIO_ROOT_USER: "${MINIO_ROOT_USER}"
+      MINIO_ROOT_PASSWORD: "${MINIO_ROOT_PASSWORD}"
+    networks:
+      - minio
+    expose:
+      - "9000"
+      - "9001"
+    volumes:
+      - ../data/minio_data:/data1
+    logging:
+      driver: "json-file"
+      options:
+        max-file: '100'
+        max-size: 1m
+
+networks:
+    external_network:
+    database:
+      name: lgdpjus_db_network
+      driver: bridge
+    database_metabase:
+      name: metabase_db_network
+      driver: bridge
+    cache:
+      name: cache_network
+      driver: bridge
+    html2pdf:
+      name: html2pdf_network
+      driver: bridge
+    minio:
+      name: minio_network
+      driver: bridge
+
