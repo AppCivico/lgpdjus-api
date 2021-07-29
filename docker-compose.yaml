@@ -8,6 +8,7 @@ services:
       - html2pdf
       - database
       - cache
+      - minio
       - external_network
     ports:
       - "172.17.0.1:${LGPDJUS_API_PORT}:8080"
