@@ -31,7 +31,7 @@ sub _build__s3 {
 
     my $vendor = Net::Amazon::S3::Vendor::Generic->new(
         host                 => $ENV{LGPDJUS_S3_HOST} || 's3.amazonaws.com',
-        use_https            => 1,
+        use_https            => $ENV{LGPDJUS_S3_USE_HTTPS} ? 1 : 0,
         use_virtual_host     => 1,
         authorization_method => 'Net::Amazon::S3::Signature::V4',
         default_region       => $ENV{LGPDJUS_S3_REGION} || 'us-west-1',
