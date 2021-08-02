@@ -52,8 +52,9 @@ sub a_tickets_detail_get_post {
             'Pedir informação adicional', 'btn-light', 'Descreva qual informação adicional é necessária',
             'Precio que me envie novamente a foto do...', 'Enviar pedido'
         ],
-        close =>
-          ['Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'],
+        close => [
+            'Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'
+        ],
         change_due => ['Mudar prazo', 'btn-light', 'Justificativa', 'Escreva a justificativa', 'Mudar prazo'],
         verify     => [
             'Analisar e verificar conta', 'btn-primary', 'Comentário',
@@ -83,7 +84,11 @@ sub a_tickets_detail_get_post {
             my $param2;
 
             my $form = $c->validate_request_params(
-                response_content => {required => 1, type => 'Str', max_length => 10000},
+                response_content => {
+                    required   => $valid->{selected_action} eq 'verify' ? 0 : 1,
+                    type       => 'Str',
+                    max_length => 10000,
+                },
             );
 
             if (   $valid->{selected_action} eq 'ask_add_info'

@@ -419,7 +419,7 @@ sub action_ask_add_info {
 sub action_verify_cliente {
     my ($self, $c, %opts) = @_;
 
-    my $message    = $opts{message}          // confess 'missing message';
+    my $message    = $opts{message} || 'Verificação finalizada';
     my $verified   = $opts{verified}         // confess 'missing verified';
     my $admin_user = $c->stash('admin_user') // confess 'missing stash.admin_user';
 
