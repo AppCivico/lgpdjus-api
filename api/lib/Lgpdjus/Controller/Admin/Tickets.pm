@@ -85,9 +85,10 @@ sub a_tickets_detail_get_post {
 
             my $form = $c->validate_request_params(
                 response_content => {
-                    required   => $valid->{selected_action} eq 'verify' ? 0 : 1,
-                    type       => 'Str',
-                    max_length => 10000,
+                    required       => $valid->{selected_action} eq 'verify' ? 0 : 1,
+                    type           => 'Str',
+                    max_length     => 10000,
+                    empty_is_valid => 1,
                 },
             );
 
