@@ -57,6 +57,25 @@ sub setup {
     );
 
     $c->helper(
+        app_build_version => sub {
+            my $c = shift;
+
+            return $c->stash('app_build_version') if defined $c->stash('app_build_version');
+
+            my $version = $c->req->headers->header('x-build-version');
+            if (defined $version && $version =~ /^\d{1,5}$/a) {
+                $version = int($version);
+            }
+            else {
+                $version = 0;
+            }
+
+            $c->stash('app_build_version' => $version);
+            return $version;
+        }
+    );
+
+    $c->helper(
         remote_addr => sub {
             my $c = shift;
 

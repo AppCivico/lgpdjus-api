@@ -242,7 +242,7 @@ sub _format_ticket_detail {
     my $detail = $r->html_detail(c => $opts{c});
 
     ## CODIGO TEMPORARIO!!
-    if ($opts{is_app}) {
+    if ($opts{is_app} && $opts{c}->app_build_version() < 41) {
 
         my $str = '';
         foreach my $r (reverse @responses) {
