@@ -105,8 +105,11 @@ sub tr_detail_body {
           . ticket_xml_escape($text) . '</p>';
     }
 
+    my $border = $c->app_build_version() < 41 ? 'border: 1px solid #eee; padding: 10px;' : '';
     $content
-      .= '<div style="border: 1px solid #eee; padding: 10px; color: #3C3C3BBF; font-weight: 300; line-height: 17pt; font-size: 14pt; margin: 0;">';
+      .= '<div style="'
+      . $border
+      . 'color: #3C3C3BBF; font-weight: 300; line-height: 17pt; font-size: 14pt; margin: 0;">';
 
     $content .= sprintf '<div style="font-size: 12pt; line-height: 14pt; color: #646464">Horário: %s</div>',
       $dt->dmy('/') . ' ' . $dt->hms;
