@@ -101,8 +101,8 @@ sub create_ticket_response_reply {
 
     my $form = $c->validate_request_params(
         response_id => {required => 1, type => 'Int'},
-        content     => {required => 1, type => 'Str', max_length => $ENV{TICKET_CONTENT_MAX_LENGTH}, label => 'Resposta'},
-        media_id    => {required => 0, type => 'Str', max_length => 500},
+        content  => {required => 1, type => 'Str', max_length => $ENV{TICKET_CONTENT_MAX_LENGTH}, label => 'Resposta'},
+        media_id => {required => 0, type => 'Str', max_length => 500},
     );
     my $user_obj = $opts{user_obj} or confess 'missing user_obj';
     my $ticket   = $opts{ticket}   or confess 'missing ticket';
@@ -230,15 +230,18 @@ sub _format_ticket_detail {
 
     my @responses = map {
         +{
-            id      => $_->id(),
-            body => $_->tr_detail_body($opts{c}),
-            detail  => $_->tr_detail_hash($opts{c}),
-            meta    => {
+            id     => $_->id(),
+            body   => $_->tr_detail_body($opts{c}),
+            detail => $_->tr_detail_hash($opts{c}),
+            meta   => {
                 can_reply => $_->tr_can_reply(),
             },
             _type => $_->type()
         }
     } $r->tickets_responses->search(undef, {order_by => 'created_on'})->all;
+
+    @responses = reverse @responses if $opts{c}->app_build_version() > 41;
+
     my $detail = $r->html_detail(c => $opts{c});
 
     ## CODIGO TEMPORARIO!!
