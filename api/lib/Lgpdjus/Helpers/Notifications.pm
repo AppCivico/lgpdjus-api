@@ -164,7 +164,7 @@ sub user_notifications {
         $meta = delete $r->{_meta};
 
         if ($meta->{ticket_id}) {
-            $r->{expand_screen} = '/tickets?id=' . $meta->{ticket_id};
+            $r->{expand_screen} = '/mainboard/tickets/' . $meta->{ticket_id};
         }
     }
 
