@@ -246,7 +246,7 @@ sub _format_ticket_detail {
 
         my $str = '';
         foreach my $r (reverse @responses) {
-            next if $r->{_type} eq 'request-additional-info';
+            next if delete $r->{_type} eq 'request-additional-info';
 
             $str .= $r->{body};
         }

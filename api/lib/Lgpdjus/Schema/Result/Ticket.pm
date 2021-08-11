@@ -419,9 +419,18 @@ sub action_ask_add_info {
 sub action_verify_cliente {
     my ($self, $c, %opts) = @_;
 
-    my $message    = $opts{message}          // confess 'missing message';
     my $verified   = $opts{verified}         // confess 'missing verified';
     my $admin_user = $c->stash('admin_user') // confess 'missing stash.admin_user';
+
+    my $message = $opts{message};
+    if (!$verified && !$message) {
+        die {
+            error  => 'form_error',  field   => 'response_content',
+            reason => 'is_required', message => 'É necessário escrever uma justificativa para recusar.',
+            status => 400
+        };
+    }
+    $message = 'Verificação finalizada' if !$message;
 
     my $success = 0;
     $c->schema->txn_do(

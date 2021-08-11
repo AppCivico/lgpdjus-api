@@ -31,6 +31,7 @@
             </div>
         </div>
     </div>
+    <img src="https://lgpdjus-api.appcivico.com/email-templates/selo_blockchain.png" />
 
     %= include('parts/pdf_decred');
 

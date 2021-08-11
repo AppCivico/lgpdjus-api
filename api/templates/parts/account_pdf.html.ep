@@ -22,6 +22,7 @@
     <h1>Registro de criação de conta</h1>
 
     <%== stash('account_html') %>
+    <img src="https://lgpdjus-api.appcivico.com/email-templates/selo_blockchain.png" />
 
     %= include('parts/pdf_decred');
 
