@@ -240,7 +240,7 @@ sub _format_ticket_detail {
         }
     } $r->tickets_responses->search(undef, {order_by => 'created_on'})->all;
 
-    @responses = reverse @responses if $opts{c}->app_build_version() > 41;
+    @responses = reverse @responses unless $opts{c}->app_build_version() > 41;
 
     my $detail = $r->html_detail(c => $opts{c});
 
