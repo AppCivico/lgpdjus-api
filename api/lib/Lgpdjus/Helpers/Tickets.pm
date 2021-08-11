@@ -101,7 +101,7 @@ sub create_ticket_response_reply {
 
     my $form = $c->validate_request_params(
         response_id => {required => 1, type => 'Int'},
-        content     => {required => 1, type => 'Str', max_length => $ENV{TICKET_CONTENT_MAX_LENGTH}},
+        content     => {required => 1, type => 'Str', max_length => $ENV{TICKET_CONTENT_MAX_LENGTH}, label => 'Resposta'},
         media_id    => {required => 0, type => 'Str', max_length => 500},
     );
     my $user_obj = $opts{user_obj} or confess 'missing user_obj';
