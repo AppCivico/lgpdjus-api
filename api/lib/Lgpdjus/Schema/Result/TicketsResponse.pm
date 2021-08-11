@@ -78,7 +78,7 @@ sub tr_detail_hash {
     my ($self, $c) = @_;
 
     return {
-        requested_information_text => $self->cliente_reply,
+        requested_information_text => $self->reply_content,
     } if $self->type eq 'request-additional-info';
 
     return {};
