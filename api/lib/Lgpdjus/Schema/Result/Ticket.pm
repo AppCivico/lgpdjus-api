@@ -446,6 +446,7 @@ sub action_verify_cliente {
                         {
                             account_verified             => '1',
                             account_verification_pending => 0,
+                            account_verification_locked  => 0,
                             verified_account_at          => \'now()',
                             verified_account_info        => to_json(
                                 {
@@ -461,6 +462,7 @@ sub action_verify_cliente {
                     $self->cliente->update(
                         {
                             # libera para que ele faça novamente
+                            account_verification_locked  => 0,
                             account_verification_pending => 0,
                             verified_account_info        => to_json(
                                 {

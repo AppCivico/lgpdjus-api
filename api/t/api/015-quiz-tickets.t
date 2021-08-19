@@ -96,15 +96,15 @@ $t->post_ok(
 
 is trace_grep('clientes_quiz_session:created_questionnaire_id'), 7, 'created questionnaire 7';
 
-is $cliente->discard_changes->account_verification_pending, 1, 'account_verification_pending was updated';
+is $cliente->discard_changes->account_verification_locked, 1, 'account_verification_locked was updated';
 
 $t->post_ok(
     '/me/quiz/start',
     {'x-api-key' => $session},
     form => {id => 'verify_account'}
-)->status_is(400, '400 start session if account_verification_pending is true')->json_is('/error', 'quiz_in_progress');
+)->status_is(400, '400 start session if account_verification_locked is true')->json_is('/error', 'quiz_in_progress');
 
-$cliente->update({account_verified => 1, account_verification_pending => 0});
+$cliente->update({account_verified => 1, account_verification_locked => 0});
 $t->post_ok(
     '/me/quiz/start',
     {'x-api-key' => $session},

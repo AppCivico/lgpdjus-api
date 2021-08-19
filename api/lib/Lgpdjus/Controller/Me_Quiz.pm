@@ -85,11 +85,11 @@ sub cancel_quiz_post {
         );
     }
 
-    if ($session->questionnaire->code eq 'verify_account') {
+    if ($session->questionnaire_is_verify()) {
         $user_obj->update(
             {
                 # libera a conta para iniciar outros questionários do tipo verify_account
-                account_verification_pending => 0,
+                account_verification_locked => 0,
             }
         );
     }
@@ -121,12 +121,12 @@ sub start_quiz_post {
             status => 400,
         );
     }
-    elsif ($questionnaire && $questionnaire->{code} eq 'verify_account' && $user_obj->account_verification_pending) {
+    elsif ($questionnaire && $questionnaire->{code} eq 'verify_account' && $user_obj->account_verification_locked) {
         return $c->render(
             json => {
                 error   => 'quiz_in_progress',
                 message =>
-                  'Já existe um processo de validação em progresso. Não podemos iniciar novamente o questionário.'
+                  'Já existe um processo de validação em progresso. Não podemos iniciar uma nova neste momento.'
             },
             status => 400,
         );
@@ -142,7 +142,7 @@ sub start_quiz_post {
     }
     elsif ($questionnaire->{code} ne 'verify_account'
         && !$user_obj->account_verified
-        && !$user_obj->account_verification_pending
+        && !$user_obj->account_verification_locked
         && $questionnaire->{requires_account_verification})
     {
         return $c->render(

@@ -129,6 +129,10 @@ sub generate_ticket {
                 );
                 $self->update({ticket_id => $ticket->id, can_delete => 0});
                 $c->dpo_send_email(ticket => $ticket, template => 'new_ticket');
+
+                # marca como pendente para o admin, apenas depois de criar o ticket
+                $self->cliente->update({account_verification_pending => 1}) if $self->questionnaire_is_verify();
+
             }
         );
     };
@@ -197,6 +201,7 @@ sub build_questionnaire_questions_reply {
     my $stash = from_json($self->stash);
     foreach my $message (@{$stash->{prev_msgs}}) {
         my $content = tt_render($message->{content}, $vars);
+
         # se o conteudo tiver "html" entao será removido tudo e extraido apenas o textos dos elementos
 
         push @quiz, {
@@ -213,6 +218,10 @@ sub build_questionnaire_questions_reply {
         session_id => $self->id,
         quiz       => \@quiz,
     };
+}
+
+sub questionnaire_is_verify {
+    shift->questionnaire->code eq 'verify_account';
 }
 
 1;

@@ -84,6 +84,8 @@ __PACKAGE__->add_columns(
   { data_type => "json", default_value => "{}", is_nullable => 0 },
   "account_verification_pending",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "account_verification_locked",
+  { data_type => "boolean", default_value => \"false", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("idx_219091_email", ["email"]);
@@ -173,8 +175,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-27 17:47:08
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:9ZOzfOerLTIaaJFjVhlP/A
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-08-19 20:57:21
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X0Pyhoh2fey/0MH/0i0hjw
 
 use Carp qw/confess/;
 use Lgpdjus::Utils qw/is_uuid_v4 format_cpf/;

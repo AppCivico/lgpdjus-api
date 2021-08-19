@@ -185,7 +185,7 @@ sub create_quiz_session {
             {
                 # congela a conta para não iniciar outros questionários do
                 # tipo verify_account até a conclusão da solicitação (ou cancelamento)
-                account_verification_pending => 1,
+                account_verification_locked => 1,
             }
         );
     }
@@ -883,7 +883,7 @@ sub process_quiz_session {
 
         $stash->{current_msgs} = $current_msgs = \@kept;
         $session->{responses}  = $responses;
-        $session->{stash} = $stash;    # geralmente é a mesma, mas quando tem reset ou troca, a referencia é uma nova
+        $session->{stash}      = $stash;  # geralmente é a mesma, mas quando tem reset ou troca, a referencia é uma nova
 
         # salva as respostas (vai ser chamado no load_quiz_session)
         $opts{update_db} = 1;
