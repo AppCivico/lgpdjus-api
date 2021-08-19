@@ -238,6 +238,8 @@ sub unft_list {
     my $rs = $c->schema->resultset('NotificationMessage')->search(
         {'me.created_by_admin_user_id' => {'!=' => undef}},
         {
+            join         => 'admin_user',
+            '+columns'   => [{admin_user_name => \"coalesce(nullif(admin_user.first_name,''),admin_user.email)"}],
             order_by     => \'me.id DESC',
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
@@ -278,12 +280,12 @@ sub unft_list {
             }
         },
         html => {
-            rows      => \@rows,
-            has_more  => $has_more,
-            next_page => $has_more ? $next_page : undef,
+            rows                => \@rows,
+            has_more            => $has_more,
+            next_page           => $has_more ? $next_page : undef,
             total_count         => $total_count,
             current_page_number => $current_page,
-            total_page_number   => ceil( $total_count / $rows),
+            total_page_number   => ceil($total_count / $rows),
         },
     );
 }

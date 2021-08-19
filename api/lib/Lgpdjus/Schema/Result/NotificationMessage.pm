@@ -58,6 +58,13 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-27 17:48:19
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:8RuK8/oOd9UnVXTNDmc3Ug
 
+__PACKAGE__->belongs_to(
+    "admin_user",
+    "Lgpdjus::Schema::Result::DirectusUser",
+    {id            => "created_by_admin_user_id"},
+    {is_deferrable => 0, on_delete => "RESTRICT", on_update => "RESTRICT",},
+);
+
 use JSON;
 
 sub meta__count {

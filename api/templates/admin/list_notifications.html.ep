@@ -31,7 +31,8 @@
                 <td title="<%== $r->{content_text} %>" style="max-width: 9em;overflow: hidden;text-overflow: ellipsis">
                     <%== $r->{content_text} %>
                 </td>
-                <td class="text-right">
+                <td class="text-right" style="width: 15em">
+                    Criado por <%== $r->{admin_user_name} %> em <%== $pg_timestamp2human->($r->{created_at}) %><br>
                     <a href="/admin/notifications-message-detail?id=<%== $r->{id} %>"
                         class="btn btn-primary btn-sm">editar</a>
                 </td>
