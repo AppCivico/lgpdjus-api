@@ -19,6 +19,7 @@
 
 <body>
 
+    <img src="https://lgpdjus-api.appcivico.com/email-templates/selo_blockchain.png" />
     <h1>Documento de solicitação <%= $ticket->protocol %> </h1>
 
     <div style="width: 100%; display: table;">
@@ -31,7 +32,6 @@
             </div>
         </div>
     </div>
-    <img src="https://lgpdjus-api.appcivico.com/email-templates/selo_blockchain.png" />
 
     %= include('parts/pdf_decred');
 
