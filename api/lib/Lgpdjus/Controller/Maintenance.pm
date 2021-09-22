@@ -52,4 +52,12 @@ sub housekeeping {
     return $c->render(json => {});
 }
 
+sub housekeepingdb {
+    my $c = shift;
+
+    my $exists = $c->schema->resultset('Configuraco')->next;
+
+    return $c->render(json => {ok => defined $exists ? 1 : 0});
+}
+
 1;

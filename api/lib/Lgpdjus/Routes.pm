@@ -88,6 +88,9 @@ sub register {
     # GET /maintenance/housekeeping
     $maintenance->get('housekeeping')->to(controller => 'Maintenance', action => 'housekeeping');
 
+    # GET /maintenance/ping-db
+    $maintenance->get('ping-db')->to(controller => 'Maintenance', action => 'housekeepingdb');
+
     # PRIVATE ENDPOINTS
     my $authenticated = $r->under()->to(controller => 'JWT', action => 'check_user_jwt');
 
