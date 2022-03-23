@@ -13,7 +13,7 @@ sub check_user_jwt {
 
     # Authenticated
     if ($jwt_key) {
-        $c->log->error("jwt-key: $jwt_key");
+        $c->app->log->info("jwt-key: $jwt_key");
         my $claims = eval { $c->decode_jwt($jwt_key) };
         if ($@) {
             $c->render(
@@ -49,7 +49,7 @@ sub check_user_jwt {
                             columns => ['cliente_id']
                         }
                     )->next;
-                    return undef if !$ret;
+                    return '' if !$ret;
                     return $ret->{cliente_id};
                 }
             );
@@ -65,7 +65,7 @@ sub check_user_jwt {
                 return undef;
             }
             if ( $user_id !~ /^\d+$/a ) {
-                $c->log->error("jwt-key: $jwt_key");
+                $c->log->error( "jwt claims invalid: " . to_json($claims) );
                 $c->render(
                     json => {
                         error   => 'jwt_logout',
