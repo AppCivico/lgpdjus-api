@@ -140,7 +140,9 @@ sub local_get_count_and_inc {
 }
 
 sub redis_get_cached_or_execute {
-    my ($self, $key, $ttl, $cb) = @_;
+    my ($self, $key, $ttl, $cb, $ignore_cache) = @_;
+
+    return $cb->() if ($ignore_cache);
 
     my $redis     = $self->redis;
     my $cache_key = $ENV{REDIS_NS} . $key;

@@ -36,6 +36,8 @@ sub check_user_jwt {
             # usar o redis pra nao precisar ir toda hora no banco de dados
             my $session_id = $claims->{ses};
             my $cache_key  = "CaS:$session_id";
+            my $ignore_cache = 0;
+          AGAIN:
             my $user_id    = $kv->redis_get_cached_or_execute(
                 $cache_key,
                 300,    # 5min
@@ -51,7 +53,8 @@ sub check_user_jwt {
                     )->next;
                     return '' if !$ret;
                     return $ret->{cliente_id};
-                }
+                },
+                $ignore_cache
             );
             if ( !$user_id ) {
                 $c->render(
@@ -65,15 +68,9 @@ sub check_user_jwt {
                 return undef;
             }
             if ( $user_id !~ /^\d+$/a ) {
-                $c->log->error( "invalid return from redis_get_cached_or_execute should be a number: $user_id" );
-                $c->render(
-                    json => {
-                        error   => 'jwt_logout',
-                        message => "Está sessão não é válida."
-                    },
-                    status => 403
-                );
-                return undef;
+                $c->log->error( "invalid return from redis_get_cached_or_execute should be a number: $user_id, running again with ignore cache" );
+                $ignore_cache++;
+                goto AGAIN;
             }
 
             Log::Log4perl::NDC->remove;
