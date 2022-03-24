@@ -142,14 +142,15 @@ sub local_get_count_and_inc {
 sub redis_get_cached_or_execute {
     my ($self, $key, $ttl, $cb) = @_;
 
-    my $iteration = 0;
     my $redis     = $self->redis;
     my $cache_key = $ENV{REDIS_NS} . $key;
 
   AGAIN:
     my $result = $redis->get($cache_key);
     if ($result) {
-        return sereal_decode_with_object($sereal_dec, $result);
+        my $value = sereal_decode_with_object($sereal_dec, $result);
+        get_logger()->debug("redis_get_cached_or_execute: $cache_key returning " . $value) if (ref $value eq '');
+        return $value;
     }
     else {
 
@@ -165,7 +166,7 @@ sub redis_get_cached_or_execute {
         my $ret = $cb->();
 
         $redis->setex($cache_key, $ttl, sereal_encode_with_object($sereal_enc, $ret));
-
+        get_logger()->debug("redis_get_cached_or_execute: $cache_key setting  " . $ret) if (ref $value eq '');
         return $ret;
 
     }
