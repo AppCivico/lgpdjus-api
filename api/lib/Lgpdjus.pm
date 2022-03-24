@@ -54,7 +54,7 @@ sub startup {
     # Subprocess (do small background jobs without locking worker)
     $self->plugin('Subprocess');
 
-    $self->plugin('AccessLog');
+    $self->plugin('AccessLog' => {log => sub{get_logger()->info(@_)}});
 
     # Helpers.
     $self->controller_class('Lgpdjus::Controller');
