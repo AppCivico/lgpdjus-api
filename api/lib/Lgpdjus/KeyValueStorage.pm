@@ -166,7 +166,7 @@ sub redis_get_cached_or_execute {
         my $ret = $cb->();
 
         $redis->setex($cache_key, $ttl, sereal_encode_with_object($sereal_enc, $ret));
-        get_logger()->debug("redis_get_cached_or_execute: $cache_key setting  " . $ret) if (ref $value eq '');
+        get_logger()->debug("redis_get_cached_or_execute: $cache_key setting  " . $ret) if (ref $ret eq '');
         return $ret;
 
     }
