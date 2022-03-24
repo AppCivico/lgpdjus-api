@@ -65,7 +65,7 @@ sub check_user_jwt {
                 return undef;
             }
             if ( $user_id !~ /^\d+$/a ) {
-                $c->log->error( "jwt claims invalid: " . to_json($claims) );
+                $c->log->error( "invalid return from redis_get_cached_or_execute should be a number: $user_id" );
                 $c->render(
                     json => {
                         error   => 'jwt_logout',
@@ -93,6 +93,8 @@ sub check_user_jwt {
 
             # Can continue
             return 1;
+        }else{
+            $c->log->error("jwt is not valid");
         }
     }
     $c->log->error("missing jwt-key");
