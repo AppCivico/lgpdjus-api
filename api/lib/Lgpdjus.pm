@@ -85,6 +85,13 @@ sub startup {
         }
     );
 
+    $self->hook(
+        before_dispatch => sub {
+            my $c = shift;
+            $c->req->request_id($c->req->headers->header('CF-RAY') || $c->req->request_id());
+        }
+    );
+
 
 }
 
