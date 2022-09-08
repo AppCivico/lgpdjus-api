@@ -4,6 +4,7 @@ use FindBin qw($RealBin);
 use Config::General;
 
 require Exporter;
+use Mojo::Util qw(url_escape);
 
 our @ISA    = qw(Exporter);
 our @EXPORT = qw(get_schema get_connect_info);
@@ -96,7 +97,7 @@ sub get_mojo_pg {
         sprintf(
             'postgresql://%s:%s@%s:%s/%s',
             $ENV{POSTGRESQL_USER}     || 'postgres',
-            $ENV{POSTGRESQL_PASSWORD} || 'pass',
+            url_escape($ENV{POSTGRESQL_PASSWORD}) || 'pass',
             $ENV{POSTGRESQL_HOST}     || 'localhost',
             $ENV{POSTGRESQL_PORT}     || 25432,
             $ENV{POSTGRESQL_DBNAME}   || 'lgpdjus_dev_persistent',
