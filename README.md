@@ -6,7 +6,7 @@ Abaixo instruções para uma sugestão para o deploy em Produção/Homologação
 
 ## requisitos do mínimos de sistema
 
-- PostgreSQL 12 ou superior (testado na versão 12 e 13)
+- PostgreSQL 14 ou superior (precisa do gen_random_uuid())
 - docker community edition 19 or maior (testado na 19.03.12)
 - docker-compose 1.21 ou superior
 - Nginx ou outro proxy reverso para finalização do HTTPS
