@@ -1,4 +1,4 @@
-version: '3.2'
+version: '3.5'
 services:
   lgpdjus_api:
     container_name: lgpdjus_api
