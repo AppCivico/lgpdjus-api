@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     networks:
       - html2pdf
-      #- database
+      - database
       - cache
       - minio
       - external_network
@@ -16,7 +16,6 @@ services:
       - ../data/lgpdjus-data/:/data/
       - ./api/:/src/
     environment:
-      API_WORKERS: "5"
       REDIS_SERVER: "${REDIS_SERVER}"
       REDIS_NS: "${REDIS_NS}"
       POSTGRESQL_HOST: "${POSTGRESQL_HOST}"
@@ -25,7 +24,7 @@ services:
       POSTGRESQL_USER: "${POSTGRESQL_USER}"
       POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
     depends_on:
-        #- lgpdjus_db_pg
+        - lgpdjus_db_pg
         - redis
         - minio
 
@@ -33,14 +32,14 @@ services:
     container_name: lgpdjus_emaildb
     image: eokoe/emaildb
     restart: unless-stopped
-    #networks:
-    #    - database
+    networks:
+        - database
     volumes:
         - ../data/emaildb-data/:/data/
         - /home/ubuntu/email-db-service/:/src/
         # update to your path of eokoe/email-db-service
-#    depends_on:
-#        - lgpdjus_db_pg
+    depends_on:
+        - lgpdjus_db_pg
     environment:
       VARIABLES_JSON_IS_UTF8: 1
       EMAILDB_DB_HOST: "${POSTGRESQL_HOST}"
@@ -53,10 +52,10 @@ services:
     container_name: lgpdjus_directus
     image: directus/directus:9.0.0-rc.87
     restart: unless-stopped
-#    networks:
-#        - database
-#    depends_on:
-#      - lgpdjus_db_pg
+    networks:
+        - database
+    depends_on:
+      - lgpdjus_db_pg
     ports:
       - "172.17.0.1:${LGPDJUS_DIRECTUS_PORT}:8055"
     environment:
@@ -85,23 +84,23 @@ services:
     networks:
       - html2pdf
 
-#  lgpdjus_db_pg:
-#    container_name: lgpdjus_db_pg
-#    image: postgres:13.3
-#    volumes:
-#      - ../data/lgpdjus_pg_data:/var/lib/postgresql/data
-#    environment:
-#      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}"
-#      POSTGRES_USER: "${POSTGRESQL_USER}"
-#      POSTGRES_DB: "${POSTGRESQL_DBNAME}"
-#    networks:
-#      - database
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-file: '100'
-#        max-size: 1m
-#    restart: unless-stopped
+  lgpdjus_db_pg:
+    container_name: lgpdjus_db_pg
+    image: postgres:13.3
+    volumes:
+      - ../data/lgpdjus_pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}"
+      POSTGRES_USER: "${POSTGRESQL_USER}"
+      POSTGRES_DB: "${POSTGRESQL_DBNAME}"
+    networks:
+      - database
+    logging:
+      driver: "json-file"
+      options:
+        max-file: '100'
+        max-size: 1m
+    restart: unless-stopped
 
   metabase_db_pg:
     container_name: metabase_db_pg
@@ -127,7 +126,7 @@ services:
     restart: unless-stopped
     networks:
         - database_metabase
-        #- database
+        - database
         - external_network
     depends_on:
         - metabase_db_pg
@@ -186,9 +185,9 @@ services:
 
 networks:
     external_network:
-    #database:
-    #  name: lgdpjus_db_network
-    #  driver: bridge
+    database:
+      name: lgdpjus_db_network
+      driver: bridge
     database_metabase:
       name: metabase_db_network
       driver: bridge
