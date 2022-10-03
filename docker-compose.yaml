@@ -16,6 +16,7 @@ services:
       - ../data/lgpdjus-data/:/data/
       - ./api/:/src/
     environment:
+      API_WORKERS: "5"
       REDIS_SERVER: "${REDIS_SERVER}"
       REDIS_NS: "${REDIS_NS}"
       POSTGRESQL_HOST: "${POSTGRESQL_HOST}"
@@ -84,23 +85,23 @@ services:
     networks:
       - html2pdf
 
-  lgpdjus_db_pg:
-    container_name: lgpdjus_db_pg
-    image: postgres:13.3
-    volumes:
-      - ../data/lgpdjus_pg_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}"
-      POSTGRES_USER: "${POSTGRESQL_USER}"
-      POSTGRES_DB: "${POSTGRESQL_DBNAME}"
-    networks:
-      - database
-    logging:
-      driver: "json-file"
-      options:
-        max-file: '100'
-        max-size: 1m
-    restart: unless-stopped
+#  lgpdjus_db_pg:
+#    container_name: lgpdjus_db_pg
+#    image: postgres:13.3
+#    volumes:
+#      - ../data/lgpdjus_pg_data:/var/lib/postgresql/data
+#    environment:
+#      POSTGRES_PASSWORD: "${POSTGRESQL_PASSWORD}"
+#      POSTGRES_USER: "${POSTGRESQL_USER}"
+#      POSTGRES_DB: "${POSTGRESQL_DBNAME}"
+#    networks:
+#      - database
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-file: '100'
+#        max-size: 1m
+#    restart: unless-stopped
 
   metabase_db_pg:
     container_name: metabase_db_pg
