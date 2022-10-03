@@ -25,7 +25,7 @@ services:
       POSTGRESQL_USER: "${POSTGRESQL_USER}"
       POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
     depends_on:
-        - lgpdjus_db_pg
+        #- lgpdjus_db_pg
         - redis
         - minio
 
@@ -39,8 +39,8 @@ services:
         - ../data/emaildb-data/:/data/
         - /home/ubuntu/email-db-service/:/src/
         # update to your path of eokoe/email-db-service
-    depends_on:
-        - lgpdjus_db_pg
+#    depends_on:
+#        - lgpdjus_db_pg
     environment:
       VARIABLES_JSON_IS_UTF8: 1
       EMAILDB_DB_HOST: "${POSTGRESQL_HOST}"
@@ -55,8 +55,8 @@ services:
     restart: unless-stopped
     networks:
         - database
-    depends_on:
-      - lgpdjus_db_pg
+#    depends_on:
+#      - lgpdjus_db_pg
     ports:
       - "172.17.0.1:${LGPDJUS_DIRECTUS_PORT}:8055"
     environment:
@@ -186,9 +186,9 @@ services:
 
 networks:
     external_network:
-    database:
-      name: lgdpjus_db_network
-      driver: bridge
+    #database:
+    #  name: lgdpjus_db_network
+    #  driver: bridge
     database_metabase:
       name: metabase_db_network
       driver: bridge
