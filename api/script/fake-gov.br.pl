@@ -2,6 +2,9 @@ use Mojolicious::Lite -signatures;
 use Cache::File;
 use Mojo::URL;
 use JSON;
+use Crypt::JWT qw(encode_jwt);
+
+# http://127.0.0.1:3000/authorize?response_type=code&client_id=foo&scope=bar&redirect_uri=http%3A%2F%2Flocalhost%2Fgov-br-get-token&nounce=not&state=jwt&code_challenge=foo&&code_challenge_method=S256
 
 my $cache = Cache::File->new(
     cache_root      => '/tmp/govbrcache',
@@ -36,14 +39,87 @@ post '/save-and-redirect' => sub ($c) {
     my $query = $cache->get("session:$code:query");
     return $c->render(template => 'err', message => 'form expirou') unless $query;
     $query = from_json($query);
-use DDP; p $query;
+
     my $redirect_uri = $query->{redirect_uri};
-    my $state = $query->{'state'};
+    my $state        = $query->{'state'};
 
     my $url = Mojo::URL->new($redirect_uri);
     $url->query({'state' => $state, code => $code});
-use DDP; p $url;
+
     $c->redirect_to($url->to_string());
+};
+
+post '/token' => sub ($c) {
+    my $form = $c->req->params->to_hash;
+
+    return $c->render(template => 'err', message => 'inválido grant_type')
+      if !$form->{grant_type} || $form->{grant_type} ne 'authorization_code';
+    return $c->render(template => 'err', message => 'faltando code')          unless $form->{code};
+    return $c->render(template => 'err', message => 'faltando redirect_uri')  unless $form->{redirect_uri};
+    return $c->render(template => 'err', message => 'faltando code_verifier') unless $form->{code_verifier};
+
+    my $code  = $form->{code};
+    my $query = $cache->get("session:$code:query");
+    return $c->render(template => 'err', message => 'form expirou') unless $query;
+    $query = from_json($query);
+
+    $c->render(
+        json => {
+
+            access_token => encode_jwt(
+                payload => {
+
+                    "jti"   => reverse($code),
+                    "aud"   => $query->{client_id},
+                    "iss"   => "https://sso.staging.acesso.gov.br/",
+                    "iat"   => time(),
+                    "exp"   => time() + 3600,
+                    "uat"   => "...",
+                    "scope" => [
+                        "govbr_confiabilidades",
+                        "email",
+                        "profile",
+                        "openid"
+                    ],
+                    "sub"                => $query->{cpf},
+                    "preferred_username" => $query->{cpf},
+                    "amr"                => ["passwd"],
+                    "nonce"              => $query->{nonce}
+                },
+                alg => 'HS256',
+                key => 'secret'
+            ),
+            id_token => encode_jwt(
+                payload => {
+                    "jti"                => reverse($code),
+                    "sub"                => $query->{cpf},
+                    "preferred_username" => $query->{cpf},
+                    "aud"                => $query->{client_id},
+                    "iss"                => "https://sso.staging.acesso.gov.br/",
+                    "iat"                => time(),
+                    "exp"                => time() + 3600,
+                    "scope"              => [
+                        "govbr_confiabilidades",
+                        "email",
+                        "profile",
+                        "openid"
+                    ],
+                    "amr"            => ["passwd"],
+                    "nonce"          => $query->{nounce},
+                    "name"           => $query->{name},
+                    "email"          => $query->{email},
+                    "email_verified" => $query->{email_verified},
+                    "picture"        => "https://sso.staging.acesso.gov.br/userinfo/picture",
+                    "profile"        => "https://contas.staging.acesso.gov.br"
+                },
+                alg => 'HS256',
+                key => 'secret'
+            ),
+            token_type => 'Bearer',
+            expires_in => '3600',
+            scope      => 'govbr_confiabilidades email profile openid',
+        }
+    );
 };
 
 
@@ -77,16 +153,6 @@ __DATA__
 
   <label for="name">Nome *:</label>
   <input required type="text" id="name" name="name"><br><br>
-
-  <label for="phone_number">phone_number:</label>
-  <input type="text" id="phone_number" name="phone_number"><br><br>
-
-  <label for="phone_number_verified">phone_number_verified:</label>
-  <select id="phone_number_verified" name="phone_number_verified">
-      <option value="true">true</option>
-      <option value="false">false</option>
-  </select>
-  <br><br>
 
   <label for="email">email:</label>
   <input type="email" id="email" name="email"><br><br>
