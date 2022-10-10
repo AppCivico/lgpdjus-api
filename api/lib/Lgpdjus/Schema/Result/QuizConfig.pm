@@ -31,10 +31,9 @@ __PACKAGE__->add_columns(
   { data_type => "timestamp with time zone", is_nullable => 1 },
   "type",
   {
-    data_type => "varchar",
-    default_value => \"null",
+    data_type   => "text",
     is_nullable => 0,
-    size => 100,
+    original    => { data_type => "varchar" },
   },
   "code",
   {
@@ -44,7 +43,7 @@ __PACKAGE__->add_columns(
     size => 100,
   },
   "question",
-  { data_type => "text", default_value => \"null", is_nullable => 0 },
+  { data_type => "text", is_nullable => 0 },
   "yesnogroup",
   { data_type => "json", is_nullable => 1 },
   "intro",
@@ -132,12 +131,12 @@ __PACKAGE__->belongs_to(
   "questionnaire",
   "Lgpdjus::Schema::Result::Questionnaire",
   { id => "questionnaire_id" },
-  { is_deferrable => 0, on_delete => "CASCADE", on_update => "CASCADE" },
+  { is_deferrable => 0, on_delete => "SET NULL", on_update => "NO ACTION" },
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 14:50:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:yug50TQJiYCC/ZbhaWzRmA
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-10-09 22:51:46
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vn5ju5DPjgyp4tVF2rmtPg
 
 # ALTER TABLE quiz_config ADD FOREIGN KEY (questionnaire_id) REFERENCES questionnaires(id) ON DELETE CASCADE ON UPDATE cascade;
 =pod

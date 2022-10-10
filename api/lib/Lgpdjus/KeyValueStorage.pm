@@ -128,6 +128,11 @@ sub redis_del {
     $self->redis->del($ENV{REDIS_NS} . $key);
 }
 
+sub redis_ttl {
+    my ($self, $key) = @_;
+    $self->redis->ttl($ENV{REDIS_NS} . $key);
+}
+
 sub local_get_count_and_inc {
     my ($self, %conf) = @_;
 

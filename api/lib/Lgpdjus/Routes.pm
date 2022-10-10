@@ -11,6 +11,11 @@ sub register {
     # POST /login
     $r->post('login')->to(controller => 'Login', action => 'post');
 
+    # POST /login-govbr
+    $r->post('login-govbr')->to(controller => 'Login', action => 'govbr_post');
+    $r->get('status-govbr')->to(controller => 'Login', action => 'govbr_status_get');
+    $r->get('gov-br-get-token')->to(controller => 'Login', action => 'govbr_get_token');
+
     # POST /reset-password
     $r->post('reset-password/request-new')->to(controller => 'ResetPassword', action => 'request_new');
     $r->post('reset-password/write-new')->to(controller => 'ResetPassword', action => 'write_new');

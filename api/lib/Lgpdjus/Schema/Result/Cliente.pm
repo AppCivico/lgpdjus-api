@@ -86,6 +86,16 @@ __PACKAGE__->add_columns(
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
   "account_verification_locked",
   { data_type => "boolean", default_value => \"false", is_nullable => 0 },
+  "email_existente",
+  { data_type => "boolean", default_value => \"true", is_nullable => 0 },
+  "govbr_nivel",
+  {
+    data_type   => "text",
+    is_nullable => 1,
+    original    => { data_type => "varchar" },
+  },
+  "govbr_info",
+  { data_type => "json", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("idx_219091_email", ["email"]);
@@ -175,8 +185,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-08-19 20:57:21
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X0Pyhoh2fey/0MH/0i0hjw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-10-08 15:04:18
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:1VXBkBMITw8GnNfoQiZczQ
 
 use Carp qw/confess/;
 use Lgpdjus::Utils qw/is_uuid_v4 format_cpf/;
