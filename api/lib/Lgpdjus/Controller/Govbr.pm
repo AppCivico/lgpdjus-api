@@ -21,7 +21,22 @@ sub web_retorno_logout {
     return $c->render(html => {});
 }
 
+sub web_textos {
+    my $c = shift;
 
+    my $query = $c->req->params->to_hash;
+    $c->stash(texto    => $query->{texto});
+    $c->stash(sucesso  => $query->{sucesso});
+    $c->stash(template => 'govbr/texto');
+
+    return $c->render(html => {});
+}
+
+# /permissoes-e-contas
+# /recurso-acessibilidade
+# - recurso_acessibilidade_ios
+# - recurso_acessibilidade_android
+# /govbr-niveis
 
 
 1;

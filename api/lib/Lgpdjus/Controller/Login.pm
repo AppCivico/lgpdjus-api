@@ -223,8 +223,8 @@ sub govbr_status_get {
 
     # recortando o IPV6 para apenas o prefixo (18 chars)
     $c->stash(apply_rps_on => 'login' . substr($remote_ip, 0, 18));
-    $c->apply_request_per_second_limit(3,   1);
-    $c->apply_request_per_second_limit(100, 60);
+    #$c->apply_request_per_second_limit(3,   1);
+    #$c->apply_request_per_second_limit(100, 60);
 
     my $decoded_id;
 

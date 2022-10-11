@@ -1,0 +1,7 @@
+<main role="main">
+    <div class="divgray">
+        <p class="alert <%= stash('sucesso')  ? 'alert-success' : 'alert-danger' %>">
+            <%= stash('texto') %>
+        </p>
+    </div>
+</main>
