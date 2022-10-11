@@ -223,6 +223,7 @@ sub govbr_status_get {
 
     # recortando o IPV6 para apenas o prefixo (18 chars)
     $c->stash(apply_rps_on => 'login' . substr($remote_ip, 0, 18));
+
     #$c->apply_request_per_second_limit(3,   1);
     #$c->apply_request_per_second_limit(100, 60);
 
@@ -384,23 +385,22 @@ sub govbr_get_token {
     use DDP;
     p $params;
 
-    my $state = eval { $c->decode_jwt($params->{'state'}); };
+    my $redirect = $ENV{GOVBR_SUCESS_URL} || '/textos';
+    my $state    = eval { $c->decode_jwt($params->{'state'}); };
     use DDP;
     p $state;
     if (!$state || $state->{typ} ne 'govbr') {
-        return $c->render(
-            text   => 'Erro ao validar sessão do GovBr, feche o aplicativo e comece novamente.',
-            status => 400,
+        return $c->redirect_to(
+            Mojo::URL->new($redirect)->query(
+                {sucesso => 0, texto => 'Erro ao validar sessão do GovBr, feche o aplicativo e comece novamente.'}
+            )
         );
     }
+
     my $session = $c->schema->resultset('GovbrSessionLog')->find($state->{id});
-    die {
-        error   => 'govbr_invalid_token',
-        message => 'Erro ao buscar sessão, feche o aplicativo e comece novamente.',
-    } unless $session;
-
-
-    my $success_url = $ENV{GOVBR_SUCESS_URL} || '/?message=retorne-ao-app';
+    return $c->redirect_to(Mojo::URL->new($redirect)
+          ->query({sucesso => 0, texto => 'Erro ao buscar sessão, feche o aplicativo e comece novamente'}))
+      unless $session;
 
     my $url = Mojo::URL->new($ENV{GOVBR_ENDPOINT} . '/token');
     $c->render_later();
@@ -420,10 +420,9 @@ sub govbr_get_token {
 
             if (!$json->{access_token} || !$json->{id_token}) {
                 $c->log->info("Faltando campos na resposta GovBR: " . $tx->result->to_string());
-                return $c->render(
-                    text   => 'Erro ao consultar serviço do GovBR',
-                    status => 500,
-                );
+
+                return $c->redirect_to(
+                    Mojo::URL->new($redirect)->query({sucesso => 0, texto => 'Erro ao consultar serviço do GovBR'}));
             }
 
             my $keylist = &get_jwk_kids($c, $ENV{GOVBR_JWK_URI});
@@ -461,10 +460,11 @@ sub govbr_get_token {
 
             if (!$access_token || !$id_token) {
                 $c->log->info("JWT não bate com JWK: " . $tx->result->to_string());
-                return $c->render(
-                    text   => 'Erro ao consultar serviço do GovBR',
-                    status => 500,
-                );
+
+                return $c->redirect_to(
+                    Mojo::URL->new($redirect)->query({sucesso => 0, texto => 'Erro ao consultar serviço do GovBR'}));
+
+
             }
 
             my $found_obj = $c->schema->resultset('Cliente')->search(
@@ -481,16 +481,16 @@ sub govbr_get_token {
                 }
             );
 
-            $c->redirect_to($success_url);
+            $c->redirect_to(
+                Mojo::URL->new($redirect)->query({sucesso => 1, texto => 'Sucesso ao entrar, retorne ao aplicativo.'}));
         }
     )->catch(
         sub {
             my $err = shift;
             $c->log->info($err);
-            $c->render(
-                text   => 'Erro ao consultar serviço do GovBR',
-                status => 500,
-            );
+
+            return $c->redirect_to(
+                Mojo::URL->new($redirect)->query({sucesso => 0, texto => 'Erro ao consultar serviço do GovBR'}));
         }
     );
 }
