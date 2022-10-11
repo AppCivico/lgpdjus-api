@@ -23,6 +23,9 @@ services:
       POSTGRESQL_DBNAME: "${POSTGRESQL_DBNAME}"
       POSTGRESQL_USER: "${POSTGRESQL_USER}"
       POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
+      GOVBR_SECRET: "${GOVBR_SECRET}"
+      GOVBR_CLIENT_ID: "${GOVBR_CLIENT_ID}"
+      GOVBR_SUCESS_URL: "${GOVBR_SUCESS_URL}"
     depends_on:
         - lgpdjus_db_pg
         - redis
