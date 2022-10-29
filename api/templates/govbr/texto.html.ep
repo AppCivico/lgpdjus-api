@@ -5,3 +5,8 @@
         </p>
     </div>
 </main>
+<% if ( stash('sucesso') ){%>
+<script>
+    window.location.replace("lgpdjus://authorized");
+</script>
+<% } %>
