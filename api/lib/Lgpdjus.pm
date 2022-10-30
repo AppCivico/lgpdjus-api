@@ -15,6 +15,8 @@ use Lgpdjus::Controller::Me;
 sub startup {
     my $self = shift;
 
+    $ENV{GOVBR_ENABLE} ||= 0;
+
     # Config.
     Lgpdjus::Config::setup($self);
 
@@ -54,7 +56,11 @@ sub startup {
     # Subprocess (do small background jobs without locking worker)
     $self->plugin('Subprocess');
 
-    $self->plugin('AccessLog' => {log => sub{get_logger()->info(@_)}});
+    $self->plugin(
+        'AccessLog' => {
+            log => sub { get_logger()->info(@_) }
+        }
+    );
 
     # Helpers.
     $self->controller_class('Lgpdjus::Controller');

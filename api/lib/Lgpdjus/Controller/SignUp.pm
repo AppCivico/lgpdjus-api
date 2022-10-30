@@ -19,6 +19,13 @@ my $max_errors_in_24h = $ENV{MAX_CPF_ERRORS_IN_24H} || 20;
 sub post {
     my $c = shift;
 
+    if ($ENV{GOVBR_ENABLE}) {
+        die {
+            error   => 'login_disabled',
+            message => 'Versão do aplicativo não é mais aceita, por favor, atualize o aplicativo para continuar.',
+        };
+    }
+
     my $params = $c->req->params->to_hash;
     $c->validate_request_params(
         dry => {required => 1, type => 'Int'},

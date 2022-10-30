@@ -31,6 +31,13 @@ my $govauth = encode_base64($ENV{GOVBR_CLIENT_ID} . ':' . $ENV{GOVBR_SECRET}, ''
 sub post {
     my $c = shift;
 
+    if ($ENV{GOVBR_ENABLE}) {
+        die {
+            error   => 'login_disabled',
+            message => 'Versão do aplicativo não é mais aceita, por favor, atualize o aplicativo para continuar.',
+        };
+    }
+
     my $params = $c->req->params->to_hash;
     $c->validate_request_params(
         email       => {max_length => 200, required => 1, type => EmailAddress},
