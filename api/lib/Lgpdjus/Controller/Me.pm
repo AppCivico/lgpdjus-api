@@ -94,14 +94,16 @@ sub me_update {
         email   => {max_length => 200, required => 0, type => EmailAddress},
     );
 
-    if ((exists $valid->{email} && $valid->{email}) || (exists $valid->{senha} && $valid->{senha})) {
-        my $data = $c->validate_request_params(
-            senha_atual => {max_length => 200, required => 1, type => 'Str'},
-        );
+    unless ($ENV{GOVBR_ENABLE}) {
+        if ((exists $valid->{email} && $valid->{email}) || (exists $valid->{senha} && $valid->{senha})) {
+            my $data = $c->validate_request_params(
+                senha_atual => {max_length => 200, required => 1, type => 'Str'},
+            );
 
-        my $senha = sha256_hex($data->{senha_atual});
-        if (lc($senha) ne lc($user_obj->senha_sha256())) {
-            $c->reply_invalid_param('Senha atual não confere.', 'form_error', 'senha_atual');
+            my $senha = sha256_hex($data->{senha_atual});
+            if (lc($senha) ne lc($user_obj->senha_sha256())) {
+                $c->reply_invalid_param('Senha atual não confere.', 'form_error', 'senha_atual');
+            }
         }
     }
 
