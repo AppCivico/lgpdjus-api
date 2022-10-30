@@ -37,6 +37,10 @@ sub register {
 
     # GET /web/termos-de-uso
     $web->get('termos-de-uso')->to(action => 'web_termos_de_uso');
+    $web->get('acessibilidade-android')->to(action => 'web_acessibilidade_android');
+    $web->get('acessibilidade-ios')->to(action => 'web_acessibilidade_ios');
+    $web->get('permisoes-e-contas')->to(action => 'web_permisoes_e_contas');
+
 
     # GET /web/politica-privacidade
     $web->get('politica-privacidade')->to(action => 'web_politica_privacidade');

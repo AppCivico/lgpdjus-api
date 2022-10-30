@@ -40,10 +40,10 @@ __PACKAGE__->add_columns(
   },
   "label",
   {
-    data_type     => "text",
-    default_value => "T\xEDtulo",
-    is_nullable   => 0,
-    original      => { data_type => "varchar" },
+    data_type => "varchar",
+    default_value => "[% 1 %]",
+    is_nullable => 0,
+    size => 2000,
   },
   "short_text",
   {
@@ -104,8 +104,8 @@ __PACKAGE__->has_many(
 );
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-10-09 22:51:46
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:4yOKJWCMnxEuxzJNmH2riw
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-10-29 22:00:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:+eJjhnb7vPLQJBKrj7wALw
 
 sub as_hashref {
     my $self = shift;

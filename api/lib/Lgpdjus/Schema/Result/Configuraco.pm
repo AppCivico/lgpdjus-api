@@ -53,12 +53,20 @@ __PACKAGE__->add_columns(
     is_nullable   => 0,
     original      => { data_type => "varchar" },
   },
+  "acessibilidade_android",
+  { data_type => "text", is_nullable => 1 },
+  "acessibilidade_ios",
+  { data_type => "text", is_nullable => 1 },
+  "permisoes_e_contas",
+  { data_type => "text", is_nullable => 1 },
+  "texto_permissao_ouro",
+  { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 #>>>
 
-# Created by DBIx::Class::Schema::Loader v0.07049 @ 2021-07-19 14:50:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0IAgAAI+jW0TCMRnDXflbQ
+# Created by DBIx::Class::Schema::Loader v0.07049 @ 2022-10-29 22:00:16
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:AxuiuJmYdYTBQ6PcqE/gOg
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration

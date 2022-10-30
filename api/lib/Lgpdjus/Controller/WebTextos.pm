@@ -53,4 +53,36 @@ sub web_termos_de_uso {
 }
 
 
+sub web_acessibilidade_android {
+    my $c = shift;
+
+    $c->stash(texto => $c->schema->resultset('Configuraco')->get_column('acessibilidade_android')->next());
+
+    $c->stash(template => 'webfaq/texto');
+
+    return $c->render(html => {});
+}
+
+
+sub web_acessibilidade_ios {
+    my $c = shift;
+
+    $c->stash(texto => $c->schema->resultset('Configuraco')->get_column('acessibilidade_ios')->next());
+
+    $c->stash(template => 'webfaq/texto');
+
+    return $c->render(html => {});
+}
+
+
+sub web_permisoes_e_contas {
+    my $c = shift;
+
+    $c->stash(texto => $c->schema->resultset('Configuraco')->get_column('permisoes_e_contas')->next());
+
+    $c->stash(template => 'webfaq/texto');
+
+    return $c->render(html => {});
+}
+
 1;
