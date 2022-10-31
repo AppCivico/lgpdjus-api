@@ -180,7 +180,7 @@ sub create_quiz_session {
     log_trace(['clientes_quiz_session:created',                  $session->{id}]);
     log_trace(['clientes_quiz_session:created_questionnaire_id', $questionnaire->{id}]);
 
-    if ($questionnaire->{code} eq 'verify_account') {
+    if ($questionnaire->{code} eq 'verify_account' && !$ENV{GOVBR_ENABLE}) {
         $user_obj->update(
             {
                 # congela a conta para não iniciar outros questionários do
