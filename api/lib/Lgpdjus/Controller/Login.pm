@@ -534,7 +534,7 @@ sub get_confiabilidades {
     $c->log->info('get_confiabilidades: ' . to_json($json));
 
     my $nivel  = $json->[0]{id};
-    my $nivels = {
+    my $niveis = {
         '1' => '1 (Bronze)',
         '2' => '2 (Prata)',
         '3' => '3 (Ouro)',
