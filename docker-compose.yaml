@@ -26,6 +26,10 @@ services:
       GOVBR_SECRET: "${GOVBR_SECRET}"
       GOVBR_CLIENT_ID: "${GOVBR_CLIENT_ID}"
       GOVBR_SUCESS_URL: "${GOVBR_SUCESS_URL}"
+      GOVBR_ENABLE: "${GOVBR_SUCESS_URL}"
+      GOVBR_API: "${GOVBR_API}"
+      GOVBR_SELF_LOGOUT: "${GOVBR_SELF_LOGOUT}"
+      GOVBR_JWK_URI: "${GOVBR_JWK_URI}"
     depends_on:
         - lgpdjus_db_pg
         - redis
