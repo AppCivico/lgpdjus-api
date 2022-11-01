@@ -281,6 +281,20 @@ sub govbr_status_get {
         my $found_obj = $c->schema->resultset('Cliente')->search(
             {id => $session->logged_as_client_id, status => {in => $ok_user_status}},
         )->next;
+        my $id_token = from_json($session->id_token_json);
+
+        if ($found_obj->nome_completo ne $id_token->{name}) {
+            $found_obj->update({nome_completo => $id_token->{name}});
+        }
+
+        if ($found_obj->email ne $id_token->{email}) {
+
+            if ($id_token->{email}) {
+                $c->schema->resultset('Cliente')->search({email => $id_token->{email}})
+                  ->update({email => \" 'conflitou' || id || '@' || encode(email::bytea, 'base64')"});
+            }
+            $found_obj->update({email => $id_token->{email}});
+        }
 
         if (!$found_obj->account_verified) {
             my %ret = &get_confiabilidades($c, $found_obj->cpf, $session->access_token);
@@ -310,9 +324,14 @@ sub _cria_conta_pelo_govbr {
     )->next;
     return $found_obj if $found_obj;
 
+    if ($id_token->{email}) {
+        $c->schema->resultset('Cliente')->search({email => $id_token->{email}})
+          ->update({email => \" 'conflitou' || id || '@' || encode(email::bytea, 'base64')"});
+    }
+
     my $row = $c->schema->resultset('Cliente')->create(
         {
-            email           => $id_token->{email} || 'sem-email' . $id_token->{'sub'} . '@example.com',
+            email           => $id_token->{email} || 'cpf' . $id_token->{'sub'} . '@sem-email.com',
             nome_completo   => $id_token->{'name'},              # deixa do jeito que o usuario digitou
             cpf             => $id_token->{'sub'},
             senha_sha256    => '',
