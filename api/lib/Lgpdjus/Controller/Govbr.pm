@@ -12,11 +12,15 @@ sub web_entrar {
     return $c->render(html => {});
 }
 
+# fluxo de logout
+# -> app chama o endereço da api, que manda pro sso do govbr, que depois leva de volta pra ca
+# -> aqui leva de novo pra lgpdjus://loggedout que deve voltar o usuário pro app, que finalmente conclui o logout
 sub web_retorno_logout {
     my $c = shift;
 
-    $c->stash(texto    => 'Você foi deslogado com sucesso. Retorne ao aplicativo para entrar');
-    $c->stash(template => 'webfaq/texto');
+    $c->stash(texto      => 'Você foi deslogado com sucesso. Retorne ao aplicativo para entrar');
+    $c->stash(logged_off => 1);
+    $c->stash(template   => 'webfaq/texto');
 
     return $c->render(html => {});
 }

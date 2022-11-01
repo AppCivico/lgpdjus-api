@@ -13,6 +13,7 @@ use DateTime::Format::Pg;
 use Crypt::JWT qw();
 use Digest::SHA ();
 use MIME::Base64;
+use Lgpdjus::KeyValueStorage;
 
 my $max_email_errors_before_lock   = $ENV{MAX_EMAIL_ERRORS_BEFORE_LOCK}   || 15;
 my $wait_seconds_to_account_unlock = $ENV{WAIT_SECONDS_TO_ACCOUNT_UNLOCK} || 86400;
@@ -25,6 +26,9 @@ $ENV{GOVBR_SCOPE}        ||= 'openid+email+profile+govbr_confiabilidades';
 $ENV{GOVBR_SECRET}       ||= 'secret';
 $ENV{GOVBR_JWK_URI}      ||= 'https://sso.staging.acesso.gov.br/jwk';
 $ENV{GOVBR_SKIP_JWK}     ||= 0;
+$ENV{GOVBR_LOGOUT}
+  ||= 'https://sso.staging.acesso.gov.br/logout?post_logout_redirect_uri=https%3A%2F%2Fhomol-lgpdjus-api.tjsc.jus.br%2Fretorno-logout';
+$ENV{GOVBR_SELF_LOGOUT} ||= 'https://homol-lgpdjus-api.tjsc.jus.br/do-govbr-logout';
 
 my $govauth = encode_base64($ENV{GOVBR_CLIENT_ID} . ':' . $ENV{GOVBR_SECRET}, '');
 
@@ -147,7 +151,7 @@ sub post {
 }
 
 sub _logon {
-    my ($c, $remote_ip, $app_version, $found_obj) = @_;
+    my ($c, $remote_ip, $app_version, $found_obj, $is_govbr) = @_;
 
     my $directus_id      = $found_obj->id;
     my $account_disabled = 0;
@@ -194,6 +198,12 @@ sub _logon {
     my $key = $ENV{REDIS_NS} . 'is_during_login:' . $directus_id;
     $c->kv->redis->setex($key, 20, '1');
 
+    my $token = $c->encode_jwt(
+        {
+            ses => $session_id,
+            typ => 'usr'
+        }
+    );
     $c->render(
         json => {
             (
@@ -203,11 +213,11 @@ sub _logon {
                   )
                 : ()
             ),
-            session => $c->encode_jwt(
-                {
-                    ses => $session_id,
-                    typ => 'usr'
-                }
+            session => $token,
+            (
+                $is_govbr
+                ? (logout_url => Mojo::URL->new($ENV{GOVBR_SELF_LOGOUT})->query({token => $token})->to_string())
+                : ()
             ),
             (is_test() ? (_test_only_id => $directus_id) : ()),
         },
@@ -261,14 +271,14 @@ sub govbr_status_get {
     if ($session->access_token_json && !$session->logged_as_client_id) {
         my $found_obj = &_cria_conta_pelo_govbr($c, $session);
 
-        return &_logon($c, $remote_ip, $state->{a}, $found_obj);
+        return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
     elsif ($session->access_token_json && $session->logged_as_client_id) {
         my $found_obj = $c->schema->resultset('Cliente')->search(
             {id => $session->logged_as_client_id, status => {in => $ok_user_status}},
         )->next;
 
-        return &_logon($c, $remote_ip, $state->{a}, $found_obj);
+        return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
 
     $c->render(
@@ -528,6 +538,25 @@ sub drop_cache_jwk_kids {
     if ($ttl > 60) {
         $c->kv->redis_del($url);
     }
+}
+
+
+sub run_govbr_logout {
+    my $c      = shift;
+    my $params = $c->validate_request_params(
+        token => {max_length => 1024, required => 1, type => 'Str'},
+    );
+
+    my $decoded = eval { $c->decode_jwt($params->{token}); };
+
+    if ($decoded) {
+        my $session_id = $decoded->{ses};
+        $c->schema->resultset('ClientesActiveSession')->search({id => $session_id})->delete;
+
+        Lgpdjus::KeyValueStorage->instance->redis->del($ENV{REDIS_NS} . "CaS:$session_id");
+    }
+
+    $c->redirect_to($ENV{GOVBR_LOGOUT});
 }
 
 1;

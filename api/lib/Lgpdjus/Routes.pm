@@ -19,6 +19,8 @@ sub register {
     $r->get('retorno-logout')->to(controller => 'Govbr', action => 'web_retorno_logout');
     $r->get('textos')->to(controller => 'Govbr', action => 'web_textos');
 
+    $r->get('do-govbr-logout')->to(controller => 'Login', action => 'run_govbr_logout');
+
     # POST /reset-password
     $r->post('reset-password/request-new')->to(controller => 'ResetPassword', action => 'request_new');
     $r->post('reset-password/write-new')->to(controller => 'ResetPassword', action => 'write_new');

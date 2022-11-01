@@ -10,3 +10,9 @@
     window.location.replace("lgpdjus://authorized");
 </script>
 <% } %>
+<% if ( stash('logged_off') ){%>
+<script>
+    window.location.replace("lgpdjus://loggedout");
+</script>
+<% } %>
+
