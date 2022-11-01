@@ -291,7 +291,7 @@ sub govbr_status_get {
 
             if ($id_token->{email}) {
                 $c->schema->resultset('Cliente')->search({email => $id_token->{email}})
-                  ->update({email => \" 'conflitou' || id || '@' || encode(email::bytea, 'base64')"});
+                  ->update({email => \" 'conflitou' || id || '\@' || encode(email::bytea, 'base64')"});
             }
             $found_obj->update({email => $id_token->{email}});
         }
@@ -326,7 +326,7 @@ sub _cria_conta_pelo_govbr {
 
     if ($id_token->{email}) {
         $c->schema->resultset('Cliente')->search({email => $id_token->{email}})
-          ->update({email => \" 'conflitou' || id || '@' || encode(email::bytea, 'base64')"});
+          ->update({email => \" 'conflitou' || id || '\@' || encode(email::bytea, 'base64')"});
     }
 
     my $row = $c->schema->resultset('Cliente')->create(
