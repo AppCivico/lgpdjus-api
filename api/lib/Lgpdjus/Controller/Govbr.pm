@@ -6,7 +6,13 @@ use utf8;
 sub web_entrar {
     my $c = shift;
 
-    $c->stash(texto    => 'Instale o aplicativo LGPDJus para entrar');
+
+    $c->stash(
+        texto      => '',
+        texto_html => $c->schema->resultset('Configuraco')->get_column('texto_pagina_entrar')->next()
+          || 'Instale o aplicativo LGPDJus para entrar com o Gov.br.'
+    );
+    $c->stash(sucesso  => 'govbr/texto');
     $c->stash(template => 'govbr/texto');
 
     return $c->render(html => {});
@@ -18,7 +24,7 @@ sub web_entrar {
 sub web_retorno_logout {
     my $c = shift;
 
-    $c->stash(texto      => 'Você foi deslogado com sucesso. Retorne ao aplicativo para entrar');
+    $c->stash(texto      => 'Você saiu com sucesso. Retornando ao aplicativo...');
     $c->stash(logged_off => 1);
     $c->stash(template   => 'govbr/texto');
 

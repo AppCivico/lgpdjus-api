@@ -59,7 +59,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", is_nullable => 1 },
   "permisoes_e_contas",
   { data_type => "text", is_nullable => 1 },
-  "texto_permissao_ouro",
+  "texto_pagina_entrar",
   { data_type => "text", is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");

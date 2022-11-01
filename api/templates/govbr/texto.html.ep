@@ -2,6 +2,7 @@
     <div class="divgray">
         <p class="alert <%= stash('sucesso')  ? 'alert-success' : 'alert-danger' %>">
             <%= stash('texto') %>
+            <%== stash('texto_html') %>
         </p>
     </div>
 </main>

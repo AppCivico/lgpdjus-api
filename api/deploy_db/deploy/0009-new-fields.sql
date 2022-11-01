@@ -7,7 +7,6 @@ alter table configuracoes
 add column acessibilidade_android text,
 add column acessibilidade_ios text,
 add column permisoes_e_contas text,
-add column texto_permissao_ouro text
-;
+add column texto_pagina_entrar text;
 
 COMMIT;
