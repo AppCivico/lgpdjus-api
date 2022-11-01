@@ -525,12 +525,12 @@ sub govbr_get_token {
 sub get_confiabilidades {
     my ($c, $cpf, $auth) = @_;
 
-    my $result
-      = $c->ua->get($ENV{GOVBR_API}
-          . '/confiabilidades/v3/contas/'
-          . $cpf
-          . '/cpf/niveis?response-type=ids' => {'Authorization' => 'Bearer ' . $auth})->result;
-    my $json = $result->json;
+    my $url = $ENV{GOVBR_API} . '/confiabilidades/v3/contas/' . $cpf . '/cpf/niveis?response-type=ids';
+    $c->log->info('get_confiabilidades: ' . $url);
+
+    my $result = $c->ua->get($url => {'Authorization' => 'Bearer ' . $auth})->result;
+    my $json   = $result->json;
+
     $c->log->info('get_confiabilidades: ' . to_json($json));
 
     my $nivel  = $json->[0]{id};
