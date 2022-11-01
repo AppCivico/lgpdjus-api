@@ -527,7 +527,7 @@ sub get_confiabilidades {
 
     my $result
       = $c->ua->get($ENV{GOVBR_API}
-          . 'confiabilidades/v3/contas/'
+          . '/confiabilidades/v3/contas/'
           . $cpf
           . '/cpf/niveis?response-type=ids' => {'Authorization' => 'Bearer ' . $auth})->result;
     my $json = $result->json;
