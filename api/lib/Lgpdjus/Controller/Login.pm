@@ -29,6 +29,7 @@ $ENV{GOVBR_SKIP_JWK}     ||= 0;
 $ENV{GOVBR_LOGOUT}
   ||= 'https://sso.staging.acesso.gov.br/logout?post_logout_redirect_uri=https%3A%2F%2Fhomol-lgpdjus-api.tjsc.jus.br%2Fretorno-logout';
 $ENV{GOVBR_SELF_LOGOUT} ||= 'https://homol-lgpdjus-api.tjsc.jus.br/do-govbr-logout';
+$ENV{GOVBR_API}         ||= 'https://api.staging.acesso.gov.br';
 
 my $govauth = encode_base64($ENV{GOVBR_CLIENT_ID} . ':' . $ENV{GOVBR_SECRET}, '');
 
@@ -271,12 +272,20 @@ sub govbr_status_get {
     if ($session->access_token_json && !$session->logged_as_client_id) {
         my $found_obj = &_cria_conta_pelo_govbr($c, $session);
 
+        my %ret = &get_confiabilidades($c, $found_obj->cpf, $session->access_token);
+        $found_obj->update({%ret});
+
         return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
     elsif ($session->access_token_json && $session->logged_as_client_id) {
         my $found_obj = $c->schema->resultset('Cliente')->search(
             {id => $session->logged_as_client_id, status => {in => $ok_user_status}},
         )->next;
+
+        if (!$found_obj->account_verified) {
+            my %ret = &get_confiabilidades($c, $found_obj->cpf, $session->access_token);
+            $found_obj->update({%ret});
+        }
 
         return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
@@ -512,6 +521,31 @@ sub govbr_get_token {
     );
 }
 
+
+sub get_confiabilidades {
+    my ($c, $cpf, $auth) = @_;
+
+    my $result
+      = $c->ua->get($ENV{GOVBR_API}
+          . 'confiabilidades/v3/contas/'
+          . $cpf
+          . '/cpf/niveis?response-type=ids' => {'Authorization' => 'Bearer ' . $auth})->result;
+    my $json = $result->json;
+    $c->log->info('get_confiabilidades: ' . to_json($json));
+
+    my $nivel  = $json->[0]{id};
+    my $nivels = {
+        '1' => '1 (Bronze)',
+        '2' => '2 (Prata)',
+        '3' => '3 (Ouro)',
+    };
+
+    return {
+        govbr_nivel         => $niveis->{$nivel} || ($nivel . ' (desconhecido)'),
+        account_verified    => $nivel eq '3 (Ouro)',
+        verified_account_at => \'now()',
+    };
+}
 
 sub get_jwk_kids {
     my ($c, $url) = @_;
