@@ -7,7 +7,7 @@ sub web_entrar {
     my $c = shift;
 
     $c->stash(texto    => 'Instale o aplicativo LGPDJus para entrar');
-    $c->stash(template => 'webfaq/texto');
+    $c->stash(template => 'govbr/texto');
 
     return $c->render(html => {});
 }
@@ -20,7 +20,7 @@ sub web_retorno_logout {
 
     $c->stash(texto      => 'Você foi deslogado com sucesso. Retorne ao aplicativo para entrar');
     $c->stash(logged_off => 1);
-    $c->stash(template   => 'webfaq/texto');
+    $c->stash(template   => 'govbr/texto');
 
     return $c->render(html => {});
 }
