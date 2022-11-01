@@ -309,7 +309,7 @@ sub govbr_status_get {
                     }
                 )
             }
-          )
+          );
 
           return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
