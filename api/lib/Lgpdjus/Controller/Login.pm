@@ -301,7 +301,17 @@ sub govbr_status_get {
             $found_obj->update({%ret});
         }
 
-        return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
+        $found_obj->update(
+            {
+                govbr_info => to_json(
+                    {
+                        govbr_session => $session->id,
+                    }
+                )
+            }
+          )
+
+          return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
 
     $c->render(
