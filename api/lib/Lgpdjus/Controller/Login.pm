@@ -525,7 +525,7 @@ sub govbr_get_token {
 sub get_confiabilidades {
     my ($c, $cpf, $auth) = @_;
 
-    my $url = $ENV{GOVBR_API} . '/confiabilidades/v3/contas/' . $cpf . '/cpf/niveis?response-type=ids';
+    my $url = $ENV{GOVBR_API} . '/confiabilidades/v3/contas/' . $cpf . '/niveis?response-type=ids';
     $c->log->info('get_confiabilidades: ' . $url);
 
     my $result = $c->ua->get($url => {'Authorization' => 'Bearer ' . $auth})->result;
