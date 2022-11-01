@@ -192,7 +192,7 @@ sub _logon {
 
     # marca que o usuário esta fazendo um login, pra ser usado no GET /me pra ignorar o quiz
     my $key = $ENV{REDIS_NS} . 'is_during_login:' . $directus_id;
-    $c->kv->redis->setex($key, 120, '1');
+    $c->kv->redis->setex($key, 20, '1');
 
     $c->render(
         json => {
