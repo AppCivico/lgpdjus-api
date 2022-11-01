@@ -540,11 +540,11 @@ sub get_confiabilidades {
         '3' => '3 (Ouro)',
     };
 
-    return {
+    return (
         govbr_nivel         => $niveis->{$nivel} || ($nivel . ' (desconhecido)'),
         account_verified    => $nivel eq '3 (Ouro)',
         verified_account_at => \'now()',
-    };
+    );
 }
 
 sub get_jwk_kids {
