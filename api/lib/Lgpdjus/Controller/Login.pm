@@ -541,9 +541,10 @@ sub get_confiabilidades {
     };
 
     return (
-        govbr_nivel         => $niveis->{$nivel} || ($nivel . ' (desconhecido)'),
-        account_verified    => $nivel eq '3 (Ouro)',
-        verified_account_at => \'now()',
+        govbr_nivel                  => $niveis->{$nivel} || ($nivel . ' (desconhecido)'),
+        account_verified             => $nivel eq '3 (Ouro)' ? 1 : 0,
+        account_verification_pending => 0,
+        verified_account_at          => \'now()',
     );
 }
 
