@@ -121,7 +121,7 @@ sub start_quiz_post {
             status => 400,
         );
     }
-    elsif ($questionnaire && $questionnaire->{code} eq 'verify_account' && $user_obj->account_verification_locked) {
+    elsif ($questionnaire && $questionnaire->{code} eq 'verify_account' && ($user_obj->account_verification_locked && !$ENV{GOVBR_ENABLE})) {
         return $c->render(
             json => {
                 error   => 'quiz_in_progress',
