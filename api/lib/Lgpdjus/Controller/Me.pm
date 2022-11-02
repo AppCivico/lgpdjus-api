@@ -73,7 +73,7 @@ sub me_find {
 
                 account_verified             => $user->{account_verified}             ? 1 : 0,
                 account_verification_pending => $user->{account_verification_pending} ? 1 : 0,
-
+                govbr_nivel                  => $user->{govbr_nivel} || '',
             },
 
             modules => $modules,
