@@ -80,7 +80,9 @@
                 <a href="/admin/users?cliente_id=<%= $cliente->get_column('id') %>">
                     <%= $cliente->nome_completo() %>
                 </a>
-                % if ($cliente->account_verified()){
+                % if ($cliente->govbr_nivel()){
+                    <span class="badge badge-pill badge-info"><%=$cliente->govbr_nivel()%></span>
+                % } elsif ($cliente->account_verified()){
                 <span class="badge badge-pill badge-success">verificada</span>
                 % } elsif ($cliente->account_verification_pending()){
                 <span class="badge badge-pill badge-warning">verificação pendente</span>
