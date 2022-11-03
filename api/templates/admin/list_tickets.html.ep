@@ -107,7 +107,9 @@
                     <a href="/admin/users?cliente_id=<%= $r->cliente_id %>">
                         <%= $r->get_column('cliente_nome_completo') %>
                     </a>
-                    % if ($r->get_column('cliente_verification_pending')) {
+                    % if ($r->get_column('cliente_govbr_nivel')) {
+                    <span class="badge badge-pill badge-info"><%= $r->get_column('cliente_govbr_nivel') %></span>
+                    % } elsif ($r->get_column('cliente_verification_pending')) {
                     <span class="badge badge-pill badge-warning">verificação pendente</span>
                     % } elsif (!$r->get_column('cliente_verified')) {
                     <span class="badge badge-pill badge-danger">não verificada</span>

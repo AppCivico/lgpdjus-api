@@ -27,7 +27,9 @@
                 <label>Status da conta</label>
             </div>
             <div class="col-md-6">
-                % if ($cliente->{account_verified}){
+                % if ($r->{govbr_nivel}){
+                <span class="badge badge-pill badge-info"><%=$r->{govbr_nivel}%></span>
+                % } elsif ($cliente->{account_verified}){
                 <span class="badge badge-pill badge-success">verificada</span>
                 % } elsif ($cliente->{account_verification_pending}){
                 <span class="badge badge-pill badge-warning">verificação pendente</span>

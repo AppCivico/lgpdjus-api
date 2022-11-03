@@ -30,6 +30,7 @@ sub a_tickets_detail_get_post {
                     cliente_nome_completo        => 'cliente.nome_completo',
                     cliente_verified             => 'cliente.account_verified',
                     cliente_verification_pending => 'cliente.account_verification_pending',
+                    cliente_govbr_nivel => 'cliente.govbr_nivel',
                 }
             ],
         }
@@ -237,6 +238,7 @@ sub a_tickets_list_get {
                     cliente_nome_completo        => 'cliente.nome_completo',
                     cliente_verified             => 'cliente.account_verified',
                     cliente_verification_pending => 'cliente.account_verification_pending',
+                    cliente_govbr_nivel => 'cliente.govbr_nivel',
                 }
             ],
         }

@@ -76,7 +76,9 @@
                         <%=$r->{status}%>
                     </span>
                     % }
-                    % if ($r->{account_verified}){
+                    % if ($r->{govbr_nivel}){
+                        <span class="badge badge-pill badge-info"><%=$r->{govbr_nivel}%></span>
+                    % } elsif ($r->{account_verified}){
                     <span class="badge badge-pill badge-success">verificada</span>
                     % } elsif ($r->{account_verification_pending}){
                     <span class="badge badge-pill badge-warning">verificação pendente</span>
