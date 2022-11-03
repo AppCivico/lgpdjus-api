@@ -62,6 +62,7 @@ sub au_search {
                   me.status
                   me.account_verified
                   me.account_verification_pending
+                  me.govbr_nivel
                   /,
                 (
                     $render_detail

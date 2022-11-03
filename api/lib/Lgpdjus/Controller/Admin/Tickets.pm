@@ -30,7 +30,7 @@ sub a_tickets_detail_get_post {
                     cliente_nome_completo        => 'cliente.nome_completo',
                     cliente_verified             => 'cliente.account_verified',
                     cliente_verification_pending => 'cliente.account_verification_pending',
-                    cliente_govbr_nivel => 'cliente.govbr_nivel',
+                    cliente_govbr_nivel          => 'cliente.govbr_nivel',
                 }
             ],
         }
@@ -53,9 +53,8 @@ sub a_tickets_detail_get_post {
             'Pedir informação adicional', 'btn-light', 'Descreva qual informação adicional é necessária',
             'Precio que me envie novamente a foto do...', 'Enviar pedido'
         ],
-        close => [
-            'Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'
-        ],
+        close =>
+          ['Analisar e concluir', 'btn-primary', 'Escreva a resposta da solicitação', 'Sim, tratamos ...', 'Concluir'],
         change_due => ['Mudar prazo', 'btn-light', 'Justificativa', 'Escreva a justificativa', 'Mudar prazo'],
         verify     => [
             'Analisar e verificar conta', 'btn-primary', 'Comentário',
@@ -238,7 +237,7 @@ sub a_tickets_list_get {
                     cliente_nome_completo        => 'cliente.nome_completo',
                     cliente_verified             => 'cliente.account_verified',
                     cliente_verification_pending => 'cliente.account_verification_pending',
-                    cliente_govbr_nivel => 'cliente.govbr_nivel',
+                    cliente_govbr_nivel          => 'cliente.govbr_nivel',
                 }
             ],
         }
