@@ -26,6 +26,7 @@ sub web_retorno_logout {
 
     $c->stash(texto      => 'Você saiu com sucesso. Retornando ao aplicativo...');
     $c->stash(logged_off => 1);
+    $c->stash(sucesso => 1);
     $c->stash(template   => 'govbr/texto');
 
     return $c->render(html => {});
