@@ -16,6 +16,7 @@ services:
       - ../data/lgpdjus-data/:/data/
       - ./api/:/src/
     environment:
+      API_WORKERS: "${API_WORKERS}"
       REDIS_SERVER: "${REDIS_SERVER}"
       REDIS_NS: "${REDIS_NS}"
       POSTGRESQL_HOST: "${POSTGRESQL_HOST}"
@@ -37,13 +38,13 @@ services:
 
   lgpdjus_emaildb:
     container_name: lgpdjus_emaildb
-    image: eokoe/emaildb
+    image: renatocron/email-db-service:2022-11-10
     restart: unless-stopped
     networks:
         - database
     volumes:
         - ../data/emaildb-data/:/data/
-        - /home/ubuntu/email-db-service/:/src/
+        - "${EMAILDB_SRC_CODE}:/src/"
         # update to your path of eokoe/email-db-service
     depends_on:
         - lgpdjus_db_pg
