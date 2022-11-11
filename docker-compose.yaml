@@ -15,22 +15,8 @@ services:
     volumes:
       - ../data/lgpdjus-data/:/data/
       - ./api/:/src/
-    environment:
-      API_WORKERS: "${API_WORKERS}"
-      REDIS_SERVER: "${REDIS_SERVER}"
-      REDIS_NS: "${REDIS_NS}"
-      POSTGRESQL_HOST: "${POSTGRESQL_HOST}"
-      POSTGRESQL_PORT: "${POSTGRESQL_PORT}"
-      POSTGRESQL_DBNAME: "${POSTGRESQL_DBNAME}"
-      POSTGRESQL_USER: "${POSTGRESQL_USER}"
-      POSTGRESQL_PASSWORD: "${POSTGRESQL_PASSWORD}"
-      GOVBR_SECRET: "${GOVBR_SECRET}"
-      GOVBR_CLIENT_ID: "${GOVBR_CLIENT_ID}"
-      GOVBR_SUCESS_URL: "${GOVBR_SUCESS_URL}"
-      GOVBR_ENABLE: "${GOVBR_SUCESS_URL}"
-      GOVBR_API: "${GOVBR_API}"
-      GOVBR_SELF_LOGOUT: "${GOVBR_SELF_LOGOUT}"
-      GOVBR_JWK_URI: "${GOVBR_JWK_URI}"
+    env_file:
+      - .env
     depends_on:
         - lgpdjus_db_pg
         - redis
