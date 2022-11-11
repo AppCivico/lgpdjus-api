@@ -2,7 +2,7 @@ version: '3.5'
 services:
   lgpdjus_api:
     container_name: lgpdjus_api
-    image: its/lgpdjus_api
+    image: renatocron/lgpdjus_api:2022-11-10
     restart: unless-stopped
     networks:
       - html2pdf
