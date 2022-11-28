@@ -560,20 +560,27 @@ sub get_confiabilidades {
     my $json   = $result->json;
 
     $c->log->info('get_confiabilidades: ' . to_json($json));
+    if (ref $json eq 'ARRAY') {
+        # pega o status mais recente
+        $json = [sort { $b->{dataAtualizacao} cmp $a->{dataAtualizacao} } $json->@*];
 
-    my $nivel  = $json->[0]{id};
-    my $niveis = {
-        '1' => '1 (Bronze)',
-        '2' => '2 (Prata)',
-        '3' => '3 (Ouro)',
-    };
+        my $nivel  = $json->[0]{id};
+        my $niveis = {
+            '1' => '1 (Bronze)',
+            '2' => '2 (Prata)',
+            '3' => '3 (Ouro)',
+        };
 
-    return (
-        govbr_nivel                  => $niveis->{$nivel} || ($nivel . ' (desconhecido)'),
-        account_verified             => $nivel eq '3 (Ouro)' ? 1 : 0,
-        account_verification_pending => 0,
-        verified_account_at          => \'now()',
-    );
+        return (
+            govbr_nivel                  => $niveis->{$nivel} || ($nivel . ' (desconhecido)'),
+            account_verified             => $nivel eq '3 (Ouro)' ? 1 : 0,
+            account_verification_pending => 0,
+            verified_account_at          => \'now()',
+        );
+    }
+    else {
+        die 'Invalid JSON, expected an array';
+    }
 }
 
 sub get_jwk_kids {
