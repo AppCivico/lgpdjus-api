@@ -296,10 +296,8 @@ sub govbr_status_get {
             $found_obj->update({email => $id_token->{email}});
         }
 
-        if (!$found_obj->account_verified) {
-            my %ret = &get_confiabilidades($c, $found_obj->cpf, $session->access_token);
-            $found_obj->update({%ret});
-        }
+        my %ret = &get_confiabilidades($c, $found_obj->cpf, $session->access_token);
+        $found_obj->update({%ret});
 
         $found_obj->update(
             {
