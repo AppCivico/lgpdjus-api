@@ -30,6 +30,7 @@ $ENV{GOVBR_LOGOUT}
   ||= 'https://sso.staging.acesso.gov.br/logout?post_logout_redirect_uri=https%3A%2F%2Fhomol-lgpdjus-api.tjsc.jus.br%2Fretorno-logout';
 $ENV{GOVBR_SELF_LOGOUT} ||= 'https://homol-lgpdjus-api.tjsc.jus.br/do-govbr-logout';
 $ENV{GOVBR_API}         ||= 'https://api.staging.acesso.gov.br';
+$ENV{GOVBR_API} =~ s/\/+$//;    # removendo barra no final, se existir
 
 my $govauth = encode_base64($ENV{GOVBR_CLIENT_ID} . ':' . $ENV{GOVBR_SECRET}, '');
 
@@ -307,9 +308,9 @@ sub govbr_status_get {
                     }
                 )
             }
-          );
+        );
 
-          return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
+        return &_logon($c, $remote_ip, $state->{a}, $found_obj, 1);
     }
 
     $c->render(
