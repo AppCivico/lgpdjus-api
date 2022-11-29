@@ -98,7 +98,7 @@ sub media_generate_download_url_admin {
     my $media_id = $self->id;
 
     return
-        $c->req->url->to_abs->scheme . '://'
+        ($ENV{PUBLIC_API_URL} =~ /^https/i ? 'https' : $c->req->url->to_abs->scheme) . '://'
       . $c->req->url->to_abs->host . ':'
       . $c->req->url->to_abs->port
       . "/admin/media-download/?m=$media_id&q=$quality&jpeg=$jpeg"
