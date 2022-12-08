@@ -3,7 +3,7 @@ export USER=app
 
 source /home/app/perl5/perlbrew/etc/bashrc
 
-cpanm -n App::Sqitch \
+cpanm --from https://cpan.metacpan.org/ -n App::Sqitch \
  blib \
  Business::BR::CEP \
  Business::BR::CNPJ \
