@@ -20,6 +20,11 @@ Abaixo instruções para uma sugestão para o deploy em Produção/Homologação
 
 <img src="https://raw.githubusercontent.com/AppCivico/lgpdjus-api/main/misc/LGPDJus-Containers.svg" alt="Deps">
 
+<h1>Atenção: para seguir os os passos a passos, utilize o arquivo `docker-compose.from-readme.yaml` e não `docker-compose.yaml`</h1>
+
+No arquivo `docker-compose.yaml` original do repositório, já estão configurados todos os serviços (PostgreSQL, redis, etc..) e não é necessário configurar
+cada um individualmente, exceto pelo proxy reverso.
+
 ## Instalação dos requisitos:
 
 Instale o PostgreSQL, docker e docker-compose.
@@ -466,6 +471,7 @@ Para executar tais ações, basta fazer uma chamada HTTP usando o secret do MAIN
 Os endpoints são os seguintes:
 
 - http://172.17.0.1:64598/maintenance/housekeeping?secret=MAINTENANCE_SECRET
+- http://172.17.0.1:64598/maintenance/ping-db?secret=MAINTENANCE_SECRET
 
 Pode-se configurar para o crontab executar de 1 em 1 minuto, pois a api faz o controle de quantos jobs executar em cada request.
 

@@ -12,7 +12,11 @@ sub check_authorization {
         secret => {required => 1, type => 'Str', max_length => 100},
     );
 
-    $c->reply_forbidden() unless $params->{secret} eq ($ENV{MAINTENANCE_SECRET} || die 'missing MAINTENANCE_SECRET');
+    die {
+        error   => 'permission_denied',
+        message => 'Você não tem a permissão para este recurso.',
+        status  => 403,
+    } unless $params->{secret} eq ($ENV{MAINTENANCE_SECRET} || die 'missing MAINTENANCE_SECRET');
 
     return 1;
 }
@@ -55,9 +59,28 @@ sub housekeeping {
 sub housekeepingdb {
     my $c = shift;
 
-    my $exists = $c->schema->resultset('Configuraco')->next;
+    my $pong = $c->kv->redis->ping();
+    return $c->render(json => {error => 'redis não respondeu pong'}, status => 400) unless $pong eq 'PONG';
 
-    return $c->render(json => {ok => defined $exists ? 1 : 0});
+    my $exists = $c->schema->resultset('Configuraco')->next;
+    return $c->render(json => {error => 'faltando linha na tabela de configuração'}, status => 400) unless $exists;
+
+    my ($failed_jobs) = $c->schema->storage->dbh->selectrow_array(
+        <<'SQL_QUERY', undef,
+        select count(1) from minion_jobs where state='failed';
+SQL_QUERY
+    );
+    return $c->render(json => {error => 'há jobs com erro no minion'}, status => 400) if $failed_jobs > 0;
+
+    my ($failed_emails) = $c->schema->storage->dbh->selectrow_array(
+        <<'SQL_QUERY', undef,
+        select count(1) from emaildb_queue where errmsg is not null;
+SQL_QUERY
+    );
+    return $c->render(json => {error => 'há emails com erro na tabela emaildb_queue'}, status => 400)
+      if $failed_emails > 0;
+
+    return $c->render(text => 'all-good');
 }
 
 1;

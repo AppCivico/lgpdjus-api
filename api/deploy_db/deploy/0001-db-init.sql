@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.10 (Ubuntu 11.10-1.pgdg20.04+1)
--- Dumped by pg_dump version 13.3 (Ubuntu 13.3-1.pgdg20.04+1)
+-- quem estiver antes do pg 13, descomentar
+-- CREATE EXTENSION if not exists pgcrypto;
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1046,7 +1046,7 @@ ALTER SEQUENCE public.emaildb_config_id_seq OWNED BY public.emaildb_config.id;
 --
 
 CREATE TABLE public.emaildb_queue (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
     config_id integer NOT NULL,
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     template character varying NOT NULL,
